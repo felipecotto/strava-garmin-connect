@@ -1,31 +1,59 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { fetchActivities, getWeeklyStats, formatPace } from "@/app/lib/strava"
+import { MetricCard } from "@/app/components/dashdoard/metric-card"
+import { Map, Timer, TrendingUp, Zap } from "lucide-react"
 
-export default async function Dashboard() {
-  const session = await getServerSession(authOptions)
+export default async function DashboardPage() {
+  const session = await auth()
+  if (!session?.accessToken) redirect("/")
 
-  if (!session) {
-    redirect("/")
-  }
+  const activities = await fetchActivities(session.accessToken)
+  const stats = getWeeklyStats(activities)
+
+  const metrics = [
+    {
+      label: "Km esta semana",
+      value: `${stats.totalKm.toFixed(1)} km`,
+      sub: `${stats.activityCount} corrida${stats.activityCount !== 1 ? "s" : ""}`,
+      icon: <Map size={18} />,
+    },
+    {
+      label: "Pace médio",
+      value: formatPace(stats.avgPaceSeconds),
+      sub: "esta semana",
+      icon: <Timer size={18} />,
+    },
+    {
+      label: "Atividades",
+      value: String(stats.activityCount),
+      sub: "esta semana",
+      icon: <Zap size={18} />,
+    },
+    {
+      label: "Elevação",
+      value: `${Math.round(stats.totalElevation)} m`,
+      sub: "esta semana",
+      icon: <TrendingUp size={18} />,
+    },
+  ]
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#f1efe8]">
-      <div className="bg-white border border-black/10 rounded-2xl p-8 flex flex-col gap-4 max-w-sm w-full">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#0F6E56] flex items-center justify-center text-white font-medium">
-            {session.user?.name?.[0] ?? "?"}
-          </div>
-          <div>
-            <p className="font-medium text-sm">{session.user?.name}</p>
-            <p className="text-xs text-muted-foreground">Strava conectado</p>
-          </div>
-        </div>
-        <div className="h-px bg-black/10" />
-        <p className="text-sm text-muted-foreground">
-          Auth funcionando. Dashboard em construção.
+    <div className="p-8">
+      <div className="mb-8">
+        <h1 className="text-xl font-semibold text-neutral-900">
+          Olá, {session.user?.name?.split(" ")[0]} 👋
+        </h1>
+        <p className="text-sm text-neutral-500 mt-1">
+          Aqui está o resumo da sua semana.
         </p>
       </div>
-    </main>
+
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+        {metrics.map((m) => (
+          <MetricCard key={m.label} {...m} />
+        ))}
+      </div>
+    </div>
   )
 }

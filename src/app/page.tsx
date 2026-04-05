@@ -1,9 +1,8 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 
 export default async function Home() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
 
   if (session) {
     redirect("/dashboard")
@@ -34,7 +33,7 @@ export default async function Home() {
         </div>
 
         
-          href="/api/auth/signin/strava"
+        <a  href="/api/auth/signin/strava"
           className="flex items-center gap-2 bg-[#FC4C02] text-white text-sm font-medium px-5 py-3 rounded-lg hover:bg-[#e04400] transition-colors"
         >
           <span className="w-5 h-5 bg-white/20 rounded flex items-center justify-center text-xs font-bold">
