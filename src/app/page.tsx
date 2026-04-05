@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { auth, signIn } from "@/lib/auth"
 import { redirect } from "next/navigation"
 
 export default async function Home() {
@@ -32,15 +32,22 @@ export default async function Home() {
           </p>
         </div>
 
-        
-        <a  href="/api/auth/signin/strava"
-          className="flex items-center gap-2 bg-[#FC4C02] text-white text-sm font-medium px-5 py-3 rounded-lg hover:bg-[#e04400] transition-colors"
+        <form
+          action={async () => {
+            "use server"
+            await signIn("strava", { redirectTo: "/dashboard" })
+          }}
         >
-          <span className="w-5 h-5 bg-white/20 rounded flex items-center justify-center text-xs font-bold">
-            S
-          </span>
-          Conectar com Strava
-        </a>
+          <button
+            type="submit"
+            className="flex items-center gap-2 bg-[#FC4C02] text-white text-sm font-medium px-5 py-3 rounded-lg hover:bg-[#e04400] transition-colors"
+          >
+            <span className="w-5 h-5 bg-white/20 rounded flex items-center justify-center text-xs font-bold">
+              S
+            </span>
+            Conectar com Strava
+          </button>
+        </form>
 
       </div>
     </main>

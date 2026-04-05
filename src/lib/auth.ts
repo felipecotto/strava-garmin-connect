@@ -11,8 +11,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       authorization: {
         params: {
           scope: "read,activity:read_all",
-          approval_prompt: "force",
-          response_type: "code",
         },
       },
     }),
