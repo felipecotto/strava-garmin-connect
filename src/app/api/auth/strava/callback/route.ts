@@ -1,9 +1,8 @@
-import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
 import { exchangeAuthorizationCode } from "@/lib/strava/auth"
 import { getAppOrigin, isStravaConfigured } from "@/lib/strava/env"
-import { STRAVA_OAUTH_STATE_COOKIE } from "@/lib/strava/oauth-state"
+import { verifyStravaOAuthState } from "@/lib/strava/oauth-state"
 import { getStravaIronSession } from "@/lib/strava/session"
 
 export async function GET(request: Request) {
@@ -11,9 +10,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
 
   const redirectWith = (path: string) => {
-    const res = NextResponse.redirect(new URL(path, origin))
-    res.cookies.delete(STRAVA_OAUTH_STATE_COOKIE)
-    return res
+    return NextResponse.redirect(new URL(path, origin))
   }
 
   if (!isStravaConfigured()) {
@@ -27,10 +24,8 @@ export async function GET(request: Request) {
 
   const code = url.searchParams.get("code")
   const state = url.searchParams.get("state")
-  const jar = await cookies()
-  const expected = jar.get(STRAVA_OAUTH_STATE_COOKIE)?.value
 
-  if (!code || !state || !expected || state !== expected) {
+  if (!code || !verifyStravaOAuthState(state)) {
     return redirectWith("/dashboard?error=invalid_state")
   }
 

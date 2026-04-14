@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { getAppOrigin, getStravaOAuthConfig, isStravaConfigured } from "@/lib/strava/env"
-import { STRAVA_OAUTH_STATE_COOKIE } from "@/lib/strava/oauth-state"
+import { createStravaOAuthState } from "@/lib/strava/oauth-state"
 
 export async function GET() {
   const origin = getAppOrigin()
@@ -11,7 +11,7 @@ export async function GET() {
   }
 
   const { clientId, redirectUri } = getStravaOAuthConfig()
-  const state = crypto.randomUUID()
+  const state = createStravaOAuthState()
 
   const authorize = new URL("https://www.strava.com/oauth/authorize")
   authorize.searchParams.set("client_id", clientId)
@@ -21,13 +21,5 @@ export async function GET() {
   authorize.searchParams.set("scope", "read,activity:read")
   authorize.searchParams.set("state", state)
 
-  const res = NextResponse.redirect(authorize.toString())
-  res.cookies.set(STRAVA_OAUTH_STATE_COOKIE, state, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 600,
-    path: "/",
-  })
-  return res
+  return NextResponse.redirect(authorize.toString())
 }

@@ -43,14 +43,16 @@ const errorCopy: Record<string, { title: string; body: ReactNode }> = {
     body: "Confira Client ID, Client Secret e Redirect URI no app Strava e no arquivo .env.",
   },
   config: {
-    title: "Strava não configurado",
+    title: "Strava não configurado neste deploy",
     body: (
       <>
-        Defina <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_ID</code>,{" "}
-        <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_SECRET</code>,{" "}
-        <code className="rounded bg-muted px-1 py-0.5">STRAVA_REDIRECT_URI</code> e{" "}
-        <code className="rounded bg-muted px-1 py-0.5">SESSION_SECRET</code> no{" "}
-        <code className="rounded bg-muted px-1 py-0.5">.env</code>.
+        O servidor não encontrou <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_ID</code>{" "}
+        e/ou <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_SECRET</code>. Na{" "}
+        <strong>Vercel</strong>, abra o projeto → Settings → Environment Variables e
+        preencha para <strong>Production</strong> e para <strong>Preview</strong> (deploys
+        de branch usam Preview; sem essas chaves o app cai aqui). Depois:{" "}
+        <code className="rounded bg-muted px-1 py-0.5">SESSION_SECRET</code> (≥32 caracteres) e,
+        se quiser URL fixa, <code className="rounded bg-muted px-1 py-0.5">STRAVA_REDIRECT_URI</code>.
       </>
     ),
   },

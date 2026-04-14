@@ -46,7 +46,7 @@ export default async function DashboardHomePage({
 
       {data.ok === "config_missing" ? (
         <div className="max-w-xl space-y-4 rounded-xl border border-border bg-card p-6 text-sm">
-          <p className="font-medium">Configure as variáveis de ambiente</p>
+          <p className="font-medium">Variáveis de ambiente (local e Vercel)</p>
           <p className="text-muted-foreground leading-relaxed">
             Crie um app em{" "}
             <a
@@ -57,11 +57,14 @@ export default async function DashboardHomePage({
             >
               Strava → Settings → API
             </a>{" "}
-            e copie o Client ID e o Client Secret. O Redirect URI deve ser
-            exatamente o mesmo de{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5">STRAVA_REDIRECT_URI</code>{" "}
-            (ex.: <code className="rounded bg-muted px-1.5 py-0.5">http://localhost:3000/api/auth/strava/callback</code>
-            ).
+            e use o Client ID e o Client Secret no servidor. Na Vercel, defina as
+            mesmas variáveis para <strong>Production</strong> e{" "}
+            <strong>Preview</strong>, senão o link de preview do PR não enxerga as
+            chaves. Inclua <code className="rounded bg-muted px-1.5 py-0.5">SESSION_SECRET</code>{" "}
+            (≥32 caracteres). O callback pode ser omitido no env; o app monta{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5">…/api/auth/strava/callback</code> a
+            partir do domínio — o Strava deve ter o mesmo host em Authorization
+            Callback Domain.
           </p>
         </div>
       ) : null}
