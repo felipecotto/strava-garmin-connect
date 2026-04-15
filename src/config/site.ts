@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "Pace Insights",
-  tagline: "Clareza nos seus treinos de corrida",
+  name: "CTT.",
+  tagline: "CTT. A inteligência de dados que sua corrida precisa.",
   description:
     "Case de portfólio: product design, design system em shadcn/ui e front-end Next.js para conectar dados da API do Strava e transformar volume, ritmo e consistência em decisões de treino.",
   author: {

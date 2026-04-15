@@ -41,3 +41,13 @@ export async function refreshAccessToken(
   }
   return res.json() as Promise<StravaTokenResponse>
 }
+
+export async function deauthorizeAccessToken(accessToken: string): Promise<boolean> {
+  const res = await fetch("https://www.strava.com/oauth/deauthorize", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return res.ok
+}

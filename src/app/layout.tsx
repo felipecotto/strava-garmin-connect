@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 
-import { siteConfig } from "@/config/site"
+import { MonitoringProvider } from "@/components/analytics/monitoring-provider"
 
 import "./globals.css"
 
@@ -16,11 +16,43 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://usectt.com.br"),
   title: {
-    default: siteConfig.name,
-    template: `%s · ${siteConfig.name}`,
+    default: "CTT — Cotto Training Tracker",
+    template: "%s | CTT — Cotto Training Tracker",
   },
-  description: siteConfig.description,
+  description:
+    "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://usectt.com.br",
+    siteName: "CTT — Cotto Training Tracker",
+    title: "CTT — Cotto Training Tracker",
+    description:
+      "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "CTT — Cotto Training Tracker",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CTT — Cotto Training Tracker",
+    description:
+      "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+    images: ["/opengraph-image"],
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
 }
 
 export default function RootLayout({
@@ -33,7 +65,10 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <MonitoringProvider />
+        {children}
+      </body>
     </html>
   )
 }

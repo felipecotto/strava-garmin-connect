@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Clock, Footprints, Mountain, Timer } from "lucide-react"
 
 import { getDashboardStravaData } from "@/app/actions/strava"
+import { ActivityIssueGrid } from "@/components/dashboard/activity-issue-grid"
 import { DashboardStravaAlerts } from "@/components/dashboard/dashboard-strava-alerts"
 import { InsightCard } from "@/components/dashboard/insight-card"
 import { StatCard } from "@/components/dashboard/stat-card"
@@ -157,6 +158,8 @@ export default async function DashboardHomePage({
               ))}
             </div>
           </section>
+
+          <ActivityIssueGrid runs={data.recentRuns} />
         </>
       ) : null}
     </div>

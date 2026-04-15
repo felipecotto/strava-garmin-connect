@@ -1,8 +1,6 @@
 import Link from "next/link"
 
-import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
 
 const nav = [
   { href: "#projeto", label: "Projeto" },
@@ -12,17 +10,20 @@ const nav = [
 
 export function LandingHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="font-semibold tracking-tight text-foreground">
-          {siteConfig.name}
+    <header className="sticky top-0 z-50 border-b border-black/[0.08] bg-white/90 backdrop-blur-md">
+      <div className="relative mx-auto flex h-14 max-w-6xl items-center px-6">
+        <Link
+          href="/"
+          className="shrink-0 font-semibold tracking-tight text-[#E8450A]"
+        >
+          CTT.
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-sm text-muted-foreground md:flex">
           {nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="transition-colors hover:text-foreground"
+              className="transition-colors duration-200 hover:text-[#E8450A]"
             >
               {item.label}
             </a>
@@ -30,7 +31,7 @@ export function LandingHeader() {
         </nav>
         <Link
           href={siteConfig.connectStravaPath}
-          className={cn(buttonVariants({ size: "sm" }), "shrink-0")}
+          className="ml-auto shrink-0 rounded-lg bg-[#E8450A] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-[#C73D09]"
         >
           Conectar Strava
         </Link>

@@ -1,10 +1,11 @@
 import Link from "next/link"
-import { MapPin } from "lucide-react"
+import { CheckCircle2, MapPin } from "lucide-react"
 
 import { getStravaProfileData, logoutStrava } from "@/app/actions/strava"
 import { DashboardStravaAlerts } from "@/components/dashboard/dashboard-strava-alerts"
+import { StravaRevokeAccessDialog } from "@/components/dashboard/strava-revoke-access-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -97,6 +98,10 @@ export default async function ProfilePage({
                 <CardDescription>
                   @{data.athlete.username ?? "atleta"}
                 </CardDescription>
+                <p className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  <CheckCircle2 className="size-3.5" aria-hidden />
+                  Conexão Ativa
+                </p>
                 <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <MapPin className="size-3.5" aria-hidden />
                   {[data.athlete.city, data.athlete.state, data.athlete.country]
@@ -106,14 +111,10 @@ export default async function ProfilePage({
               </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              <form action={logoutStrava}>
-                <Button type="submit" variant="outline" className="w-full">
-                  Desconectar Strava
-                </Button>
-              </form>
+              <StravaRevokeAccessDialog action={logoutStrava} />
               <p className="text-xs text-muted-foreground">
-                Remove os tokens deste navegador. Você pode autorizar de novo a
-                qualquer momento.
+                Revoga o token no Strava e remove a sessão local do CTT. Você
+                pode autorizar novamente quando quiser.
               </p>
             </CardContent>
           </Card>

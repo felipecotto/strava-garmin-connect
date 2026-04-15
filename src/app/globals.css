@@ -49,25 +49,24 @@
 }
 
 :root {
-  --background: oklch(0.99 0.005 95);
-  --foreground: oklch(0.18 0.02 265);
-  --card: oklch(1 0.005 95);
-  --card-foreground: oklch(0.18 0.02 265);
-  --popover: oklch(1 0.005 95);
-  --popover-foreground: oklch(0.18 0.02 265);
-  /* Tom inspirado na identidade Strava — energia e foco em performance */
-  --primary: oklch(0.58 0.22 29);
-  --primary-foreground: oklch(0.99 0.01 95);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #ffffff;
+  --foreground: #0f172a; /* slate-900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #e8450a;
+  --primary-foreground: #ffffff;
+  --secondary: #f8fafc; /* slate-50 */
+  --secondary-foreground: #0f172a;
+  --muted: #f8fafc; /* slate-50 */
+  --muted-foreground: #475569; /* slate-600 */
+  --accent: #f8fafc;
+  --accent-foreground: #0f172a;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0;
+  --ring: #e8450a;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -82,27 +81,32 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --glass-bg: rgb(255 255 255 / 0.8);
+  --glass-border: rgb(226 232 240 / 0.6);
+  --glass-blur: 12px;
+  --glass-shadow: 0 12px 36px -28px rgb(2 6 23 / 0.28);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
-  --background: oklch(0.14 0.02 265);
-  --foreground: oklch(0.97 0.01 95);
-  --card: oklch(0.18 0.02 265);
-  --card-foreground: oklch(0.97 0.01 95);
-  --popover: oklch(0.18 0.02 265);
-  --popover-foreground: oklch(0.97 0.01 95);
-  --primary: oklch(0.68 0.2 29);
-  --primary-foreground: oklch(0.14 0.02 265);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #e8450a;
+  --primary-foreground: #ffffff;
+  --secondary: #f8fafc;
+  --secondary-foreground: #0f172a;
+  --muted: #f8fafc;
+  --muted-foreground: #475569;
+  --accent: #f8fafc;
+  --accent-foreground: #0f172a;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #e8450a;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -110,12 +114,17 @@
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: #e8450a;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --glass-bg: rgb(255 255 255 / 0.8);
+  --glass-border: rgb(226 232 240 / 0.6);
+  --glass-blur: 12px;
+  --glass-shadow: 0 12px 36px -28px rgb(2 6 23 / 0.28);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
@@ -124,8 +133,46 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "tnum" on, "lnum" on;
   }
   html {
     @apply font-sans;
+  }
+  .tabular-nums {
+    font-family: var(--font-geist-mono), monospace;
+  }
+  .glass-panel {
+    border-color: var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+  }
+  .luxury-enter {
+    animation: luxury-enter 620ms var(--motion-ease) both;
+  }
+  .luxury-enter-delay-1 {
+    animation-delay: 80ms;
+  }
+  .luxury-enter-delay-2 {
+    animation-delay: 160ms;
+  }
+}
+
+@keyframes luxury-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .luxury-enter,
+  .luxury-enter-delay-1,
+  .luxury-enter-delay-2 {
+    animation: none;
   }
 }

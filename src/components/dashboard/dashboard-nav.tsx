@@ -12,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 const links = [
@@ -64,9 +63,9 @@ export function DashboardHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="text-sm font-semibold tracking-tight text-foreground"
+            className="text-sm font-bold tracking-tighter text-foreground"
           >
-            {siteConfig.name}
+            CTT.
           </Link>
           <span className="hidden text-muted-foreground md:inline">/</span>
           <span className="hidden text-sm text-muted-foreground md:inline">

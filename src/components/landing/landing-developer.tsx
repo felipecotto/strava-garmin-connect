@@ -13,51 +13,44 @@ const socialLinks = [
 ] as const
 
 export function LandingDeveloper() {
-  const initials = siteConfig.author.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
-
   return (
     <section
       id="desenvolvedor"
-      className="scroll-mt-20 border-t border-border/60 bg-muted/15 py-16 sm:py-24"
+      className="scroll-mt-20 border-t border-border/80 bg-white py-20 sm:py-24"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-6 sm:px-6">
         <div className="max-w-2xl space-y-3">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
             Portfólio
           </p>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-medium tracking-tight text-slate-950">
             Quem está desenvolvendo
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-slate-600">
             Product design, design system e front-end em um único fluxo — da
             narrativa da landing às telas do dashboard.
           </p>
         </div>
 
-        <div className="mt-12 overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm ring-1 ring-foreground/5">
+        <div className="glass-panel luxury-enter mt-12 overflow-hidden rounded-2xl border-slate-200/60 shadow-[0_10px_40px_-30px_rgba(2,6,23,0.28)] transition-all duration-200 hover:border-[#E8450A]/20 hover:bg-slate-50/50">
           <div className="grid gap-0 lg:grid-cols-[minmax(0,280px)_1fr]">
-            <div className="flex flex-col gap-6 border-b border-border/60 bg-muted/30 p-8 lg:border-r lg:border-b-0">
-              <Avatar className="size-20 border-2 border-background shadow-sm">
-                <AvatarFallback className="bg-primary/10 text-2xl font-semibold text-primary">
-                  {initials}
+            <div className="flex flex-col gap-6 border-b border-slate-200/80 bg-white/65 p-8 lg:border-r lg:border-b-0">
+              <Avatar className="size-20 border border-slate-200 shadow-sm">
+                <AvatarFallback className="bg-slate-100 text-2xl font-semibold text-red-600">
+                  FO
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-1">
-                <p className="text-lg font-semibold leading-tight">
+                <p className="text-lg leading-tight font-semibold text-slate-900">
                   {siteConfig.author.name}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-500">
                   @{siteConfig.author.handle}
                 </p>
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-medium text-slate-900">
                   {siteConfig.author.role}
                 </p>
-                <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <p className="flex items-center gap-1.5 text-sm text-slate-600">
                   <MapPin className="size-3.5 shrink-0" aria-hidden />
                   {siteConfig.author.location}
                 </p>
@@ -65,7 +58,7 @@ export function LandingDeveloper() {
             </div>
 
             <div className="flex flex-col justify-center gap-8 p-8 sm:p-10">
-              <p className="text-pretty text-base leading-relaxed text-muted-foreground">
+              <p className="text-pretty text-base leading-relaxed text-slate-600">
                 {siteConfig.author.bio}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -76,11 +69,11 @@ export function LandingDeveloper() {
                     target="_blank"
                     rel="noreferrer"
                     className={cn(
-                      buttonVariants({ variant: "secondary", size: "sm" }),
-                      "gap-1.5"
+                      buttonVariants({ variant: "outline", size: "sm" }),
+                      "gap-2 border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-[#E8450A]"
                     )}
                   >
-                    <ExternalLink className="size-4" aria-hidden />
+                    <ExternalLink className="size-[18px]" aria-hidden />
                     {item.label}
                   </Link>
                 ))}

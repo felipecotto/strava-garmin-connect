@@ -15,9 +15,10 @@ import {
   fetchAthlete,
   getValidAccessToken,
 } from "@/lib/strava/api"
+import { deauthorizeAccessToken } from "@/lib/strava/auth"
 import { isStravaConfigured } from "@/lib/strava/env"
 import { getStravaIronSession } from "@/lib/strava/session"
-import type { StravaAthlete } from "@/lib/strava/types"
+import type { StravaActivity, StravaAthlete } from "@/lib/strava/types"
 
 export type DashboardStravaResult =
   | { ok: "config_missing" }
@@ -27,6 +28,7 @@ export type DashboardStravaResult =
       periodLabel: string
       stats: PeriodStats
       insights: DashboardInsight[]
+      recentRuns: StravaActivity[]
     }
   | { ok: "error"; message: string }
 
@@ -62,12 +64,19 @@ export async function getDashboardStravaData(): Promise<DashboardStravaResult> {
     const stats = summarizeRuns(currentRuns)
     const prevStats = summarizeRuns(previousRuns)
     const insights = buildInsights(stats, prevStats)
+    const recentRuns = [...currentRuns]
+      .sort(
+        (a, b) =>
+          new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
+      )
+      .slice(0, 12)
 
     return {
       ok: "success",
       periodLabel: "Últimos 7 dias",
       stats,
       insights,
+      recentRuns,
     }
   } catch (e) {
     const message = e instanceof Error ? e.message : "Erro ao buscar dados."
@@ -101,6 +110,16 @@ export async function getStravaProfileData(): Promise<ProfileStravaResult> {
 
 export async function logoutStrava() {
   const session = await getStravaIronSession()
+  const token = await getValidAccessToken(session)
+
+  if (token) {
+    try {
+      await deauthorizeAccessToken(token)
+    } catch {
+      // Ainda limpamos a sessão local para garantir logout no app.
+    }
+  }
+
   session.destroy()
   await session.save()
   redirect("/dashboard?disconnected=1")
