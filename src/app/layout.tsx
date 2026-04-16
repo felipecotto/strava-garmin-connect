@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://usectt.com.br"),
+  metadataBase: new URL("https://www.usectt.com.br"),
   title: {
     default: "CTT — Cotto Training Tracker",
     template: "%s | CTT — Cotto Training Tracker",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://usectt.com.br",
+    url: "https://www.usectt.com.br",
     siteName: "CTT — Cotto Training Tracker",
     title: "CTT — Cotto Training Tracker",
     description:

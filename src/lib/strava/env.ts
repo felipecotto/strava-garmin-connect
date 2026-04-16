@@ -28,6 +28,23 @@ export function normalizeRedirectUri(uri: string): string {
 const CALLBACK_PATH = "/api/auth/strava/callback"
 
 /**
+ * Quando STRAVA_REDIRECT_URI está definido com o domínio de produção (ex.: usectt.com.br),
+ * reutilizamos essa origem para redirects — evita ficar preso ao hostname antigo de VERCEL_URL.
+ */
+function getOriginFromStravaRedirectUri(): string | null {
+  const raw = process.env.STRAVA_REDIRECT_URI?.trim()
+  if (!raw) {
+    return null
+  }
+  try {
+    const u = new URL(normalizeRedirectUri(raw))
+    return `${u.protocol}//${u.host}`
+  } catch {
+    return null
+  }
+}
+
+/**
  * Mesmo valor em /authorize e em POST /oauth/token.
  * Se STRAVA_REDIRECT_URI não existir, usa origem atual + path (útil na Vercel).
  */
@@ -63,12 +80,19 @@ export function getSessionSecret() {
 
 /**
  * Origem usada em redirects OAuth (callback, erros).
- * Na Vercel, `VERCEL_URL` existe sem protocolo — não dependa só de localhost.
+ * 1) NEXT_PUBLIC_APP_URL — canônico do site (recomendado em produção com domínio próprio).
+ * 2) Origem derivada de STRAVA_REDIRECT_URI — alinha com o callback configurado no Strava.
+ * 3) VERCEL_URL — deploy na Vercel (pode ser *.vercel.app, não o domínio custom).
+ * 4) localhost em dev.
  */
 export function getAppOrigin(): string {
   const explicit = process.env.NEXT_PUBLIC_APP_URL?.trim()
   if (explicit) {
     return explicit.replace(/\/$/, "")
+  }
+  const fromStravaRedirect = getOriginFromStravaRedirectUri()
+  if (fromStravaRedirect) {
+    return fromStravaRedirect
   }
   const vercel = process.env.VERCEL_URL?.trim()
   if (vercel) {
