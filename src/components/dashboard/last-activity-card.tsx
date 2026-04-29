@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { StravaActivity } from "@/lib/strava/types"
 
+// ─── helpers ────────────────────────────────────────────────────────────────
+
 function formatDuration(seconds: number): string {
   const total = Math.max(0, Math.round(seconds))
   const h = Math.floor(total / 3600)
@@ -18,6 +20,11 @@ function formatPace(movingTimeSec: number, distanceM: number): string {
   const min = Math.floor(paceSecKm / 60)
   const sec = Math.round(paceSecKm % 60)
   return `${min}:${String(sec).padStart(2, "0")}`
+}
+
+function paceSecKm(movingTimeSec: number, distanceM: number): number {
+  if (distanceM <= 0 || movingTimeSec <= 0) return 0
+  return movingTimeSec / (distanceM / 1000)
 }
 
 function timeAgo(isoDate: string): string {
@@ -35,11 +42,54 @@ function timeAgo(isoDate: string): string {
   })
 }
 
+// ─── effort zone ─────────────────────────────────────────────────────────────
+
+type EffortZone = "recovery" | "threshold" | "vo2max"
+
+function classifyEffort(pace: number): EffortZone {
+  if (pace <= 0) return "recovery"
+  if (pace < 270) return "vo2max"    // < 4:30/km
+  if (pace < 340) return "threshold" // 4:30–5:40/km
+  return "recovery"                  // > 5:40/km
+}
+
+const ZONE_CONFIG: Record<
+  EffortZone,
+  { label: string; className: string }
+> = {
+  recovery: {
+    label: "Recuperação",
+    className: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  },
+  threshold: {
+    label: "Limiar",
+    className: "bg-amber-50 text-amber-700 border border-amber-200",
+  },
+  vo2max: {
+    label: "VO₂ Max",
+    className: "bg-red-50 text-red-600 border border-red-200",
+  },
+}
+
+// ─── pace comparison ──────────────────────────────────────────────────────────
+
+function periodAvgPaceSec(runs: StravaActivity[]): number | null {
+  const valid = runs.filter((r) => r.distance > 200 && r.moving_time > 0)
+  if (valid.length < 2) return null
+  const totalDist = valid.reduce((s, r) => s + r.distance, 0)
+  const totalTime = valid.reduce((s, r) => s + r.moving_time, 0)
+  return totalTime / (totalDist / 1000)
+}
+
+// ─── component ───────────────────────────────────────────────────────────────
+
 export function LastActivityCard({
   activity,
+  allRuns = [],
   className,
 }: {
   activity: StravaActivity
+  allRuns?: StravaActivity[]
   className?: string
 }) {
   const distKm = (activity.distance / 1000).toFixed(1)
@@ -51,6 +101,25 @@ export function LastActivityCard({
   )
   const relDate = timeAgo(activity.start_date_local ?? activity.start_date)
 
+  // Effort zone badge
+  const currentPaceSec = paceSecKm(activity.moving_time, activity.distance)
+  const zone = classifyEffort(currentPaceSec)
+  const zoneConfig = ZONE_CONFIG[zone]
+
+  // Pace comparison vs period average (excluding this run)
+  const otherRuns = allRuns.filter((r) => r.id !== activity.id)
+  const avgSec = periodAvgPaceSec(otherRuns)
+  let paceCompare: string | null = null
+  if (avgSec && currentPaceSec > 0) {
+    const deltaPct = Math.round(((avgSec - currentPaceSec) / avgSec) * 100)
+    if (Math.abs(deltaPct) >= 2) {
+      paceCompare =
+        deltaPct > 0
+          ? `${deltaPct}% mais rápido que a média do período`
+          : `${Math.abs(deltaPct)}% mais lento que a média do período`
+    }
+  }
+
   return (
     <Card
       className={cn(
@@ -59,7 +128,7 @@ export function LastActivityCard({
         className
       )}
     >
-      {/* Subtle radial glow behind the header area */}
+      {/* Subtle radial glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-40"
@@ -78,7 +147,7 @@ export function LastActivityCard({
               Última Corrida Registrada
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <span className="text-xs text-slate-500">{relDate}</span>
             <ChevronRight
               className="size-4 text-slate-400 opacity-0 transition-opacity group-hover:opacity-100"
@@ -87,13 +156,24 @@ export function LastActivityCard({
           </div>
         </div>
 
-        <p className="mt-1.5 truncate text-xs text-muted-foreground">
-          {activity.name}
-        </p>
+        {/* Activity name + effort badge */}
+        <div className="mt-2 flex items-center gap-2">
+          <p className="truncate text-xs text-muted-foreground flex-1 min-w-0">
+            {activity.name}
+          </p>
+          <span
+            className={cn(
+              "shrink-0 rounded-md px-2 py-0.5 text-[11px] font-semibold tabular-nums",
+              zoneConfig.className
+            )}
+          >
+            {zoneConfig.label}
+          </span>
+        </div>
 
         {/* KPI grid */}
         <div className="mt-7 grid grid-cols-3 gap-4 sm:gap-6">
-          {/* Distance — hero metric, largest font */}
+          {/* Distance — hero metric */}
           <div className="space-y-1.5">
             <div className="flex items-baseline gap-1">
               <span className="font-mono text-[2.5rem] font-bold leading-none tracking-tight tabular-nums">
@@ -145,7 +225,7 @@ export function LastActivityCard({
           </span>
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex flex-wrap items-start gap-x-5 gap-y-3">
           <div className="space-y-0.5">
             <p className="font-mono text-sm font-semibold tabular-nums">
               {pace}{" "}
@@ -153,13 +233,35 @@ export function LastActivityCard({
             </p>
             <p className="text-[11px] text-slate-500">Pace Médio</p>
           </div>
-          <div className="h-6 w-px bg-slate-100" aria-hidden />
+          <div className="h-6 w-px bg-slate-100 self-start mt-0.5" aria-hidden />
           <div className="space-y-0.5">
             <p className="font-mono text-sm font-semibold tabular-nums">
               {efficiencyPct}%
             </p>
             <p className="text-[11px] text-slate-500">Em Movimento</p>
           </div>
+          {paceCompare ? (
+            <>
+              <div className="h-6 w-px bg-slate-100 self-start mt-0.5" aria-hidden />
+              <div className="space-y-0.5">
+                <p
+                  className={cn(
+                    "font-mono text-sm font-semibold tabular-nums",
+                    paceCompare.includes("mais rápido")
+                      ? "text-emerald-600"
+                      : "text-amber-600"
+                  )}
+                >
+                  {paceCompare.split(" ")[0]}
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  {paceCompare.includes("mais rápido")
+                    ? "vs. média do período ↑"
+                    : "vs. média do período ↓"}
+                </p>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </Card>

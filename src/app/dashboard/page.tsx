@@ -4,9 +4,11 @@ import { Clock, Footprints, Mountain, Timer } from "lucide-react"
 import { getDashboardStravaData } from "@/app/actions/strava"
 import { ActivityIssueGrid } from "@/components/dashboard/activity-issue-grid"
 import { DashboardStravaAlerts } from "@/components/dashboard/dashboard-strava-alerts"
+import { GoalTracker } from "@/components/dashboard/goal-tracker"
 import { InsightCard } from "@/components/dashboard/insight-card"
 import { LastActivityCard } from "@/components/dashboard/last-activity-card"
 import { StatCard } from "@/components/dashboard/stat-card"
+import { WeeklySummaryCard } from "@/components/dashboard/weekly-summary-card"
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { siteConfig } from "@/config/site"
@@ -135,7 +137,23 @@ export default async function DashboardHomePage({
             </div>
           </section>
 
-          <section className="mt-14" aria-labelledby="activity-insights-heading">
+          {/* Weekly load + Race goal */}
+          <section className="mt-14" aria-labelledby="load-goal-heading">
+            <h2 id="load-goal-heading" className="sr-only">
+              Carga semanal e objetivo
+            </h2>
+            <div className="grid gap-6 lg:grid-cols-3">
+              <WeeklySummaryCard
+                runs={data.recentRuns}
+                goalKm={60}
+                className="lg:col-span-2"
+              />
+              <GoalTracker />
+            </div>
+          </section>
+
+          {/* Last activity + insights */}
+          <section className="mt-8" aria-labelledby="activity-insights-heading">
             <h2 id="activity-insights-heading" className="sr-only">
               Atividade recente e insights
             </h2>
@@ -143,6 +161,7 @@ export default async function DashboardHomePage({
               {data.recentRuns.length > 0 ? (
                 <LastActivityCard
                   activity={data.recentRuns[0]}
+                  allRuns={data.recentRuns}
                   className="lg:col-span-2"
                 />
               ) : null}
