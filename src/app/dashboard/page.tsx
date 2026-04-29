@@ -5,6 +5,7 @@ import { getDashboardStravaData } from "@/app/actions/strava"
 import { ActivityIssueGrid } from "@/components/dashboard/activity-issue-grid"
 import { DashboardStravaAlerts } from "@/components/dashboard/dashboard-strava-alerts"
 import { InsightCard } from "@/components/dashboard/insight-card"
+import { LastActivityCard } from "@/components/dashboard/last-activity-card"
 import { StatCard } from "@/components/dashboard/stat-card"
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -134,28 +135,42 @@ export default async function DashboardHomePage({
             </div>
           </section>
 
-          <section className="mt-14" aria-labelledby="insights-heading">
-            <div className="mb-6 max-w-2xl space-y-2">
-              <h2
-                id="insights-heading"
-                className="text-xl font-semibold tracking-tight"
-              >
-                Insights
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Leituras automáticas com base nos seus dados agregados — não
-                substituem orientação profissional.
-              </p>
-            </div>
-            <div className="grid gap-4 lg:grid-cols-3">
-              {data.insights.map((item) => (
-                <InsightCard
-                  key={item.id}
-                  title={item.title}
-                  body={item.body}
-                  tone={item.tone}
+          <section className="mt-14" aria-labelledby="activity-insights-heading">
+            <h2 id="activity-insights-heading" className="sr-only">
+              Atividade recente e insights
+            </h2>
+            <div className="grid gap-6 lg:grid-cols-3">
+              {data.recentRuns.length > 0 ? (
+                <LastActivityCard
+                  activity={data.recentRuns[0]}
+                  className="lg:col-span-2"
                 />
-              ))}
+              ) : null}
+
+              <div
+                className={cn(
+                  "flex flex-col gap-3",
+                  data.recentRuns.length === 0 && "lg:col-span-3"
+                )}
+              >
+                <div className="space-y-1">
+                  <h3 className="text-base font-semibold tracking-tight">
+                    Insights
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Leituras automáticas — não substituem orientação
+                    profissional.
+                  </p>
+                </div>
+                {data.insights.map((item) => (
+                  <InsightCard
+                    key={item.id}
+                    title={item.title}
+                    body={item.body}
+                    tone={item.tone}
+                  />
+                ))}
+              </div>
             </div>
           </section>
 
