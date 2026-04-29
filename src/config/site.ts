@@ -2,12 +2,12 @@ export const siteConfig = {
   name: "CTT.",
   tagline: "CTT. A inteligência de dados que sua corrida precisa.",
   description:
-    "Case de portfólio: product design, design system em shadcn/ui e front-end Next.js para conectar dados da API do Strava e transformar volume, ritmo e consistência em decisões de treino.",
+    "CTT conecta com sua conta Strava e transforma suas corridas em decisões claras — volume, ritmo, fadiga e objetivo em um só lugar.",
   author: {
     name: "Felipe Oliveira",
     handle: "felipecotto",
     role: "Product Designer & Front-end Developer",
-    bio: "Conecto pesquisa, interface e código: deste case à entrega em produção, com foco em clareza para o usuário e consistência de componentes documentados no Storybook.",
+    bio: "Designers que constroem: conectei produto, design system e front-end para criar uma ferramenta que uso toda semana. O CTT é open source e está em produção real.",
     location: "São Paulo, SP",
     links: {
       github: "https://github.com/felipecotto",

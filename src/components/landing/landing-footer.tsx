@@ -13,11 +13,10 @@ export function LandingFooter() {
           <div>
             <p className="font-semibold text-slate-900">{siteConfig.name}</p>
             <p className="mt-1 text-sm text-slate-600">
-              Case de portfólio — sem backend de produção neste repositório.
+              Ferramenta para corredores em produção real.
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Desenvolvido por Felipe Oliveira para atletas que buscam clareza
-              nos dados.
+              Desenvolvido por Felipe Oliveira — grátis, open source.
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600">
@@ -28,10 +27,16 @@ export function LandingFooter() {
               Dashboard
             </Link>
             <a
+              href="#projeto"
+              className="transition-colors hover:text-[#E8450A]"
+            >
+              O produto
+            </a>
+            <a
               href="#desenvolvedor"
               className="transition-colors hover:text-[#E8450A]"
             >
-              Sobre mim
+              Sobre
             </a>
           </div>
         </div>

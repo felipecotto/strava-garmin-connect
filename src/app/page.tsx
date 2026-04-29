@@ -1,4 +1,5 @@
 import { Hero } from "@/components/landing/hero"
+import { LandingCtaBanner } from "@/components/landing/landing-cta-banner"
 import { LandingDeveloper } from "@/components/landing/landing-developer"
 import { LandingExperience } from "@/components/landing/landing-experience"
 import { LandingFooter } from "@/components/landing/landing-footer"
@@ -17,6 +18,7 @@ export default function LandingPage() {
       <LandingProject />
       <LandingExperience />
       <LandingDeveloper />
+      <LandingCtaBanner />
       <LandingFooter />
     </div>
   )

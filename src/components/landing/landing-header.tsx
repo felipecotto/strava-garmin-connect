@@ -3,9 +3,9 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 
 const nav = [
-  { href: "#projeto", label: "Projeto" },
-  { href: "#experiencia", label: "Experiência" },
-  { href: "#desenvolvedor", label: "Quem faz" },
+  { href: "#projeto", label: "O produto" },
+  { href: "#como-funciona", label: "Como funciona" },
+  { href: "#desenvolvedor", label: "Sobre" },
 ] as const
 
 export function LandingHeader() {

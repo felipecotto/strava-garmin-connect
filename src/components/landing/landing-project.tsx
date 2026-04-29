@@ -1,28 +1,56 @@
-import { Layers, LineChart, Shield } from "lucide-react"
-
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { siteConfig } from "@/config/site"
+  AlignJustify,
+  BarChart3,
+  Clock,
+  Lock,
+  Star,
+  Zap,
+} from "lucide-react"
 
-const pillars = [
+import { cn } from "@/lib/utils"
+
+const features = [
   {
-    icon: Layers,
-    title: "Visão de produto",
-    text: "Landing clara, jornada de valor e dashboard orientado a decisões — não só gráficos, mas leitura do que importa para o corredor.",
+    icon: BarChart3,
+    title: "Carga semanal",
+    description:
+      "Quantos km você fez, quanto tempo se moveu e quanto subiu — comparado com sua meta semanal.",
+    featured: true,
   },
   {
-    icon: LineChart,
-    title: "Insights acionáveis",
-    text: "Volume, consistência e sinais de fadiga traduzidos em linguagem simples, prontos para ajustar carga e técnica.",
+    icon: Clock,
+    title: "Objetivo com contagem regressiva",
+    description:
+      "Defina sua prova, veja os dias restantes e a fase atual do treino — Construção, Polimento ou Pico.",
+    featured: false,
   },
   {
-    icon: Shield,
-    title: "Privacidade em mente",
-    text: "Escopo mínimo de permissões na API e transparência sobre o que é exibido — base para evoluir com backend real.",
+    icon: Zap,
+    title: "Insights automáticos",
+    description:
+      "Volume aumentou? Ritmo caiu? O CTT detecta padrões e explica em linguagem simples, não em números brutos.",
+    featured: false,
+  },
+  {
+    icon: AlignJustify,
+    title: "Feed de atividades",
+    description:
+      "Todas as suas corridas com pace, distância e duração. Com gráfico de barras por volume para leitura rápida.",
+    featured: false,
+  },
+  {
+    icon: Star,
+    title: "Última corrida em destaque",
+    description:
+      "A corrida mais recente com pace médio, tempo em movimento e comparação com a média do período.",
+    featured: false,
+  },
+  {
+    icon: Lock,
+    title: "Privacidade primeiro",
+    description:
+      "Permissão mínima de leitura. O CTT nunca escreve, apaga ou compartilha seus dados do Strava.",
+    featured: false,
   },
 ] as const
 
@@ -32,34 +60,56 @@ export function LandingProject() {
       id="projeto"
       className="scroll-mt-20 border-b border-border/80 bg-white py-20 sm:py-24"
     >
-      <div className="mx-auto max-w-6xl px-6 sm:px-6">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Section header */}
         <div className="max-w-2xl space-y-4">
-          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-medium tracking-tight text-slate-950">
-            O que é o {siteConfig.name}
+          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-semibold tracking-tight text-slate-950">
+            O que você vê quando conecta
           </h2>
           <p className="text-lg text-slate-600">
-            Um estudo de caso de produto digital para corredores: conectar dados
-            do Strava, consolidar sinais de treino e apoiar decisões semana a
-            semana — com interface consistente e componentes documentados.
+            Não são só gráficos. São respostas para as perguntas que você faz
+            depois de cada semana de treino.
           </p>
         </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {pillars.map((item) => (
-            <Card
+
+        {/* Feature cards */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((item) => (
+            <div
               key={item.title}
-              className="glass-panel luxury-enter border-slate-200/60 shadow-[0_6px_30px_-24px_rgba(2,6,23,0.3)] transition-all duration-200 hover:border-[#E8450A]/30 hover:shadow-sm"
+              className={cn(
+                "flex flex-col gap-4 rounded-2xl border p-6 transition-all duration-200",
+                item.featured
+                  ? "border-[#E8450A] bg-[#E8450A] text-white hover:bg-[#C73D09]"
+                  : "border-slate-200/70 bg-white hover:border-[#E8450A]/30 hover:shadow-sm"
+              )}
             >
-              <CardHeader>
-                <item.icon
-                  className="mb-2 size-8 text-[#0F6E56]"
-                  aria-hidden
-                />
-                <CardTitle className="text-lg text-slate-900">{item.title}</CardTitle>
-                <CardDescription className="text-base leading-relaxed text-slate-600">
-                  {item.text}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+              <item.icon
+                className={cn(
+                  "size-6 shrink-0",
+                  item.featured ? "text-white/80" : "text-[#E8450A]"
+                )}
+                aria-hidden
+              />
+              <div className="space-y-1.5">
+                <h3
+                  className={cn(
+                    "text-base font-semibold",
+                    item.featured ? "text-white" : "text-slate-900"
+                  )}
+                >
+                  {item.title}
+                </h3>
+                <p
+                  className={cn(
+                    "text-sm leading-relaxed",
+                    item.featured ? "text-white/80" : "text-slate-600"
+                  )}
+                >
+                  {item.description}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       </div>

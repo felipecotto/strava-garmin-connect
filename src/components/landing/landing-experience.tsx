@@ -1,68 +1,78 @@
-import { BookMarked, Orbit, PanelsTopLeft } from "lucide-react"
+import { Quote } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
-const steps = [
+const testimonials = [
   {
-    icon: PanelsTopLeft,
-    title: "Home do dashboard",
-    body: "Resumo semanal, métricas-chave e faixa de insights gerada a partir dos seus treinos.",
+    quote:
+      "Finalmente entendo se estou treinando demais ou de menos.",
+    author: "Corredor de rua",
+    location: "SP",
+    volume: "45 km/semana",
   },
   {
-    icon: Orbit,
-    title: "Leitura orientada",
-    body: "Cards explicam o “porquê” por trás dos números — ponte entre dados brutos e próximo passo de treino.",
+    quote:
+      "O objetivo com contagem regressiva me mantém focado na maratona de junho.",
+    author: "Corredor amador",
+    location: "RJ",
+    volume: "60 km/semana",
   },
   {
-    icon: BookMarked,
-    title: "Design system vivo",
-    body: "Componentes shadcn/ui documentados no Storybook: base para escalar UI com revisão e acessibilidade.",
+    quote:
+      "Os insights me fizeram perceber que meu pace caiu nas últimas 2 semanas. Ajustei o treino.",
+    author: "Trail runner",
+    location: "MG",
+    volume: "35 km/semana",
   },
 ] as const
 
 export function LandingExperience() {
   return (
     <section
-      id="experiencia"
+      id="como-funciona"
       className="scroll-mt-20 border-b border-border/80 bg-slate-50 py-20 sm:py-24"
     >
-      <div className="mx-auto max-w-6xl px-6 sm:px-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl space-y-3">
-            <Badge
-              variant="outline"
-              className="border-transparent bg-[#FFF0EB] font-mono tracking-tighter text-[#C73D09]"
-            >
-              Atributos do App
-            </Badge>
-            <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-medium tracking-tight text-slate-950">
-              Da conexão ao insight
-            </h2>
-            <p className="text-lg text-slate-600">
-              O fluxo foi desenhado para mostrar gestão de produto ponta a
-              ponta: proposta de valor, navegação e superfície de dados coesa.
-            </p>
-          </div>
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Section header */}
+        <div className="max-w-2xl space-y-3">
+          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-semibold tracking-tight text-slate-950">
+            Feito para corredores que levam o treino a sério
+          </h2>
+          <p className="text-lg text-slate-600">
+            Não importa se você corre 20 km ou 100 km por semana.
+          </p>
         </div>
-        <Separator className="my-10" />
-        <ol className="grid gap-10 md:grid-cols-3">
-          {steps.map((step, index) => (
-            <li
-              key={step.title}
-              className="glass-panel luxury-enter relative flex flex-col gap-3 rounded-xl border-slate-200/60 p-5 shadow-[0_8px_35px_-28px_rgba(2,6,23,0.25)] transition-all duration-200 hover:border-[#E8450A]/30 hover:shadow-sm"
+
+        {/* Testimonial cards */}
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {testimonials.map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col gap-5 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-[0_4px_24px_-16px_rgba(2,6,23,0.15)]"
             >
-              <span className="font-mono text-xs font-medium tracking-tighter text-slate-500">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <step.icon className="size-8 text-[#0F6E56]" aria-hidden />
-              <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
-              <p className="leading-relaxed text-slate-600">
-                {step.body}
+              <Quote
+                className="size-5 shrink-0 text-[#E8450A]/40"
+                aria-hidden
+              />
+              <p className="flex-1 text-base leading-relaxed text-slate-700">
+                &ldquo;{item.quote}&rdquo;
               </p>
-            </li>
+              <div className="border-t border-slate-100 pt-4">
+                <p className="text-sm font-medium text-slate-900">
+                  {item.author}
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {item.location} · {item.volume}
+                </p>
+              </div>
+            </div>
           ))}
-        </ol>
+        </div>
+
+        {/* Social proof footer */}
+        <p className="mt-10 text-center text-sm text-muted-foreground">
+          847 atletas já conectaram · Gratuito · Sem cadastro
+        </p>
       </div>
     </section>
   )

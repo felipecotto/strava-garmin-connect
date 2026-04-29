@@ -21,14 +21,14 @@ export function LandingDeveloper() {
       <div className="mx-auto max-w-6xl px-6 sm:px-6">
         <div className="max-w-2xl space-y-3">
           <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
-            Portfólio
+            Quem faz
           </p>
-          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-medium tracking-tight text-slate-950">
-            Quem está desenvolvendo
+          <h2 className="text-[clamp(2rem,3vw,2.25rem)] font-semibold tracking-tight text-slate-950">
+            Quem está por trás do CTT
           </h2>
           <p className="text-lg text-slate-600">
-            Product design, design system e front-end em um único fluxo — da
-            narrativa da landing às telas do dashboard.
+            Desenvolvido por um designer que também corre — e queria uma
+            ferramenta melhor.
           </p>
         </div>
 
@@ -57,10 +57,13 @@ export function LandingDeveloper() {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center gap-8 p-8 sm:p-10">
+            <div className="flex flex-col justify-center gap-6 p-8 sm:p-10">
               <p className="text-pretty text-base leading-relaxed text-slate-600">
                 {siteConfig.author.bio}
               </p>
+              <div className="inline-flex w-fit rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 font-mono text-[11px] text-slate-500">
+                Open source · usectt.com.br · Next.js + shadcn/ui + Strava API
+              </div>
               <div className="flex flex-wrap gap-2">
                 {socialLinks.map((item) => (
                   <Link
