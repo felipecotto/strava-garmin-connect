@@ -17,11 +17,13 @@ export function ConnectedBanner() {
   }
 
   return (
-    <div className="border-b border-border/60 bg-primary/10 px-4 py-3 text-sm text-foreground sm:px-6">
+    <div className="border-b border-[var(--line)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--ink)] sm:px-6">
       <div className="mx-auto flex max-w-6xl items-start justify-between gap-4">
         <p>
-          <span className="font-medium">Strava conectado.</span> Os dados do
-          dashboard vêm da API conforme as permissões que você autorizou.
+          <span className="font-heading font-semibold">Strava conectado.</span>{" "}
+          <span className="text-[var(--ink-soft)]">
+            Os dados vêm da API conforme as permissões autorizadas.
+          </span>
         </p>
         <Button
           type="button"

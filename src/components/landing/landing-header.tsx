@@ -2,28 +2,27 @@ import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 
-const nav = [
-  { href: "#projeto", label: "O produto" },
-  { href: "#como-funciona", label: "Como funciona" },
-  { href: "#desenvolvedor", label: "Sobre" },
-] as const
-
 export function LandingHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-black/[0.08] bg-white/90 backdrop-blur-md">
-      <div className="relative mx-auto flex h-14 max-w-6xl items-center px-6">
+    <header className="sticky top-0 z-50 border-b border-[color-mix(in_srgb,var(--line)_55%,transparent)] bg-[color-mix(in_srgb,var(--bg)_78%,transparent)] backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-6 sm:px-8">
         <Link
           href="/"
-          className="shrink-0 font-semibold tracking-tight text-[#E8450A]"
+          className="font-mono text-[15px] font-bold tracking-tight text-[var(--ink)]"
         >
-          CTT.
+          <span className="mr-2 inline-block size-[7px] rounded-[2px] bg-[var(--brand)] align-middle shadow-[0_0_12px_color-mix(in_srgb,var(--accent)_55%,transparent)]" />
+          {siteConfig.name}
         </Link>
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-sm text-muted-foreground md:flex">
-          {nav.map((item) => (
+        <nav className="hidden items-center gap-8 md:flex">
+          {[
+            { href: "#foreword", label: "FOREWORD" },
+            { href: "#recordes", label: "RECORDES" },
+            { href: "#dados", label: "DADOS" },
+          ].map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="transition-colors duration-200 hover:text-[#E8450A]"
+              className="font-mono text-[13px] text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)]"
             >
               {item.label}
             </a>
@@ -31,9 +30,9 @@ export function LandingHeader() {
         </nav>
         <Link
           href={siteConfig.connectStravaPath}
-          className="ml-auto shrink-0 rounded-lg bg-[#E8450A] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-[#C73D09]"
+          className="rounded-full border border-[color-mix(in_srgb,var(--ink)_18%,transparent)] bg-[color-mix(in_srgb,white_45%,transparent)] px-4 py-2 font-mono text-[13px] text-[var(--ink)] shadow-soft backdrop-blur-sm transition-all hover:border-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--bg)]"
         >
-          Conectar Strava
+          CONECTAR STRAVA →
         </Link>
       </div>
     </header>

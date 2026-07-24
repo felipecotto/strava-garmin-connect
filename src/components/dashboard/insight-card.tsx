@@ -1,49 +1,35 @@
-import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import type { DashboardInsight } from "@/lib/strava/aggregate"
 import { cn } from "@/lib/utils"
-
-export type InsightTone = "positive" | "neutral" | "tip"
-
-export type InsightCardProps = {
-  title: string
-  body: string
-  tone?: InsightTone
-  className?: string
-}
-
-const toneLabel: Record<InsightTone, string> = {
-  positive: "Sinal positivo",
-  neutral: "Atenção",
-  tip: "Sugestão",
-}
 
 export function InsightCard({
   title,
   body,
-  tone = "neutral",
+  tone,
   className,
-}: InsightCardProps) {
+}: {
+  title: string
+  body: string
+  tone?: DashboardInsight["tone"]
+  className?: string
+}) {
   return (
-    <Card
+    <div
       className={cn(
-        "border-border/80 shadow-none transition-colors hover:border-primary/20",
+        "surface-soft rounded-[24px] px-4 py-4",
         className
       )}
     >
-      <CardHeader className="gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="secondary">{toneLabel[tone]}</Badge>
-        </div>
-        <CardTitle className="text-lg leading-snug">{title}</CardTitle>
-        <CardDescription className="text-base leading-relaxed text-muted-foreground">
-          {body}
-        </CardDescription>
-      </CardHeader>
-    </Card>
+      <p className="font-heading text-sm font-semibold text-[var(--ink)]">
+        {title}
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
+        {body}
+      </p>
+      {tone ? (
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--label)]">
+          {tone}
+        </p>
+      ) : null}
+    </div>
   )
 }

@@ -2,6 +2,33 @@
  * Gera slug válido para profiles.slug
  * Constraint: ^[a-z0-9]([a-z0-9-]{1,28}[a-z0-9])?$ (3–30 chars)
  */
+
+export const RESERVED_SLUGS = new Set([
+  "dashboard",
+  "perfil",
+  "connect",
+  "api",
+  "settings",
+  "login",
+  "logout",
+  "admin",
+  "app",
+  "static",
+  "favicon.ico",
+  "robots.txt",
+  "sitemap.xml",
+  "opengraph-image",
+])
+
+export function isValidSlug(slug: string): boolean {
+  return (
+    slug.length >= 3 &&
+    slug.length <= 30 &&
+    /^[a-z0-9]([a-z0-9-]{1,28}[a-z0-9])?$/.test(slug) &&
+    !RESERVED_SLUGS.has(slug)
+  )
+}
+
 export function sanitizeSlug(raw: string): string {
   const cleaned = raw
     .normalize("NFD")

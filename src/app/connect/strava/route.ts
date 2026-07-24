@@ -3,14 +3,14 @@ import { NextResponse } from "next/server"
 import { getAppOrigin, getStravaOAuthConfig, isStravaConfigured } from "@/lib/strava/env"
 import { createStravaOAuthState } from "@/lib/strava/oauth-state"
 
-export async function GET() {
-  const origin = getAppOrigin()
+export async function GET(request: Request) {
+  const origin = getAppOrigin(request)
 
   if (!isStravaConfigured()) {
-    return NextResponse.redirect(new URL("/dashboard?error=config", origin))
+    return NextResponse.redirect(new URL("/?error=config", origin))
   }
 
-  const { clientId, redirectUri } = getStravaOAuthConfig()
+  const { clientId, redirectUri } = getStravaOAuthConfig(request)
   const state = createStravaOAuthState()
 
   const authorize = new URL("https://www.strava.com/oauth/authorize")

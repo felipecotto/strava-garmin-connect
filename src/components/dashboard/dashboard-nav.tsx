@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutGrid, Menu, User } from "lucide-react"
+import { Menu } from "lucide-react"
 
 import { buttonVariants } from "@/components/ui/button"
 import {
@@ -15,8 +15,9 @@ import {
 import { cn } from "@/lib/utils"
 
 const links = [
-  { href: "/dashboard", label: "Início", icon: LayoutGrid },
-  { href: "/dashboard/profile", label: "Perfil", icon: User },
+  { href: "/dashboard", label: "Arquivo" },
+  { href: "/dashboard/profile", label: "Conta" },
+  { href: "/dashboard/settings", label: "Settings" },
 ] as const
 
 function NavLinks({
@@ -29,8 +30,13 @@ function NavLinks({
   const pathname = usePathname()
 
   return (
-    <nav className={cn("flex flex-col gap-1 md:flex-row md:items-center", className)}>
-      {links.map(({ href, label, icon: Icon }) => {
+    <nav
+      className={cn(
+        "flex flex-col gap-1 md:flex-row md:items-center md:gap-6",
+        className
+      )}
+    >
+      {links.map(({ href, label }) => {
         const active =
           href === "/dashboard"
             ? pathname === "/dashboard"
@@ -41,13 +47,12 @@ function NavLinks({
             href={href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "font-mono text-[13px] transition-colors",
               active
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "text-[var(--ink)]"
+                : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
             )}
           >
-            <Icon className="size-4" aria-hidden />
             {label}
           </Link>
         )
@@ -58,20 +63,15 @@ function NavLinks({
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--line)_55%,transparent)] bg-[color-mix(in_srgb,var(--bg)_78%,transparent)] backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="text-sm font-bold tracking-tighter text-foreground"
-          >
-            CTT.
-          </Link>
-          <span className="hidden text-muted-foreground md:inline">/</span>
-          <span className="hidden text-sm text-muted-foreground md:inline">
-            Dashboard
-          </span>
-        </div>
+        <Link
+          href="/"
+          className="font-mono text-[15px] font-bold tracking-tight text-[var(--ink)]"
+        >
+          <span className="mr-2 inline-block size-[7px] rounded-[2px] bg-[var(--brand)] align-middle shadow-[0_0_12px_color-mix(in_srgb,var(--accent)_55%,transparent)]" />
+          CTT
+        </Link>
 
         <NavLinks className="hidden md:flex" />
 
@@ -85,9 +85,12 @@ export function DashboardHeader() {
             >
               <Menu className="size-4" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-[min(100%,20rem)]">
+            <SheetContent
+              side="right"
+              className="w-[min(100%,20rem)] border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_92%,white)]"
+            >
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle className="font-heading">Menu</SheetTitle>
               </SheetHeader>
               <NavLinks className="mt-6" />
             </SheetContent>

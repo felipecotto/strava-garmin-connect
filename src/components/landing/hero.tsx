@@ -1,115 +1,186 @@
-import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Lock } from "lucide-react"
 
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Atmosphere } from "@/components/ui/atmosphere"
 import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
+import type { PublicProfileData } from "@/lib/profile/get-public-profile"
+import {
+  formatDuration,
+  formatKm,
+  formatPace,
+} from "@/lib/profile/stats"
 
-const RUNNER_IMAGE = "/images/hero-runner.png"
+function formatLogDate(iso: string) {
+  const d = new Date(iso)
+  return d
+    .toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })
+    .replace(".", "")
+    .toUpperCase()
+}
 
-export function Hero() {
+export function Hero({ featured }: { featured: PublicProfileData | null }) {
+  const stats = featured?.stats
+  const recent = featured?.recentRuns.slice(0, 4) ?? []
+
   return (
-    <section className="border-b border-black/[0.08] bg-white py-12 lg:py-20">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-5 lg:gap-10">
-          {/* ── Left copy ── */}
-          <div className="space-y-8 lg:col-span-3">
-            {/* Badge */}
-            <div className="inline-flex w-fit items-center rounded-full border border-[#E8450A]/15 bg-[#FFF0EB] px-3 py-1.5 font-mono text-[11px] font-medium tracking-tighter text-[#C73D09]">
-              Conecta com Strava · gratuito
-            </div>
+    <section className="relative border-b-0 pb-0 pt-14">
+      <Atmosphere intensity="strong" className="opacity-90" />
 
-            {/* Heading + subtitle */}
-            <div className="space-y-5">
-              <h1 className="max-w-[22ch] text-[clamp(3rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight text-slate-950">
-                Pare de adivinhar seu treino.
-              </h1>
-              <p className="max-w-lg text-base text-muted-foreground">
-                {siteConfig.description}
+      <div className="relative mx-auto max-w-[1180px] px-6 sm:px-8">
+        <div className="flex justify-between pb-8 font-mono text-xs tracking-[0.02em] text-[var(--label)]">
+          <span>ARQUIVO DE PERFORMANCE</span>
+          <span className="inline-flex items-center gap-1.5 text-[var(--brand)]">
+            <span className="size-1.5 rounded-full bg-[var(--brand)] shadow-[0_0_10px_var(--brand)]" />
+            SYNC ATIVO — STRAVA API
+          </span>
+        </div>
+
+        <h1 className="font-heading text-[clamp(52px,10vw,128px)] font-extrabold leading-[0.88] tracking-[-0.04em] text-[var(--ink)] uppercase">
+          O QUE VOCÊ
+          <br />
+          TREINOU,
+          <br />
+          <span className="text-transparent [-webkit-text-stroke:1.5px_var(--ink)]">
+            FICA
+          </span>{" "}
+          REGISTRADO.
+        </h1>
+
+        <p className="max-w-[520px] py-6 font-mono text-[13px] leading-relaxed tracking-[0.01em] text-[var(--label)]">
+          SEM FEED. SEM RANKING. SEM FRASE DE EFEITO.
+          <br />
+          SÓ O HISTÓRICO — PACE, VOLUME, FREQUÊNCIA — DO JEITO QUE ACONTECEU.
+        </p>
+
+        <div className="surface-soft rounded-[28px] px-5 py-7 sm:px-7">
+          <div className="mb-4 flex flex-wrap justify-between gap-2 font-mono text-[11px] text-[var(--label)]">
+            <span>
+              EXEMPLO DE ARQUIVO
+              {featured ? ` — ${featured.profile.display_name.toUpperCase()}` : ""}
+            </span>
+            <span>CONECTE O SEU STRAVA PRA VER O SEU PRÓPRIO</span>
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div>
+              <p className="font-mono text-[clamp(28px,4vw,46px)] font-extrabold leading-none tracking-[-0.02em] text-[var(--ink)]">
+                {stats ? stats.totalRuns.toLocaleString("pt-BR") : "—"}
+              </p>
+              <p className="mt-2 font-mono text-[11px] uppercase text-[var(--label)]">
+                Atividades
               </p>
             </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button
-                size="lg"
-                render={<Link href={siteConfig.connectStravaPath} />}
-                className="h-11 w-full justify-center gap-2 rounded-lg bg-[#E8450A] px-5 text-base font-medium text-white shadow-sm shadow-[#E8450A]/20 transition-[background-color,transform] duration-150 hover:bg-[#C73D09] active:scale-95 sm:w-auto"
-              >
-                <span aria-hidden className="inline-flex size-4 items-center justify-center">
-                  <svg viewBox="0 0 16 16" className="size-3.5 fill-current">
-                    <path d="M8 1.2 5.1 7h1.95L8 5.25 8.95 7h1.95L8 1.2Zm3.25 6.8L8 14.8 4.75 8h1.9L8 10.95 9.35 8h1.9Z" />
-                  </svg>
-                </span>
-                Conectar com Strava — é gratuito
-              </Button>
-              <Link
-                href="/dashboard"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "h-11 w-full justify-center gap-2 rounded-lg border-slate-200 bg-white text-slate-800 transition-colors duration-150 hover:bg-slate-50 sm:w-auto"
-                )}
-              >
-                Ver dashboard
-                <ArrowRight className="size-4" aria-hidden />
-              </Link>
+            <div className="sm:border-l sm:border-[color-mix(in_srgb,var(--line)_80%,transparent)] sm:pl-6">
+              <p className="font-mono text-[clamp(28px,4vw,46px)] font-extrabold leading-none tracking-[-0.02em] text-[var(--ink)]">
+                {stats ? formatKm(stats.totalDistanceM, 0) : "—"}
+              </p>
+              <p className="mt-2 font-mono text-[11px] uppercase text-[var(--label)]">
+                Km percorridos
+              </p>
             </div>
-
-            {/* Privacy proof */}
-            <div className="flex items-center gap-2 pt-1">
-              <Lock className="size-3.5 shrink-0 text-muted-foreground/60" aria-hidden />
-              <p className="text-xs text-muted-foreground">
-                Seus dados ficam no Strava. O CTT só lê, nunca escreve.
+            <div className="sm:border-l sm:border-[color-mix(in_srgb,var(--line)_80%,transparent)] sm:pl-6">
+              <p className="font-mono text-[clamp(28px,4vw,46px)] font-extrabold leading-none tracking-[-0.02em] text-[var(--ink)]">
+                {stats
+                  ? Math.round(stats.totalMovingTimeS / 3600).toLocaleString(
+                      "pt-BR"
+                    )
+                  : "—"}
+              </p>
+              <p className="mt-2 font-mono text-[11px] uppercase text-[var(--label)]">
+                Horas treinadas
               </p>
             </div>
           </div>
+        </div>
 
-          {/* ── Right visual ── */}
-          <div className="relative min-h-[420px] overflow-hidden rounded-2xl bg-[#111] lg:col-span-2 lg:min-h-[560px]">
-            <Image
-              src={RUNNER_IMAGE}
-              alt="Corredor em movimento em trilha arborizada"
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 40vw"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/40" aria-hidden />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0d1f19] to-transparent"
-              aria-hidden
-            />
+        <div className="flex items-center justify-between gap-4 py-10">
+          <Link
+            href={siteConfig.connectStravaPath}
+            className="cta-gradient grain-surface inline-flex items-center gap-2 rounded-full px-[28px] py-4 text-sm font-bold text-[var(--bg)] shadow-lift transition-[filter] hover:brightness-110"
+          >
+            Criar meu arquivo →
+          </Link>
+          <a
+            href="#foreword"
+            className="font-mono text-[13px] text-[var(--ink-soft)] underline decoration-[color-mix(in_srgb,var(--line)_90%,transparent)] underline-offset-4 transition-colors hover:text-[var(--ink)]"
+          >
+            por que existe ↓
+          </a>
+        </div>
+      </div>
 
-            <div className="absolute top-6 right-6 z-10 w-[min(100%,220px)] rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
-              <p className="text-xs font-medium text-muted-foreground">Atividade recente</p>
-              <p className="mt-1 font-medium text-slate-900">Corrida matinal</p>
-              <div className="mt-3 grid grid-cols-2 gap-2 font-mono text-xs tracking-tighter text-slate-700">
-                <span>10.4 km</span>
-                <span>5:38/km</span>
-                <span>58 min</span>
-                <span>312 m</span>
-              </div>
-            </div>
-
-            <div className="absolute bottom-28 left-4 z-10 w-[min(100%,200px)] rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
-              <p className="text-xs font-medium text-muted-foreground">Pace da semana</p>
-              <p className="mt-1 font-mono text-sm font-semibold tracking-tighter text-slate-900">
-                5:28 /km · média
-              </p>
-              <p className="mt-2 text-xs font-medium text-[#0F6E56]">↑ 8s mais rápido</p>
-            </div>
-
-            <div className="absolute bottom-8 right-4 z-10 w-[min(100%,200px)] rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
-              <p className="text-xs font-medium text-muted-foreground">Meta — Maratona do Rio</p>
-              <p className="mt-1 font-mono text-sm font-semibold tracking-tighter text-slate-900">
-                39 dias restantes
-              </p>
-            </div>
-
-            <p className="absolute bottom-4 left-4 right-4 z-10 text-center text-sm text-white/40">
-              São Paulo · Parque Ibirapuera
-            </p>
+      <div className="relative mt-4 overflow-hidden rounded-t-[28px] bg-[var(--ink)] font-mono text-[12.5px] text-[#EDEDE8] shadow-lift sm:mx-6 lg:mx-auto lg:max-w-[1180px]">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-overlay [background-image:var(--noise)] [background-size:140px]" />
+        <div className="relative">
+          <div className="mx-auto flex max-w-[1180px] justify-between border-b border-[#333330] px-6 py-3.5 text-[11px] text-[#8A8A82] sm:px-8">
+            <span>LOG // ÚLTIMAS ATIVIDADES</span>
+            <span>REGISTRO CONTÍNUO</span>
+          </div>
+          <div className="mx-auto max-w-[1180px] overflow-x-auto px-6 sm:px-8">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b border-[#333330] text-left text-[11px] font-medium text-[#7A7A72]">
+                  <th className="py-3.5 pr-4">DATA</th>
+                  <th className="py-3.5 pr-4">TIPO</th>
+                  <th className="py-3.5 pr-4">DIST.</th>
+                  <th className="py-3.5 pr-4">PACE</th>
+                  <th className="py-3.5 pr-4">DUR.</th>
+                  <th className="py-3.5">STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-[#8A8A82]">
+                      Sem atividades sincronizadas.
+                    </td>
+                  </tr>
+                ) : (
+                  recent.map((run) => (
+                    <tr
+                      key={run.id}
+                      className="border-b border-[#262623] last:border-b-0"
+                    >
+                      <td className="py-3.5 pr-4 font-medium text-[#EDEDE8]">
+                        {formatLogDate(run.start_date_local)}
+                      </td>
+                      <td className="py-3.5 pr-4 text-[#D8D8D2]">
+                        {run.sport_type}
+                      </td>
+                      <td className="py-3.5 pr-4 font-medium text-[#EDEDE8]">
+                        {formatKm(Number(run.distance_m))} KM
+                      </td>
+                      <td className="py-3.5 pr-4 font-medium text-[#EDEDE8]">
+                        {formatPace(
+                          Number(run.distance_m),
+                          run.moving_time_s
+                        ).toUpperCase()}
+                      </td>
+                      <td className="py-3.5 pr-4 font-medium text-[#EDEDE8]">
+                        {formatDuration(run.moving_time_s)}
+                      </td>
+                      <td className="py-3.5 text-[11px] text-[var(--brand)]">
+                        OK
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="mx-auto flex max-w-[1180px] justify-between px-6 py-4 text-[11px] text-[#6E6E66] sm:px-8">
+            <span>
+              MOSTRANDO {recent.length}
+              {stats ? ` DE ${stats.totalRuns.toLocaleString("pt-BR")}` : ""}{" "}
+              REGISTROS
+            </span>
+            <span>
+              {featured
+                ? `ATLETA: ${featured.profile.display_name.toUpperCase()}${
+                    featured.profile.city
+                      ? ` — ${featured.profile.city.toUpperCase()}`
+                      : ""
+                  }`
+                : "—"}
+            </span>
           </div>
         </div>
       </div>

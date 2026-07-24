@@ -11,18 +11,18 @@ function AlertBox({
 }) {
   const styles =
     variant === "destructive"
-      ? "border-destructive/40 bg-destructive/5 text-destructive"
+      ? "border-destructive/40 bg-[var(--bg)] text-destructive"
       : variant === "success"
-        ? "border-primary/30 bg-primary/5 text-foreground"
-        : "border-border bg-muted/40 text-foreground"
+        ? "border-[var(--accent)]/40 bg-[var(--bg)] text-[var(--ink)]"
+        : "border-[var(--line)] bg-[var(--bg-alt)] text-[var(--ink)]"
 
   return (
     <div
       role="alert"
-      className={`rounded-xl border px-4 py-3 text-sm ${styles}`}
+      className={`border px-4 py-3 text-sm ${styles}`}
     >
-      <p className="font-medium">{title}</p>
-      <div className="mt-1 text-muted-foreground [&_a]:font-medium [&_a]:text-primary [&_a]:underline-offset-4 [&_a]:hover:underline">
+      <p className="font-heading font-semibold">{title}</p>
+      <div className="mt-1 text-[var(--ink-soft)] [&_a]:font-medium [&_a]:text-[var(--ink)] [&_a]:underline-offset-4 [&_a]:hover:underline [&_code]:font-mono [&_code]:text-[var(--ink)]">
         {children}
       </div>
     </div>
@@ -46,13 +46,11 @@ const errorCopy: Record<string, { title: string; body: ReactNode }> = {
     title: "Strava não configurado neste deploy",
     body: (
       <>
-        O servidor não encontrou <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_ID</code>{" "}
-        e/ou <code className="rounded bg-muted px-1 py-0.5">STRAVA_CLIENT_SECRET</code>. Na{" "}
-        <strong>Vercel</strong>, abra o projeto → Settings → Environment Variables e
-        preencha para <strong>Production</strong> e para <strong>Preview</strong> (deploys
-        de branch usam Preview; sem essas chaves o app cai aqui). Depois:{" "}
-        <code className="rounded bg-muted px-1 py-0.5">SESSION_SECRET</code> (≥32 caracteres) e,
-        se quiser URL fixa, <code className="rounded bg-muted px-1 py-0.5">STRAVA_REDIRECT_URI</code>.
+        O servidor não encontrou <code>STRAVA_CLIENT_ID</code> e/ou{" "}
+        <code>STRAVA_CLIENT_SECRET</code>. Na Vercel, abra o projeto → Settings →
+        Environment Variables e preencha para Production e Preview. Depois:{" "}
+        <code>SESSION_SECRET</code> (≥32 caracteres) e, se quiser URL fixa,{" "}
+        <code>STRAVA_REDIRECT_URI</code>.
       </>
     ),
   },
@@ -60,9 +58,9 @@ const errorCopy: Record<string, { title: string; body: ReactNode }> = {
     title: "Conta Strava conectada, mas o perfil não foi criado",
     body: (
       <>
-        Confira <code className="rounded bg-muted px-1 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> e{" "}
-        <code className="rounded bg-muted px-1 py-0.5">SUPABASE_SERVICE_ROLE_KEY</code> no{" "}
-        <code className="rounded bg-muted px-1 py-0.5">.env</code> / Vercel e tente conectar de novo.
+        Confira <code>NEXT_PUBLIC_SUPABASE_URL</code> e{" "}
+        <code>SUPABASE_SERVICE_ROLE_KEY</code> no <code>.env</code> / Vercel e
+        tente conectar de novo.
       </>
     ),
   },

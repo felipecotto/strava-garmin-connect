@@ -27,9 +27,25 @@ export function normalizeRedirectUri(uri: string): string {
 
 const CALLBACK_PATH = "/api/auth/strava/callback"
 
+function isLocalDev(): boolean {
+  return process.env.NODE_ENV === "development"
+}
+
+function originFromRequest(request?: Request): string | null {
+  if (!request) {
+    return null
+  }
+  try {
+    return new URL(request.url).origin
+  } catch {
+    return null
+  }
+}
+
 /**
  * Quando STRAVA_REDIRECT_URI está definido com o domínio de produção (ex.: usectt.com.br),
  * reutilizamos essa origem para redirects — evita ficar preso ao hostname antigo de VERCEL_URL.
+ * Em development isso é ignorado (ver getAppOrigin).
  */
 function getOriginFromStravaRedirectUri(): string | null {
   const raw = process.env.STRAVA_REDIRECT_URI?.trim()
@@ -46,21 +62,26 @@ function getOriginFromStravaRedirectUri(): string | null {
 
 /**
  * Mesmo valor em /authorize e em POST /oauth/token.
- * Se STRAVA_REDIRECT_URI não existir, usa origem atual + path (útil na Vercel).
+ * Em development: sempre localhost (ignora STRAVA_REDIRECT_URI de produção).
+ * Em produção: STRAVA_REDIRECT_URI ou origem canônica + path.
  */
-export function getStravaRedirectUri(): string {
+export function getStravaRedirectUri(request?: Request): string {
+  if (isLocalDev()) {
+    return normalizeRedirectUri(`${getAppOrigin(request)}${CALLBACK_PATH}`)
+  }
+
   const fromEnv = process.env.STRAVA_REDIRECT_URI?.trim()
   if (fromEnv) {
     return normalizeRedirectUri(fromEnv)
   }
-  return normalizeRedirectUri(`${getAppOrigin()}${CALLBACK_PATH}`)
+  return normalizeRedirectUri(`${getAppOrigin(request)}${CALLBACK_PATH}`)
 }
 
-export function getStravaOAuthConfig() {
+export function getStravaOAuthConfig(request?: Request) {
   return {
     clientId: required("STRAVA_CLIENT_ID"),
     clientSecret: required("STRAVA_CLIENT_SECRET"),
-    redirectUri: getStravaRedirectUri(),
+    redirectUri: getStravaRedirectUri(request),
   }
 }
 
@@ -70,7 +91,7 @@ export function getSessionSecret() {
   if (v && v.length >= 32) {
     return v
   }
-  if (process.env.NODE_ENV === "development") {
+  if (isLocalDev()) {
     return "pace-insights-dev-only-secret-32chars-min!!"
   }
   throw new Error(
@@ -80,12 +101,18 @@ export function getSessionSecret() {
 
 /**
  * Origem usada em redirects OAuth (callback, erros).
- * 1) NEXT_PUBLIC_APP_URL — canônico do site (recomendado em produção com domínio próprio).
- * 2) Origem derivada de STRAVA_REDIRECT_URI — alinha com o callback configurado no Strava.
- * 3) VERCEL_URL — deploy na Vercel (pode ser *.vercel.app, não o domínio custom).
- * 4) localhost em dev.
+ * Development: origem do request (localhost) — ignora NEXT_PUBLIC_APP_URL de produção.
+ * Produção:
+ * 1) NEXT_PUBLIC_APP_URL
+ * 2) Origem derivada de STRAVA_REDIRECT_URI
+ * 3) VERCEL_URL
+ * 4) localhost fallback
  */
-export function getAppOrigin(): string {
+export function getAppOrigin(request?: Request): string {
+  if (isLocalDev()) {
+    return originFromRequest(request) ?? "http://localhost:3000"
+  }
+
   const explicit = process.env.NEXT_PUBLIC_APP_URL?.trim()
   if (explicit) {
     return explicit.replace(/\/$/, "")

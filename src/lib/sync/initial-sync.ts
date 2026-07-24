@@ -2,6 +2,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { fetchActivitiesPage } from "@/lib/strava/api"
 import { mapStravaActivityToRow } from "@/lib/strava/map-activity"
 import type { StravaActivity } from "@/lib/strava/types"
+import { recomputeProfileAggregates } from "@/lib/sync/recompute-stats"
 
 /** ~2 anos — suficiente para PRs e volume sem estourar rate limit no onboarding. */
 const DEFAULT_LOOKBACK_DAYS = 730
@@ -127,6 +128,8 @@ export async function syncInitialActivities(
     if (cursorError) {
       throw new Error(`Falha ao atualizar sync_cursors: ${cursorError.message}`)
     }
+
+    await recomputeProfileAggregates(profileId)
 
     const { error: readyError } = await supabase
       .from("profiles")

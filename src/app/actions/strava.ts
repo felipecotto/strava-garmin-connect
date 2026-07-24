@@ -122,5 +122,5 @@ export async function logoutStrava() {
 
   session.destroy()
   await session.save()
-  redirect("/dashboard?disconnected=1")
+  redirect("/?disconnected=1")
 }

@@ -169,6 +169,106 @@ export type Database = {
           },
         ]
       }
+      profile_stats: {
+        Row: {
+          profile_id: string
+          total_runs: number
+          total_distance_m: number
+          total_moving_time_s: number
+          total_elevation_m: number
+          current_streak_days: number
+          longest_streak_days: number
+          ytd_distance_m: number
+          ytd_runs: number
+          last_30d_distance_m: number
+          last_30d_runs: number
+          last_activity_at: string | null
+          monthly_volume: Json
+          updated_at: string
+        }
+        Insert: {
+          profile_id: string
+          total_runs?: number
+          total_distance_m?: number
+          total_moving_time_s?: number
+          total_elevation_m?: number
+          current_streak_days?: number
+          longest_streak_days?: number
+          ytd_distance_m?: number
+          ytd_runs?: number
+          last_30d_distance_m?: number
+          last_30d_runs?: number
+          last_activity_at?: string | null
+          monthly_volume?: Json
+          updated_at?: string
+        }
+        Update: {
+          profile_id?: string
+          total_runs?: number
+          total_distance_m?: number
+          total_moving_time_s?: number
+          total_elevation_m?: number
+          current_streak_days?: number
+          longest_streak_days?: number
+          ytd_distance_m?: number
+          ytd_runs?: number
+          last_30d_distance_m?: number
+          last_30d_runs?: number
+          last_activity_at?: string | null
+          monthly_volume?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_stats_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personal_records: {
+        Row: {
+          id: string
+          profile_id: string
+          distance_key: string
+          distance_m: number
+          moving_time_s: number
+          activity_id: number | null
+          activity_name: string | null
+          achieved_at: string
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          distance_key: string
+          distance_m: number
+          moving_time_s: number
+          activity_id?: number | null
+          activity_name?: string | null
+          achieved_at: string
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          distance_key?: string
+          distance_m?: number
+          moving_time_s?: number
+          activity_id?: number | null
+          activity_name?: string | null
+          achieved_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personal_records_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
@@ -179,3 +279,6 @@ export type Database = {
 
 export type ActivityInsert = Database["public"]["Tables"]["activities"]["Insert"]
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"]
+export type ProfileStatsRow = Database["public"]["Tables"]["profile_stats"]["Row"]
+export type PersonalRecordRow =
+  Database["public"]["Tables"]["personal_records"]["Row"]

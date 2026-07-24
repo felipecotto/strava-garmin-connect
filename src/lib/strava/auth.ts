@@ -2,9 +2,10 @@ import { getStravaOAuthConfig } from "@/lib/strava/env"
 import type { StravaTokenResponse } from "@/lib/strava/types"
 
 export async function exchangeAuthorizationCode(
-  code: string
+  code: string,
+  request?: Request
 ): Promise<StravaTokenResponse | null> {
-  const { clientId, clientSecret, redirectUri } = getStravaOAuthConfig()
+  const { clientId, clientSecret, redirectUri } = getStravaOAuthConfig(request)
   const body = new URLSearchParams({
     client_id: clientId,
     client_secret: clientSecret,

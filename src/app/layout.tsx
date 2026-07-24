@@ -1,28 +1,37 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 
 import { MonitoringProvider } from "@/components/analytics/monitoring-provider"
+import { GrainOverlay } from "@/components/ui/atmosphere"
 
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500"],
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["600", "700", "800"],
+})
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.usectt.com.br"),
   title: {
-    default: "CTT — Cotto Training Tracker",
-    template: "%s | CTT — Cotto Training Tracker",
+    default: "CTT — Arquivo de Performance",
+    template: "%s | CTT",
   },
   description:
-    "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+    "Sem feed. Sem ranking. Sem frase de efeito. Só o histórico — pace, volume, frequência — do jeito que aconteceu.",
   alternates: {
     canonical: "/",
   },
@@ -30,24 +39,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: "https://www.usectt.com.br",
-    siteName: "CTT — Cotto Training Tracker",
-    title: "CTT — Cotto Training Tracker",
+    siteName: "CTT",
+    title: "CTT — Arquivo de Performance",
     description:
-      "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+      "Sem feed. Sem ranking. Sem frase de efeito. Só o histórico — pace, volume, frequência — do jeito que aconteceu.",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "CTT — Cotto Training Tracker",
+        alt: "CTT — Arquivo de Performance",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CTT — Cotto Training Tracker",
+    title: "CTT — Arquivo de Performance",
     description:
-      "Plataforma de análise de performance multiesporte. Transforme dados do Strava em decisões de treino com clareza e precisão.",
+      "Sem feed. Sem ranking. Sem frase de efeito. Só o histórico — pace, volume, frequência — do jeito que aconteceu.",
     images: ["/opengraph-image"],
   },
   verification: {
@@ -63,9 +72,10 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${jakarta.variable} ${jetbrains.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col font-sans">
+        <GrainOverlay />
         <MonitoringProvider />
         {children}
       </body>

@@ -13,7 +13,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { syncInitialActivities } from "@/lib/sync/initial-sync"
 
 export async function GET(request: Request) {
-  const origin = getAppOrigin()
+  const origin = getAppOrigin(request)
   const url = new URL(request.url)
 
   const redirectWith = (path: string) => {
@@ -21,24 +21,24 @@ export async function GET(request: Request) {
   }
 
   if (!isStravaConfigured()) {
-    return redirectWith("/dashboard?error=config")
+    return redirectWith("/?error=config")
   }
 
   const error = url.searchParams.get("error")
   if (error === "access_denied") {
-    return redirectWith("/dashboard?error=denied")
+    return redirectWith("/?error=denied")
   }
 
   const code = url.searchParams.get("code")
   const state = url.searchParams.get("state")
 
   if (!code || !verifyStravaOAuthState(state)) {
-    return redirectWith("/dashboard?error=invalid_state")
+    return redirectWith("/?error=invalid_state")
   }
 
-  const token = await exchangeAuthorizationCode(code)
+  const token = await exchangeAuthorizationCode(code, request)
   if (!token) {
-    return redirectWith("/dashboard?error=token")
+    return redirectWith("/?error=token")
   }
 
   const session = await getStravaIronSession()
@@ -68,10 +68,10 @@ export async function GET(request: Request) {
     } catch (profileError) {
       console.error("[strava-callback] profile upsert failed", profileError)
       await session.save()
-      return redirectWith("/dashboard?error=profile")
+      return redirectWith("/?error=profile")
     }
   }
 
   await session.save()
-  return redirectWith("/dashboard?connected=1")
+  return redirectWith("/?connected=1")
 }
