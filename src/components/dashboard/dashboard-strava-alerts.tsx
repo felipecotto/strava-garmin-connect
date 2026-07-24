@@ -56,6 +56,16 @@ const errorCopy: Record<string, { title: string; body: ReactNode }> = {
       </>
     ),
   },
+  profile: {
+    title: "Conta Strava conectada, mas o perfil não foi criado",
+    body: (
+      <>
+        Confira <code className="rounded bg-muted px-1 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> e{" "}
+        <code className="rounded bg-muted px-1 py-0.5">SUPABASE_SERVICE_ROLE_KEY</code> no{" "}
+        <code className="rounded bg-muted px-1 py-0.5">.env</code> / Vercel e tente conectar de novo.
+      </>
+    ),
+  },
 }
 
 export async function DashboardStravaAlerts({

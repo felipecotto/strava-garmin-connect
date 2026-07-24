@@ -50,38 +50,63 @@ export async function fetchAthlete(accessToken: string): Promise<StravaAthlete> 
   return res.json() as Promise<StravaAthlete>
 }
 
+export type FetchActivitiesPageOptions = {
+  afterSec?: number
+  beforeSec?: number
+  page?: number
+  perPage?: number
+}
+
+export async function fetchActivitiesPage(
+  accessToken: string,
+  options: FetchActivitiesPageOptions = {}
+): Promise<StravaActivity[]> {
+  const page = options.page ?? 1
+  const perPage = options.perPage ?? 100
+  const params = new URLSearchParams({
+    page: String(page),
+    per_page: String(perPage),
+  })
+  if (options.afterSec != null) {
+    params.set("after", String(options.afterSec))
+  }
+  if (options.beforeSec != null) {
+    params.set("before", String(options.beforeSec))
+  }
+
+  const res = await fetch(
+    `https://www.strava.com/api/v3/athlete/activities?${params}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    }
+  )
+  if (!res.ok) {
+    throw new Error(`Strava activities: ${res.status}`)
+  }
+  return res.json() as Promise<StravaActivity[]>
+}
+
 export async function fetchActivitiesRange(
   accessToken: string,
   afterSec: number,
-  beforeSec: number
+  beforeSec: number,
+  maxPages = 10
 ): Promise<StravaActivity[]> {
   const out: StravaActivity[] = []
-  let page = 1
   const perPage = 100
 
-  while (page <= 10) {
-    const params = new URLSearchParams({
-      after: String(afterSec),
-      before: String(beforeSec),
-      page: String(page),
-      per_page: String(perPage),
+  for (let page = 1; page <= maxPages; page += 1) {
+    const batch = await fetchActivitiesPage(accessToken, {
+      afterSec,
+      beforeSec,
+      page,
+      perPage,
     })
-    const res = await fetch(
-      `https://www.strava.com/api/v3/athlete/activities?${params}`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
-      }
-    )
-    if (!res.ok) {
-      throw new Error(`Strava activities: ${res.status}`)
-    }
-    const batch = (await res.json()) as StravaActivity[]
     out.push(...batch)
     if (batch.length < perPage) {
       break
     }
-    page += 1
   }
 
   return out

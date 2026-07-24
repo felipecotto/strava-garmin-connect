@@ -3,6 +3,8 @@ export type StravaSessionData = {
   refreshToken?: string
   /** Unix timestamp (segundos) em que o access token expira */
   expiresAt?: number
+  /** UUID do profile no Supabase (após OAuth + upsert) */
+  profileId?: string
 }
 
 export type StravaAthlete = {
@@ -27,8 +29,17 @@ export type StravaActivity = {
   elapsed_time: number
   total_elevation_gain: number
   type: string
+  sport_type?: string
+  average_speed?: number
+  max_speed?: number
+  average_heartrate?: number
+  max_heartrate?: number
+  timezone?: string
   start_date: string
   start_date_local: string
+  map?: {
+    summary_polyline?: string | null
+  } | null
 }
 
 export type StravaTokenResponse = {
