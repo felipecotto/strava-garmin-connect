@@ -26,7 +26,7 @@ export function ArchiveManifesto({
               O CTT começou porque um designer queria ver o que já tinha
               treinado.
             </p>
-            <p className="rounded-2xl border-l-[3px] border-[var(--brand)] bg-[color-mix(in_srgb,var(--accent)_6%,transparent)] py-3 pl-[18px] text-[22px] font-bold">
+            <p className="rounded-2xl border-l-[3px] border-[var(--brand)] bg-[color-mix(in_srgb,var(--signal)_6%,transparent)] py-3 pl-[18px] text-[22px] font-bold">
               Não uma frase de efeito sobre superação, nem um ranking pra
               comparar com os outros.
             </p>

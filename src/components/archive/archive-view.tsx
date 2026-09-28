@@ -42,7 +42,7 @@ export function ArchiveView({ data, variant, banner }: ArchiveViewProps) {
         {isDemo ? (
           <div className="mt-8 surface-soft grain-surface flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="space-y-1">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--signal)]">
                 Exemplo de arquivo
               </p>
               <p className="max-w-xl text-sm text-[var(--ink-soft)]">
@@ -63,7 +63,7 @@ export function ArchiveView({ data, variant, banner }: ArchiveViewProps) {
         ) : null}
 
         {isOwner && !profile.is_public ? (
-          <div className="mt-8 rounded-[20px] border border-[color-mix(in_srgb,var(--accent)_25%,transparent)] bg-[color-mix(in_srgb,var(--accent)_6%,transparent)] px-4 py-3 text-sm text-[var(--ink-soft)]">
+          <div className="mt-8 rounded-[20px] border border-[color-mix(in_srgb,var(--signal)_25%,transparent)] bg-[color-mix(in_srgb,var(--signal)_6%,transparent)] px-4 py-3 text-sm text-[var(--ink-soft)]">
             Seu arquivo está privado.{" "}
             <Link
               href="/perfil"

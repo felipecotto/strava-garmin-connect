@@ -25,7 +25,7 @@ export function SiteChrome({
         href="/"
         className="font-mono text-[15px] font-bold tracking-tight text-[var(--ink)]"
       >
-        <span className="mr-2 inline-block size-[7px] rounded-[2px] bg-[var(--brand)] align-middle shadow-[0_0_12px_color-mix(in_srgb,var(--accent)_55%,transparent)]" />
+        <span className="mr-2 inline-block size-[7px] rounded-[2px] bg-[var(--brand)] align-middle" />
         {siteConfig.name}
       </Link>
 

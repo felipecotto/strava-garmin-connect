@@ -93,7 +93,7 @@ export default async function PerfilPage() {
                     <p className="font-mono text-[13px] text-[var(--label)]">
                       @{strava.athlete.username ?? "atleta"}
                     </p>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--signal)]">
                       Strava ativo
                     </p>
                     <p className="font-mono text-xs text-[var(--label)]">

@@ -75,7 +75,7 @@ export function ProfileVolumeChart({
             />
             <Bar
               dataKey="distanceKm"
-              fill="#e8450a"
+              fill="var(--signal)"
               radius={[2, 2, 0, 0]}
               maxBarSize={28}
             />

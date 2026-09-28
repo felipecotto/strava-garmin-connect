@@ -13,7 +13,7 @@ function AlertBox({
     variant === "destructive"
       ? "border-destructive/40 bg-[var(--bg)] text-destructive"
       : variant === "success"
-        ? "border-[var(--accent)]/40 bg-[color-mix(in_srgb,var(--accent)_6%,transparent)] text-[var(--ink)]"
+        ? "border-[var(--signal)]/40 bg-[color-mix(in_srgb,var(--signal)_6%,transparent)] text-[var(--ink)]"
         : "border-[var(--line)] bg-[var(--bg-alt)] text-[var(--ink)]"
 
   return (

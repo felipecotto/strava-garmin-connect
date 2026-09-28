@@ -4,33 +4,29 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center border border-transparent text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]/35 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-full border border-transparent text-sm font-medium whitespace-nowrap transition-colors duration-150 outline-none select-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default:
-          "cta-gradient grain-surface rounded-full text-[var(--bg)] shadow-lift hover:brightness-110",
+        default: "bg-primary text-primary-foreground hover:bg-signal",
         outline:
-          "rounded-full border-[color-mix(in_srgb,var(--ink)_22%,transparent)] bg-[color-mix(in_srgb,white_40%,transparent)] text-[var(--ink)] shadow-soft backdrop-blur-sm hover:border-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--bg)]",
+          "border-border bg-transparent text-foreground hover:border-foreground",
         secondary:
-          "rounded-full bg-[color-mix(in_srgb,white_50%,var(--bg-alt))] text-[var(--ink)] shadow-soft hover:bg-[var(--bg-alt)]",
-        ghost:
-          "rounded-full text-[var(--ink-soft)] hover:bg-[color-mix(in_srgb,white_45%,transparent)] hover:text-[var(--ink)]",
+          "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground",
+        ghost: "text-ink-2 hover:bg-muted hover:text-foreground",
         destructive:
-          "rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20",
-        link: "rounded-none text-[var(--ink-soft)] underline-offset-4 hover:underline border-0",
-        brand:
-          "cta-gradient-brand grain-surface rounded-full text-white shadow-lift hover:brightness-105",
+          "bg-destructive/10 text-destructive hover:bg-destructive/20",
+        link: "rounded-none border-0 text-ink-2 underline-offset-4 hover:text-foreground hover:underline",
       },
       size: {
-        default: "h-10 gap-2 px-5",
+        default: "h-11 gap-2 px-5",
         xs: "h-7 gap-1 px-2.5 text-xs",
-        sm: "h-8 gap-1.5 px-3.5 text-[0.8rem]",
-        lg: "h-12 gap-2 px-7 text-sm font-semibold",
-        icon: "size-9 rounded-full",
-        "icon-xs": "size-6 rounded-full",
-        "icon-sm": "size-7 rounded-full",
-        "icon-lg": "size-10 rounded-full",
+        sm: "h-9 gap-1.5 px-4 text-[0.8rem]",
+        lg: "h-12 gap-2 px-7",
+        icon: "size-11",
+        "icon-xs": "size-7",
+        "icon-sm": "size-9",
+        "icon-lg": "size-12",
       },
     },
     defaultVariants: {
