@@ -48,7 +48,7 @@ function alertFromSearchParams(
     return {
       variant: "signal",
       title: "Strava conectado",
-      body: "Seu arquivo está sendo sincronizado. Em alguns segundos os dados aparecem aqui.",
+      body: "Estamos importando seus treinos. A primeira importação leva alguns minutos.",
     }
   }
   if (isOn(params.disconnected)) {
@@ -62,7 +62,8 @@ function alertFromSearchParams(
   return error ? { variant: "destructive", ...error } : null
 }
 
-export async function HomeAlerts({
+/** Aviso de volta do OAuth do Strava (`?connected`, `?disconnected`, `?error`). */
+export async function ConnectionAlerts({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>

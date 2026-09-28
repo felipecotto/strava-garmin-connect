@@ -10,11 +10,35 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { siteConfig } from "@/config/site"
 import type { ProfileRow } from "@/lib/supabase/types"
 
 const initialState: UpdateSettingsResult | null = null
+
+function SettingSwitch({
+  label,
+  description,
+  checked,
+  onCheckedChange,
+}: {
+  label: string
+  description: string
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <div>
+        <p className="text-sm font-medium">{label}</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
+      </div>
+      <Switch checked={checked} onCheckedChange={onCheckedChange} aria-label={label} />
+    </div>
+  )
+}
 
 export function SettingsForm({ profile }: { profile: ProfileRow }) {
   const [isPublic, setIsPublic] = useState(profile.is_public)
@@ -33,11 +57,11 @@ export function SettingsForm({ profile }: { profile: ProfileRow }) {
   )
 
   return (
-    <form action={formAction} className="max-w-xl space-y-8">
+    <form action={formAction} className="space-y-8">
       <div className="space-y-2">
-        <Label htmlFor="slug">Slug público</Label>
+        <Label htmlFor="slug">Endereço</Label>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-[var(--label)]">/</span>
+          <span className="font-mono text-sm text-muted-foreground">{siteConfig.domain}/</span>
           <Input
             id="slug"
             name="slug"
@@ -49,9 +73,8 @@ export function SettingsForm({ profile }: { profile: ProfileRow }) {
             className="font-mono"
           />
         </div>
-        <p className="text-xs text-[var(--label)]">
-          URL: usectt.com.br/
-          <span className="font-mono">{profile.slug}</span>
+        <p className="text-xs text-muted-foreground">
+          Letras minúsculas, números e hífen, de 3 a 30 caracteres.
         </p>
       </div>
 
@@ -63,45 +86,27 @@ export function SettingsForm({ profile }: { profile: ProfileRow }) {
           defaultValue={profile.bio ?? ""}
           maxLength={280}
           rows={4}
-          placeholder="Uma linha sobre sua corrida..."
+          placeholder="Uma linha sobre a sua corrida"
         />
-        <p className="text-xs text-[var(--label)]">Até 280 caracteres.</p>
+        <p className="text-xs text-muted-foreground">
+          Aparece no topo do arquivo, no lugar do texto padrão. Até 280 caracteres.
+        </p>
       </div>
 
-      <div className="space-y-4 surface-soft rounded-3xl p-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-[var(--ink)]">
-              Arquivo público
-            </p>
-            <p className="text-xs text-[var(--label)]">
-              Se desligado, /{profile.slug} retorna 404.
-            </p>
-          </div>
-          <Switch
-            checked={isPublic}
-            onCheckedChange={setIsPublic}
-            aria-label="Arquivo público"
-          />
-        </div>
-
-        <div className="h-px bg-[var(--line)]" />
-
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-[var(--ink)]">
-              Mostrar nomes das atividades
-            </p>
-            <p className="text-xs text-[var(--label)]">
-              No log público, exibe o título do Strava.
-            </p>
-          </div>
-          <Switch
-            checked={showNames}
-            onCheckedChange={setShowNames}
-            aria-label="Mostrar nomes das atividades"
-          />
-        </div>
+      <div className="space-y-4 rounded-lg border border-border p-4">
+        <SettingSwitch
+          label="Arquivo público"
+          description={`Desligado, ${siteConfig.domain}/${profile.slug} só abre para você.`}
+          checked={isPublic}
+          onCheckedChange={setIsPublic}
+        />
+        <Separator />
+        <SettingSwitch
+          label="Mostrar nomes das atividades"
+          description="Nos recordes, mostra o título que a corrida tem no Strava."
+          checked={showNames}
+          onCheckedChange={setShowNames}
+        />
       </div>
 
       {state?.ok === false ? (
@@ -111,12 +116,9 @@ export function SettingsForm({ profile }: { profile: ProfileRow }) {
       ) : null}
 
       {state?.ok === true ? (
-        <p className="text-sm text-[var(--ink-soft)]" role="status">
+        <p className="text-sm text-ink-2" role="status">
           Salvo.{" "}
-          <Link
-            href={`/${state.slug}`}
-            className="font-medium text-[var(--ink)] underline-offset-4 hover:underline"
-          >
+          <Link href={`/${state.slug}`} className="font-medium text-foreground underline-offset-4 hover:underline">
             Ver arquivo
           </Link>
         </p>

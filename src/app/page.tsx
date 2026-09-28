@@ -15,7 +15,7 @@ import {
   ViewerNavActions,
   VisitorFinalCta,
 } from "@/components/archive/edition/viewer-slots"
-import { HomeAlerts } from "@/components/site/home-alerts"
+import { ConnectionAlerts } from "@/components/site/connection-alerts"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getExampleEdition } from "@/lib/profile/get-example-edition"
@@ -51,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   )
   const banner = (
     <Suspense fallback={null}>
-      <HomeAlerts searchParams={searchParams} />
+      <ConnectionAlerts searchParams={searchParams} />
     </Suspense>
   )
   const finalCta = (

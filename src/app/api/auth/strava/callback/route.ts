@@ -10,6 +10,7 @@ import { getAppOrigin, isStravaConfigured } from "@/lib/strava/env"
 import { verifyStravaOAuthState } from "@/lib/strava/oauth-state"
 import { getStravaIronSession } from "@/lib/strava/session"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
+import { expireProfileCache } from "@/lib/sync/expire-edition-cache"
 import { syncInitialActivities } from "@/lib/sync/initial-sync"
 
 export async function GET(request: Request) {
@@ -46,14 +47,18 @@ export async function GET(request: Request) {
   session.refreshToken = token.refresh_token
   session.expiresAt = token.expires_at
 
+  let destination = "/?connected=1"
+
   if (isSupabaseConfigured()) {
     try {
       const athlete =
         token.athlete ?? (await fetchAthlete(token.access_token))
       const { profile } = await upsertProfileFromAthlete(athlete)
       session.profileId = profile.id
+      expireProfileCache(profile.id, profile.slug)
 
       const needsSync = await shouldRunInitialSync(profile.id)
+      destination = needsSync ? `/${profile.slug}?connected=1` : `/${profile.slug}`
       if (needsSync) {
         const accessToken = token.access_token
         const profileId = profile.id
@@ -73,5 +78,5 @@ export async function GET(request: Request) {
   }
 
   await session.save()
-  return redirectWith("/?connected=1")
+  return redirectWith(destination)
 }

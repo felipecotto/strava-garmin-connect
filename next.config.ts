@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/\\[slug\\]/card": ["./assets/fonts/**/*"],
   },
+  async redirects() {
+    return [
+      { source: "/dashboard", destination: "/", permanent: true },
+      { source: "/dashboard/:path+", destination: "/perfil", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

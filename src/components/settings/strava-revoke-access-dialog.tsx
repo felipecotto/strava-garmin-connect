@@ -1,6 +1,5 @@
 "use client"
 
-import type { ReactNode } from "react"
 import type { logoutStrava } from "@/app/actions/strava"
 import {
   AlertDialog,
@@ -15,32 +14,23 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 
-type RevokeAction = typeof logoutStrava
-
-export function StravaRevokeAccessDialog({
-  action,
-  triggerLabel = "Revogar Acesso",
-}: {
-  action: RevokeAction
-  triggerLabel?: ReactNode
-}) {
+export function StravaRevokeAccessDialog({ action }: { action: typeof logoutStrava }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger render={<Button variant="outline" className="w-full" />}>
-        {triggerLabel}
+        Desconectar Strava
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Revogar acesso ao Strava?</AlertDialogTitle>
+          <AlertDialogTitle>Desconectar o Strava?</AlertDialogTitle>
           <AlertDialogDescription>
-            Vamos desconectar sua conta do CTT., revogar o token na API do Strava
-            e limpar a sessão local deste navegador.
+            O CTT revoga o acesso na API do Strava e encerra a sessão neste navegador.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <form action={action}>
-            <AlertDialogAction type="submit">Revogar Acesso</AlertDialogAction>
+            <AlertDialogAction type="submit">Desconectar</AlertDialogAction>
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

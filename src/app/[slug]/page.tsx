@@ -10,6 +10,7 @@ import {
   ProfileHeroActions,
   ViewerNavActions,
 } from "@/components/archive/edition/viewer-slots"
+import { ConnectionAlerts } from "@/components/site/connection-alerts"
 import { Skeleton } from "@/components/ui/skeleton"
 import { siteConfig } from "@/config/site"
 import { getArchive } from "@/lib/archive/get-archive"
@@ -17,8 +18,11 @@ import { formatKm, formatNumber } from "@/lib/archive/format"
 import { getProfileBySlug } from "@/lib/profile/get-profile"
 import type { ProfileRow } from "@/lib/supabase/types"
 
+type SearchParams = Promise<Record<string, string | string[] | undefined>>
+
 type PageProps = {
   params: Promise<{ slug: string }>
+  searchParams: SearchParams
 }
 
 /** O exemplo é pré-renderizado; os demais perfis são gerados na primeira visita. */
@@ -26,7 +30,7 @@ export function generateStaticParams() {
   return [{ slug: siteConfig.exampleProfileSlug }]
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Pick<PageProps, "params">): Promise<Metadata> {
   const { slug } = await params
   const profile = await getProfileBySlug(slug)
   if (!profile) return { title: "Arquivo não encontrado" }
@@ -56,12 +60,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function ProfileArchivePage({ params }: PageProps) {
+export default async function ProfileArchivePage({ params, searchParams }: PageProps) {
   const { slug } = await params
   const profile = await getProfileBySlug(slug)
   if (!profile) notFound()
 
-  const edition = <ProfileEdition profile={profile} />
+  const edition = <ProfileEdition profile={profile} searchParams={searchParams} />
   if (profile.is_public) return edition
 
   return (
@@ -71,7 +75,13 @@ export default async function ProfileArchivePage({ params }: PageProps) {
   )
 }
 
-async function ProfileEdition({ profile }: { profile: ProfileRow }) {
+async function ProfileEdition({
+  profile,
+  searchParams,
+}: {
+  profile: ProfileRow
+  searchParams: SearchParams
+}) {
   const archive = await getArchive(profile.id)
   const storyCards = buildStoryCards(archive)
 
@@ -80,6 +90,11 @@ async function ProfileEdition({ profile }: { profile: ProfileRow }) {
       profile={profile}
       archive={archive}
       storyCards={storyCards}
+      banner={
+        <Suspense fallback={null}>
+          <ConnectionAlerts searchParams={searchParams} />
+        </Suspense>
+      }
       navActions={
         <Suspense fallback={<Skeleton className="h-9 w-36 rounded-full" />}>
           <ViewerNavActions />

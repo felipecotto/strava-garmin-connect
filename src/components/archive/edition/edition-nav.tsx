@@ -12,7 +12,14 @@ import { EDITION_ANCHORS } from "./anchors"
 import { EditionMobileMenu } from "./edition-mobile-menu"
 import { EditionContainer } from "./section"
 
-export function EditionNav({ actions }: { actions?: ReactNode }) {
+/** `showSections` desliga as âncoras em páginas que não são a edição (ex.: configurações). */
+export function EditionNav({
+  actions,
+  showSections = true,
+}: {
+  actions?: ReactNode
+  showSections?: boolean
+}) {
   return (
     <header className="border-b border-border">
       <EditionContainer className="flex items-center justify-between gap-4 py-5">
@@ -23,22 +30,24 @@ export function EditionNav({ actions }: { actions?: ReactNode }) {
           </span>
         </Link>
         <div className="flex items-center gap-2 md:gap-6">
-          <NavigationMenu aria-label="Seções" className="hidden md:flex">
-            <NavigationMenuList className="gap-6">
-              {EDITION_ANCHORS.map((anchor) => (
-                <NavigationMenuItem key={anchor.href}>
-                  <NavigationMenuLink
-                    href={anchor.href}
-                    className="p-0 font-mono text-xs tracking-[0.06em] text-ink-2 uppercase transition-colors duration-150 hover:bg-transparent hover:text-foreground focus:bg-transparent"
-                  >
-                    {anchor.label}
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+          {showSections ? (
+            <NavigationMenu aria-label="Seções" className="hidden md:flex">
+              <NavigationMenuList className="gap-6">
+                {EDITION_ANCHORS.map((anchor) => (
+                  <NavigationMenuItem key={anchor.href}>
+                    <NavigationMenuLink
+                      href={anchor.href}
+                      className="p-0 font-mono text-xs tracking-[0.06em] text-ink-2 uppercase transition-colors duration-150 hover:bg-transparent hover:text-foreground focus:bg-transparent"
+                    >
+                      {anchor.label}
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          ) : null}
           {actions}
-          <EditionMobileMenu />
+          {showSections ? <EditionMobileMenu /> : null}
         </div>
       </EditionContainer>
     </header>

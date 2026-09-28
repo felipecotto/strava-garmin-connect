@@ -1,5 +1,10 @@
-import { isRunActivity } from "@/lib/profile/stats"
 import type { ArchiveActivity } from "@/lib/archive/types"
+
+const RUN_SPORT_TYPES = new Set(["Run", "TrailRun", "VirtualRun"])
+
+export function isRunActivity(sportType: string): boolean {
+  return RUN_SPORT_TYPES.has(sportType)
+}
 
 export function onlyRuns(activities: ArchiveActivity[]): ArchiveActivity[] {
   return activities.filter((activity) => isRunActivity(activity.sport_type))

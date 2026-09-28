@@ -157,17 +157,6 @@
   }
 }
 
-/* Legado: aliases para componentes antigos. Remover na fase de limpeza. */
-:root {
-  --bg: var(--background);
-  --bg-alt: var(--muted);
-  --ink: var(--foreground);
-  --ink-soft: var(--ink-2);
-  --label: var(--muted-foreground);
-  --line: var(--border);
-  --brand: var(--signal);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -251,24 +240,4 @@
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.04em;
-}
-
-@layer utilities {
-  /* Legado: remover na fase de limpeza. */
-  .text-label {
-    color: var(--muted-foreground);
-  }
-  .text-ink-soft {
-    color: var(--ink-2);
-  }
-  .text-brand {
-    color: var(--signal);
-  }
-  .bg-brand {
-    background-color: var(--signal);
-  }
-  .surface-soft {
-    background: var(--card);
-    border: 1px solid var(--border);
-  }
 }

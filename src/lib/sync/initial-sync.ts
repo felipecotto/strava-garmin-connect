@@ -2,10 +2,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import { fetchActivitiesPage } from "@/lib/strava/api"
 import { mapStravaActivityToRow } from "@/lib/strava/map-activity"
 import type { StravaActivity } from "@/lib/strava/types"
-import {
-  invalidateArchive,
-  recomputeProfileAggregates,
-} from "@/lib/sync/recompute-stats"
+import { expireArchiveCache, expireProfileCache } from "@/lib/sync/expire-edition-cache"
 
 /** ~2 anos — suficiente para PRs e volume sem estourar rate limit no onboarding. */
 export const DEFAULT_LOOKBACK_DAYS = 730
@@ -67,6 +64,7 @@ export async function syncInitialActivities(
   if (statusError) {
     throw new Error(`Falha ao marcar syncing: ${statusError.message}`)
   }
+  expireProfileCache(profileId)
 
   try {
     const collected: StravaActivity[] = []
@@ -132,9 +130,6 @@ export async function syncInitialActivities(
       throw new Error(`Falha ao atualizar sync_cursors: ${cursorError.message}`)
     }
 
-    await recomputeProfileAggregates(profileId)
-    invalidateArchive(profileId)
-
     const { error: readyError } = await supabase
       .from("profiles")
       .update({
@@ -146,6 +141,8 @@ export async function syncInitialActivities(
     if (readyError) {
       throw new Error(`Falha ao marcar ready: ${readyError.message}`)
     }
+    expireArchiveCache(profileId)
+    expireProfileCache(profileId)
 
     return {
       synced: rows.length,
@@ -171,6 +168,7 @@ export async function syncInitialActivities(
       },
       { onConflict: "profile_id" }
     )
+    expireProfileCache(profileId)
 
     throw error
   }
