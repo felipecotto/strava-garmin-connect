@@ -21,7 +21,7 @@ export const RECORD_TARGETS: RecordTarget[] = [
 ]
 
 /** Atividades com até 5% a mais que o alvo contam para o recorde. */
-const MAX_DISTANCE_RATIO = 1.05
+export const MAX_DISTANCE_RATIO = 1.05
 
 /** Um esforço candidato a recorde numa distância-alvo. */
 export type Effort = {

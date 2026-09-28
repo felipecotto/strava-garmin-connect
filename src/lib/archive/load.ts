@@ -15,10 +15,10 @@ export const DEFAULT_HR_MAX = 190
 const HR_MAX_PERCENTILE = 0.98
 /** Carga por minuto estimada quando a atividade não tem frequência cardíaca. */
 const LOAD_PER_MINUTE_WITHOUT_HR = 0.8
-const FITNESS_DAYS = 42
-const FATIGUE_DAYS = 7
+export const FITNESS_DAYS = 42
+export const FATIGUE_DAYS = 7
 /** Semanas seguidas sem carga que caracterizam uma pausa. */
-const MIN_PAUSE_WEEKS = 2
+export const MIN_PAUSE_WEEKS = 2
 
 /** FC máxima do atleta: percentil 98 de `max_heartrate`. */
 export function estimateHrMax(activities: ArchiveActivity[]): number {

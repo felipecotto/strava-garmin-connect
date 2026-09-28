@@ -12,8 +12,8 @@ export const WEEKDAYS: Weekday[] = ["seg", "ter", "qua", "qui", "sex", "sab", "d
 /** 53 semanas × 7 dias: o calendário cobre um ano completo alinhado por semana. */
 export const DAILY_WINDOW_DAYS = 371
 
-const EARLY_START_HOUR = 6
-const EARLY_END_HOUR = 7
+export const EARLY_START_HOUR = 6
+export const EARLY_END_HOUR = 7
 
 export function computeHours(runs: ArchiveActivity[]): number[] {
   const hours = Array.from({ length: 24 }, () => 0)

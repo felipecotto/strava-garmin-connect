@@ -1,32 +1,12 @@
 import type { ReactNode } from "react"
 
-function AlertBox({
-  variant,
-  title,
-  children,
-}: {
-  variant: "destructive" | "default" | "success"
-  title: string
-  children: ReactNode
-}) {
-  const styles =
-    variant === "destructive"
-      ? "border-destructive/40 bg-[var(--bg)] text-destructive"
-      : variant === "success"
-        ? "border-[var(--signal)]/40 bg-[color-mix(in_srgb,var(--signal)_6%,transparent)] text-[var(--ink)]"
-        : "border-[var(--line)] bg-[var(--bg-alt)] text-[var(--ink)]"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-  return (
-    <div role="alert" className={`mt-6 rounded-2xl border px-4 py-3 text-sm ${styles}`}>
-      <p className="font-heading font-semibold">{title}</p>
-      <div className="mt-1 text-[var(--ink-soft)] [&_code]:font-mono [&_code]:text-[var(--ink)]">
-        {children}
-      </div>
-    </div>
-  )
-}
+type AlertVariant = "default" | "destructive" | "signal"
 
-const errorCopy: Record<string, { title: string; body: ReactNode }> = {
+type AlertCopy = { variant: AlertVariant; title: string; body: ReactNode }
+
+const errorCopy: Record<string, Omit<AlertCopy, "variant">> = {
   denied: {
     title: "Autorização cancelada",
     body: "Você não autorizou o acesso. Pode tentar de novo quando quiser.",
@@ -59,41 +39,43 @@ const errorCopy: Record<string, { title: string; body: ReactNode }> = {
   },
 }
 
+function alertFromSearchParams(
+  params: Record<string, string | string[] | undefined>
+): AlertCopy | null {
+  const isOn = (value: unknown) => value === "1" || value === "true"
+
+  if (isOn(params.connected)) {
+    return {
+      variant: "signal",
+      title: "Strava conectado",
+      body: "Seu arquivo está sendo sincronizado. Em alguns segundos os dados aparecem aqui.",
+    }
+  }
+  if (isOn(params.disconnected)) {
+    return {
+      variant: "default",
+      title: "Conta desconectada",
+      body: "Sua sessão Strava foi encerrada neste navegador.",
+    }
+  }
+  const error = typeof params.error === "string" ? errorCopy[params.error] : undefined
+  return error ? { variant: "destructive", ...error } : null
+}
+
 export async function HomeAlerts({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const sp = await searchParams
-  const err = typeof sp.error === "string" ? sp.error : undefined
-  const disconnected = sp.disconnected === "1" || sp.disconnected === "true"
-  const connected = sp.connected === "1" || sp.connected === "true"
+  const alert = alertFromSearchParams(await searchParams)
+  if (!alert) return null
 
-  if (connected) {
-    return (
-      <AlertBox variant="success" title="Strava conectado">
-        Seu arquivo está sendo sincronizado. Em alguns segundos os dados
-        aparecem aqui.
-      </AlertBox>
-    )
-  }
-
-  if (disconnected) {
-    return (
-      <AlertBox variant="default" title="Conta desconectada">
-        Sua sessão Strava foi encerrada neste navegador.
-      </AlertBox>
-    )
-  }
-
-  if (err && errorCopy[err]) {
-    const { title, body } = errorCopy[err]
-    return (
-      <AlertBox variant="destructive" title={title}>
-        {body}
-      </AlertBox>
-    )
-  }
-
-  return null
+  return (
+    <Alert variant={alert.variant} className="mb-8 px-4 py-3">
+      <AlertTitle>{alert.title}</AlertTitle>
+      <AlertDescription className="[&_code]:font-mono [&_code]:text-foreground">
+        {alert.body}
+      </AlertDescription>
+    </Alert>
+  )
 }

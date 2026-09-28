@@ -1,5 +1,0 @@
-import { EditionSkeleton } from "@/components/archive/edition/edition-skeleton"
-
-export default function PublicProfileLoading() {
-  return <EditionSkeleton />
-}

@@ -8,7 +8,7 @@ import {
 } from "@/lib/sync/recompute-stats"
 
 /** ~2 anos — suficiente para PRs e volume sem estourar rate limit no onboarding. */
-const DEFAULT_LOOKBACK_DAYS = 730
+export const DEFAULT_LOOKBACK_DAYS = 730
 const PER_PAGE = 100
 /** 50 × 100 = até 5.000 activities por sync inicial. */
 const MAX_PAGES = 50
