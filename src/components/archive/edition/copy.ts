@@ -7,6 +7,7 @@ import {
   formatTimeDelta,
 } from "@/lib/archive/format"
 import { FATIGUE_DAYS, FITNESS_DAYS, MIN_PAUSE_WEEKS } from "@/lib/archive/load"
+import { HALF_MARATHON_LABEL, MARATHON_LABEL } from "@/lib/archive/races"
 import { MAX_DISTANCE_RATIO } from "@/lib/archive/records"
 import { EARLY_END_HOUR, EARLY_START_HOUR } from "@/lib/archive/routine"
 import type {
@@ -142,7 +143,8 @@ export function formDescription(pauses: ArchivePause[], racesCount: number): str
 }
 
 export function raceMarkerLabel(label: string, date: string): string {
-  const name = label === "42K" ? "Maratona" : label === "21K" ? "Meia" : label
+  const name =
+    label === MARATHON_LABEL ? "Maratona" : label === HALF_MARATHON_LABEL ? "Meia" : label
   return `${name} · ${formatMonth(date.slice(0, 7))}`
 }
 

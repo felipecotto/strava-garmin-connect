@@ -27,6 +27,12 @@ export function formatRaceTime(totalSec: number): string {
     : `${minutes}:${pad2(seconds)}`
 }
 
+/** Duração em horas e minutos: "16h01". */
+export function formatHoursMinutes(totalSec: number): string {
+  const totalMinutes = Math.round(totalSec / 60)
+  return `${Math.floor(totalMinutes / 60)}h${pad2(totalMinutes % 60)}`
+}
+
 /** Diferença de tempo com sinal: "−5:58". */
 export function formatTimeDelta(deltaSec: number): string {
   const sign = deltaSec < 0 ? "−" : "+"
@@ -61,6 +67,14 @@ export function formatDay(dayKey: string): string {
     .replace(/ de /g, " ")
 }
 
+/** "15 ago" */
+export function formatDayMonth(dayKey: string): string {
+  return new Date(`${dayKey}T12:00:00Z`)
+    .toLocaleDateString(LOCALE, { day: "numeric", month: "short", timeZone: "UTC" })
+    .replace(/\./g, "")
+    .replace(/ de /g, " ")
+}
+
 /** "abr 2025" */
 export function formatMonth(month: string): string {
   return new Date(`${month}-01T12:00:00Z`)
@@ -70,5 +84,12 @@ export function formatMonth(month: string): string {
       timeZone: "UTC",
     })
     .replace(/\./g, "")
+    .replace(/ de /g, " ")
+}
+
+/** "agosto 2026" */
+export function formatMonthLong(month: string): string {
+  return new Date(`${month}-01T12:00:00Z`)
+    .toLocaleDateString(LOCALE, { month: "long", year: "numeric", timeZone: "UTC" })
     .replace(/ de /g, " ")
 }

@@ -1,7 +1,11 @@
 import { metersToKm, onlyRuns } from "@/lib/archive/activity"
 import { ianaTimeZone, todayKey } from "@/lib/archive/dates"
 import { computeLoad, computePauses } from "@/lib/archive/load"
-import { detectRaces, raceLabelByWeek } from "@/lib/archive/races"
+import {
+  computeBuildUp,
+  detectRaces,
+  raceLabelByWeek,
+} from "@/lib/archive/races"
 import { computeRecords } from "@/lib/archive/records"
 import {
   computeDaily,
@@ -68,7 +72,11 @@ export function buildArchive(
   const today = todayKey(now, latestTimeZone(activities))
   const runs = onlyRuns(activities)
 
-  const races = detectRaces(runs)
+  const metersByWeek = sumMetersByWeek(runs)
+  const races = detectRaces(runs).map((race) => ({
+    ...race,
+    buildUp: computeBuildUp(race, runs, metersByWeek),
+  }))
   const weeks = computeWeeks(runs, {
     since: WEEKS_SINCE,
     today,

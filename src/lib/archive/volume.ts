@@ -89,12 +89,13 @@ export function computeMonths(
   const first = firstRunDay(runs)
   if (!first) return []
 
-  const byMonth = new Map<string, { meters: number; runs: number }>()
+  const byMonth = new Map<string, { meters: number; runs: number; movingSec: number }>()
   for (const run of runs) {
     const month = monthKey(localDayKey(run.start_date_local))
-    const bucket = byMonth.get(month) ?? { meters: 0, runs: 0 }
+    const bucket = byMonth.get(month) ?? { meters: 0, runs: 0, movingSec: 0 }
     bucket.meters += Number(run.distance_m)
     bucket.runs += 1
+    bucket.movingSec += run.moving_time_s
     byMonth.set(month, bucket)
   }
 
@@ -104,6 +105,7 @@ export function computeMonths(
       month,
       km: metersToKm(bucket?.meters ?? 0),
       runs: bucket?.runs ?? 0,
+      movingSec: bucket?.movingSec ?? 0,
     }
   })
 }

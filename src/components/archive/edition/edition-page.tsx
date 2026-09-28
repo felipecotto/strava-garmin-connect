@@ -13,6 +13,8 @@ import { FormSection } from "./form-section"
 import { Odometer } from "./odometer"
 import { RecordsSection } from "./records-section"
 import { EditionContainer } from "./section"
+import type { StoryCards } from "./story-card/content"
+import { StoryCardSection } from "./story-card/story-card-section"
 import { VolumeSection } from "./volume-section"
 
 export const EDITION_LEDE =
@@ -27,6 +29,7 @@ export function editionLabel(profile: ProfileRow, isExample: boolean): string {
 type EditionPageProps = {
   profile: ProfileRow
   archive: ArchiveData
+  storyCards: StoryCards
   hero: {
     label: string
     title: ReactNode
@@ -42,6 +45,7 @@ type EditionPageProps = {
 export function EditionPage({
   profile,
   archive,
+  storyCards,
   hero,
   navActions,
   banner,
@@ -75,6 +79,7 @@ export function EditionPage({
             <RecordsSection records={archive.records} showActivityNames={profile.show_activity_names} />
             <ClockSection hours={archive.hours} weekdays={archive.weekdays} highlights={archive.highlights} />
             <CalendarSection daily={archive.daily} today={archive.today} streaks={archive.streaks} />
+            <StoryCardSection profile={profile} cards={storyCards} />
           </>
         ) : null}
 

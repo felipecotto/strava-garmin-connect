@@ -26,6 +26,8 @@ export function MonoLabel({
   return <p className={cn("type-label text-muted-foreground", className)}>{children}</p>
 }
 
+export const EDITION_SECTION_CLASS = "scroll-mt-4 border-t border-border py-14 md:py-28"
+
 type EditionSectionProps = {
   id?: string
   label: string
@@ -42,7 +44,7 @@ export function EditionSection({
   children,
 }: EditionSectionProps) {
   return (
-    <section id={id} className="scroll-mt-4 border-t border-border py-14 md:py-28">
+    <section id={id} className={EDITION_SECTION_CLASS}>
       <EditionContainer>
         <header className="mb-7 grid gap-5 md:mb-12 min-[860px]:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] min-[860px]:items-end lg:gap-16">
           <div>

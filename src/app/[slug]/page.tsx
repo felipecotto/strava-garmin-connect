@@ -4,6 +4,7 @@ import { Suspense } from "react"
 
 import { EDITION_LEDE, EditionPage, editionLabel } from "@/components/archive/edition/edition-page"
 import { EditionSkeleton } from "@/components/archive/edition/edition-skeleton"
+import { buildStoryCards, hasStoryCards } from "@/components/archive/edition/story-card/content"
 import {
   OwnerOnly,
   ProfileHeroActions,
@@ -72,11 +73,13 @@ export default async function ProfileArchivePage({ params }: PageProps) {
 
 async function ProfileEdition({ profile }: { profile: ProfileRow }) {
   const archive = await getArchive(profile.id)
+  const storyCards = buildStoryCards(archive)
 
   return (
     <EditionPage
       profile={profile}
       archive={archive}
+      storyCards={storyCards}
       navActions={
         <Suspense fallback={<Skeleton className="h-9 w-36 rounded-full" />}>
           <ViewerNavActions />
@@ -88,7 +91,7 @@ async function ProfileEdition({ profile }: { profile: ProfileRow }) {
         lede: profile.bio?.trim() || EDITION_LEDE,
         actions: (
           <Suspense fallback={<Skeleton className="h-11 w-44 rounded-full" />}>
-            <ProfileHeroActions profile={profile} />
+            <ProfileHeroActions profile={profile} hasStoryCard={hasStoryCards(storyCards)} />
           </Suspense>
         ),
       }}

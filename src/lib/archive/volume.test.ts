@@ -54,9 +54,9 @@ describe("computeMonths", () => {
     const runs = [makeRun("2026-06-10T06:30", { distance_m: 5000 })]
 
     expect(computeMonths(runs, "2026-08-02")).toEqual([
-      { month: "2026-06", km: 5, runs: 1 },
-      { month: "2026-07", km: 0, runs: 0 },
-      { month: "2026-08", km: 0, runs: 0 },
+      { month: "2026-06", km: 5, runs: 1, movingSec: 3000 },
+      { month: "2026-07", km: 0, runs: 0, movingSec: 0 },
+      { month: "2026-08", km: 0, runs: 0, movingSec: 0 },
     ])
   })
 })

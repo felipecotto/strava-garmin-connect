@@ -27,7 +27,7 @@ export type ArchiveTotals = {
 
 export type ArchiveWeek = { weekStart: string; km: number; race?: string }
 
-export type ArchiveMonth = { month: string; km: number; runs: number }
+export type ArchiveMonth = { month: string; km: number; runs: number; movingSec: number }
 
 export type ArchiveYear = {
   year: number
@@ -62,7 +62,7 @@ export type ArchiveRecord = {
   exact: boolean
 }
 
-export type ArchiveRace = {
+export type DetectedRace = {
   activityId: number
   name: string
   date: string
@@ -71,6 +71,16 @@ export type ArchiveRace = {
   movingSec: number
   paceSecPerKm: number
 }
+
+/** Semanas que antecederam a prova, terminando na semana dela. */
+export type RaceBuildUp = {
+  weeks: { weekStart: string; km: number }[]
+  km: number
+  /** Maior corrida do ciclo, sem contar a própria prova. */
+  longestRunKm: number
+}
+
+export type ArchiveRace = DetectedRace & { buildUp: RaceBuildUp }
 
 export type ArchiveStreaks = {
   longestWeeks: number

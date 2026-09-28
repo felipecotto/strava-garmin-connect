@@ -74,6 +74,15 @@ export function eachMonth(fromMonth: string, toMonth: string): string[] {
   return months
 }
 
+/** Dias "YYYY-MM-DD" do mês "YYYY-MM". */
+export function eachDayOfMonth(month: string): string[] {
+  const days: string[] = []
+  for (let day = `${month}-01`; monthKey(day) === month; day = addDays(day, 1)) {
+    days.push(day)
+  }
+  return days
+}
+
 /** Extrai o fuso IANA do formato do Strava: "(GMT-03:00) America/Sao_Paulo". */
 export function ianaTimeZone(stravaTimeZone: string | null): string | null {
   const match = stravaTimeZone?.match(/\)\s*(\S+)$/)

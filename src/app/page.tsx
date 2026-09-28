@@ -9,6 +9,7 @@ import { EDITION_LEDE, EditionPage, editionLabel } from "@/components/archive/ed
 import { EditionHero } from "@/components/archive/edition/edition-hero"
 import { EditionNav } from "@/components/archive/edition/edition-nav"
 import { EditionContainer } from "@/components/archive/edition/section"
+import { buildStoryCards, hasStoryCards } from "@/components/archive/edition/story-card/content"
 import {
   DemoHeroActions,
   ViewerNavActions,
@@ -37,6 +38,7 @@ type HomePageProps = {
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const example = await getExampleEdition()
+  const storyCards = example ? buildStoryCards(example.archive) : {}
   const navActions = (
     <Suspense fallback={<Skeleton className="h-9 w-36 rounded-full" />}>
       <ViewerNavActions />
@@ -44,7 +46,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   )
   const heroActions = (
     <Suspense fallback={<Skeleton className="h-11 w-44 rounded-full" />}>
-      <DemoHeroActions />
+      <DemoHeroActions hasStoryCard={hasStoryCards(storyCards)} />
     </Suspense>
   )
   const banner = (
@@ -79,6 +81,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <EditionPage
       profile={example.profile}
       archive={example.archive}
+      storyCards={storyCards}
       navActions={navActions}
       banner={banner}
       finalCta={finalCta}
