@@ -8,36 +8,37 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 
-import { EDITION_ANCHORS } from "./anchors"
+import { EDITION_ANCHORS, type EditionAnchor } from "./anchors"
 import { EditionMobileMenu } from "./edition-mobile-menu"
+import { ReadingProgress } from "./reading-progress"
 import { EditionContainer } from "./section"
 
 /** `showSections` desliga as âncoras em páginas que não são a edição (ex.: configurações). */
 export function EditionNav({
   actions,
   showSections = true,
+  anchors = EDITION_ANCHORS,
 }: {
   actions?: ReactNode
   showSections?: boolean
+  anchors?: EditionAnchor[]
 }) {
   return (
-    <header className="border-b border-border">
-      <EditionContainer className="flex items-center justify-between gap-4 py-5">
+    <header className="sticky top-[env(safe-area-inset-top,0px)] z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+      <EditionContainer className="flex items-center justify-between gap-4 py-4">
         <Link href="/" className="flex items-baseline gap-2.5">
-          <span className="text-[26px] leading-none font-black tracking-[-0.01em] [font-stretch:70%]">CTT</span>
-          <span className="hidden font-mono text-[11px] tracking-[0.06em] text-muted-foreground uppercase sm:inline">
-            Arquivo de corrida
-          </span>
+          <span className="font-[family-name:var(--font-display)] text-[28px] leading-none font-black">CTT</span>
+          <span className="type-label hidden text-muted-foreground sm:inline">Arquivo de corrida</span>
         </Link>
         <div className="flex items-center gap-2 md:gap-6">
           {showSections ? (
-            <NavigationMenu aria-label="Seções" className="hidden md:flex">
-              <NavigationMenuList className="gap-6">
-                {EDITION_ANCHORS.map((anchor) => (
+            <NavigationMenu aria-label="Capítulos" className="hidden md:flex">
+              <NavigationMenuList className="gap-5">
+                {anchors.map((anchor) => (
                   <NavigationMenuItem key={anchor.href}>
                     <NavigationMenuLink
                       href={anchor.href}
-                      className="p-0 font-mono text-xs tracking-[0.06em] text-ink-2 uppercase transition-colors duration-150 hover:bg-transparent hover:text-foreground focus:bg-transparent"
+                      className="type-label p-0 text-ink-2 transition-colors duration-150 hover:bg-transparent hover:text-foreground focus:bg-transparent"
                     >
                       {anchor.label}
                     </NavigationMenuLink>
@@ -46,8 +47,9 @@ export function EditionNav({
               </NavigationMenuList>
             </NavigationMenu>
           ) : null}
+          {showSections ? <ReadingProgress /> : null}
           {actions}
-          {showSections ? <EditionMobileMenu /> : null}
+          {showSections ? <EditionMobileMenu anchors={anchors} /> : null}
         </div>
       </EditionContainer>
     </header>

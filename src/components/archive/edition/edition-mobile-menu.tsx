@@ -12,9 +12,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { EDITION_ANCHORS } from "./anchors"
+import { EDITION_ANCHORS, type EditionAnchor } from "./anchors"
 
-export function EditionMobileMenu() {
+export function EditionMobileMenu({ anchors = EDITION_ANCHORS }: { anchors?: EditionAnchor[] }) {
   return (
     <Sheet>
       <SheetTrigger
@@ -27,11 +27,11 @@ export function EditionMobileMenu() {
           <SheetTitle className="type-label text-muted-foreground">Seções</SheetTitle>
         </SheetHeader>
         <nav aria-label="Seções" className="flex flex-col px-4">
-          {EDITION_ANCHORS.map((anchor) => (
+          {anchors.map((anchor) => (
             <SheetClose
               key={anchor.href}
               render={<a href={anchor.href} />}
-              className="border-t border-border py-4 text-2xl font-bold [font-stretch:80%]"
+              className="type-subtitle border-t border-border py-4"
             >
               {anchor.label}
             </SheetClose>

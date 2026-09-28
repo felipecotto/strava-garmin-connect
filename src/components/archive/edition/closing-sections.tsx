@@ -1,71 +1,94 @@
 /* eslint-disable @next/next/no-img-element -- SVG oficial do Strava, sem otimização de imagem */
 import { ArrowRight } from "lucide-react"
+import Image from "next/image"
+import { Suspense } from "react"
 
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { DEFAULT_LOOKBACK_DAYS } from "@/lib/sync/initial-sync"
 import { cn } from "@/lib/utils"
 
-import { EditionContainer, EditionSection, MonoLabel } from "./section"
+import { BetaSlots, BetaSlotsSkeleton } from "./beta/beta-slots"
+import type { EditionPhoto } from "./photos"
+import { EditionContainer, MonoLabel } from "./section"
 
 const DAYS_PER_YEAR = 365
 
-export function ConnectStravaLink({ size = "default" }: { size?: "default" | "sm" | "lg" }) {
+export function ConnectStravaLink({
+  size = "default",
+  className,
+}: {
+  size?: "default" | "sm" | "lg"
+  className?: string
+}) {
   return (
-    <a href={siteConfig.connectStravaPath} className={cn(buttonVariants({ size }))}>
+    <a href={siteConfig.connectStravaPath} className={cn(buttonVariants({ size }), className)}>
       Conectar Strava
       <ArrowRight aria-hidden />
     </a>
   )
 }
 
-export function HowItWorksSection() {
+function steps() {
   const importYears = Math.round(DEFAULT_LOOKBACK_DAYS / DAYS_PER_YEAR)
-  const steps = [
+  return [
     {
-      label: "Conectar",
-      title: "Um clique no Strava",
-      text: `Acesso só de leitura. Na primeira vez, o CTT importa os últimos ${importYears} anos de treinos.`,
+      number: "01",
+      title: "Conectar",
+      text: `Acesso só de leitura. Na primeira vez, o CTT importa os últimos ${importYears} anos de treinos; os novos entram sozinhos.`,
     },
     {
-      label: "Ler",
-      title: "Uma página por atleta",
+      number: "02",
+      title: "Ler",
       text: `Volume, forma, recordes e rotina num endereço seu, como ${siteConfig.domain}/${siteConfig.exampleProfileSlug}. Público ou privado, você escolhe.`,
     },
     {
-      label: "Compartilhar",
-      title: "Cards prontos",
+      number: "03",
+      title: "Compartilhar",
       text: "Depois de uma prova ou no fim do mês, o card já está montado com os seus números.",
     },
   ]
-
-  return (
-    <EditionSection
-      label="Como funciona"
-      title="Sem feed. Sem ranking."
-      description="O CTT não substitui o Strava. Ele só lê o que já está lá e organiza."
-    >
-      <div className="grid gap-8 min-[860px]:grid-cols-3 lg:gap-10">
-        {steps.map((step) => (
-          <div key={step.label} className="border-t border-foreground pt-3.5">
-            <MonoLabel>{step.label}</MonoLabel>
-            <h3 className="mt-2 mb-1.5 text-2xl leading-[1.1] font-bold [font-stretch:80%]">{step.title}</h3>
-            <p className="text-[15px] text-ink-2">{step.text}</p>
-          </div>
-        ))}
-      </div>
-    </EditionSection>
-  )
 }
 
-export function FinalCta() {
+/** Convite final para visitantes, com o contador de vagas do beta. */
+export function SuaVezSection({ photo }: { photo?: EditionPhoto }) {
   return (
-    <section id="conectar" className="border-t border-foreground py-16 md:py-36">
+    <section id="conectar" data-km="42,2" aria-labelledby="conectar-titulo" className="scroll-mt-16 py-16 md:py-28">
       <EditionContainer>
-        <h2 className="mb-7 text-[clamp(56px,11vw,160px)] leading-[0.85] font-black tracking-[-0.03em] text-balance [font-stretch:66%]">
-          Quanto você já correu?
-        </h2>
-        <ConnectStravaLink size="lg" />
+        <div className="grid gap-12 border-t border-foreground pt-10 lg:grid-cols-12 lg:gap-12 md:pt-14">
+          <div className={cn(photo ? "lg:col-span-6" : "lg:col-span-8")}>
+            <h2 id="conectar-titulo" className="type-hero text-balance">
+              Qual é a sua <span className="text-signal">história?</span>
+            </h2>
+            <p className="mt-6 max-w-[46ch] text-[17px] text-ink-2 md:text-[19px]">
+              Conecte o Strava. O CTT lê todo o seu histórico, só para leitura, e monta a sua edição em alguns minutos.
+            </p>
+
+            <div className="mt-10">
+              <Suspense fallback={<BetaSlotsSkeleton />}>
+                <BetaSlots />
+              </Suspense>
+            </div>
+
+            <ol className="mt-14 grid gap-0">
+              {steps().map((step) => (
+                <li key={step.number} className="grid grid-cols-[40px_minmax(0,1fr)] gap-x-3 border-t border-border py-5">
+                  <span className="type-label pt-1.5 text-muted-foreground">{step.number}</span>
+                  <div>
+                    <h3 className="type-subtitle text-2xl">{step.title}</h3>
+                    <p className="mt-1.5 max-w-[48ch] text-[15px] text-ink-2">{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {photo ? (
+            <figure className="relative hidden aspect-[25/36] overflow-hidden bg-ink lg:col-span-6 lg:block">
+              <Image src={photo.src} alt={photo.alt} fill sizes="45vw" className="object-cover" />
+            </figure>
+          ) : null}
+        </div>
       </EditionContainer>
     </section>
   )
@@ -73,27 +96,27 @@ export function FinalCta() {
 
 export function EditionFooter() {
   return (
-    <footer className="border-t border-border py-7">
-      <EditionContainer className="flex flex-wrap items-center justify-between gap-4">
-        <MonoLabel>CTT · {siteConfig.domain}</MonoLabel>
+    <footer className="overflow-hidden bg-ink text-paper">
+      <EditionContainer className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-10">
+        <MonoLabel className="text-paper/70">CTT · {siteConfig.domain}</MonoLabel>
+        <MonoLabel className="text-paper/70">−23,5505 / −46,6333 · São Paulo, BR</MonoLabel>
         <div className="flex items-center gap-4">
-          <MonoLabel>Dados via Strava</MonoLabel>
-          <img
-            src="/brand/powered-by-strava-black.svg"
-            alt="Powered by Strava"
-            width={146}
-            height={15}
-            className="h-[15px] w-auto dark:hidden"
-          />
+          <MonoLabel className="text-paper/70">Dados via Strava</MonoLabel>
           <img
             src="/brand/powered-by-strava-white.svg"
             alt="Powered by Strava"
             width={146}
             height={15}
-            className="hidden h-[15px] w-auto dark:block"
+            className="h-[15px] w-auto"
           />
         </div>
       </EditionContainer>
+      <p
+        aria-hidden
+        className="mt-6 -mb-[0.2em] text-center font-[family-name:var(--font-display)] text-[34vw] leading-[0.8] font-black tracking-[-0.02em] select-none"
+      >
+        CTT
+      </p>
     </footer>
   )
 }

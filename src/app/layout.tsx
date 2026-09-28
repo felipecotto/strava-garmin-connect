@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Archivo, Geist_Mono } from "next/font/google"
+import { Archivo, Barlow_Condensed, Caveat, Geist_Mono } from "next/font/google"
 
 import { MonitoringProvider } from "@/components/analytics/monitoring-provider"
 
@@ -8,7 +8,20 @@ import "./globals.css"
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
-  axes: ["wdth"],
+})
+
+/** Display: números gigantes e títulos em caixa alta. */
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+})
+
+/** Anotações à mão, no máximo quatro por página. */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500"],
 })
 
 const geistMono = Geist_Mono({
@@ -65,7 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${archivo.variable} ${geistMono.variable} h-full`}
+      className={`${archivo.variable} ${barlowCondensed.variable} ${caveat.variable} ${geistMono.variable} light h-full`}
     >
       <body className="flex min-h-full flex-col font-sans">
         <MonitoringProvider />

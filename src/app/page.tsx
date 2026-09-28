@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
 
-import {
-  EditionFooter,
-  HowItWorksSection,
-} from "@/components/archive/edition/closing-sections"
-import { EDITION_LEDE, EditionPage, editionLabel } from "@/components/archive/edition/edition-page"
+import { EditionFooter, SuaVezSection } from "@/components/archive/edition/closing-sections"
 import { EditionHero } from "@/components/archive/edition/edition-hero"
 import { EditionNav } from "@/components/archive/edition/edition-nav"
-import { EditionContainer } from "@/components/archive/edition/section"
-import { buildStoryCards, hasStoryCards } from "@/components/archive/edition/story-card/content"
+import {
+  archiveLede,
+  EDITION_LEDE,
+  EditionPage,
+  editionLabel,
+} from "@/components/archive/edition/edition-page"
+import { buildStoryCards } from "@/components/archive/edition/story-card/content"
 import {
   DemoHeroActions,
   ViewerNavActions,
@@ -22,13 +23,17 @@ import { getExampleEdition } from "@/lib/profile/get-example-edition"
 
 export const metadata: Metadata = {
   title: {
-    absolute: "CTT — Arquivo de corrida",
+    absolute: "CTT — Seu Strava, editado",
   },
 }
 
 const HOME_TITLE = (
   <>
-    Seu Strava, <em className="text-signal not-italic">editado.</em>
+    Seu Strava,
+    <br />
+    editado
+    <br />
+    <span className="text-signal">em 42 km.</span>
   </>
 )
 
@@ -40,13 +45,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const example = await getExampleEdition()
   const storyCards = example ? buildStoryCards(example.archive) : {}
   const navActions = (
-    <Suspense fallback={<Skeleton className="h-9 w-36 rounded-full" />}>
+    <Suspense fallback={<Skeleton className="h-10 w-36 rounded-none" />}>
       <ViewerNavActions />
     </Suspense>
   )
   const heroActions = (
-    <Suspense fallback={<Skeleton className="h-11 w-44 rounded-full" />}>
-      <DemoHeroActions hasStoryCard={hasStoryCards(storyCards)} />
+    <Suspense fallback={<Skeleton className="h-12 w-44 rounded-none" />}>
+      <DemoHeroActions />
     </Suspense>
   )
   const banner = (
@@ -54,23 +59,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <ConnectionAlerts searchParams={searchParams} />
     </Suspense>
   )
-  const finalCta = (
-    <Suspense fallback={null}>
-      <VisitorFinalCta />
-    </Suspense>
-  )
 
   if (!example) {
     return (
       <>
-        <EditionNav actions={navActions} />
+        <EditionNav actions={navActions} showSections={false} />
         <main id="top">
-          <EditionContainer className="pt-10 pb-14 md:pt-22 md:pb-28">
-            {banner}
-            <EditionHero label="Arquivo de corrida" title={HOME_TITLE} lede={EDITION_LEDE} actions={heroActions} />
-          </EditionContainer>
-          <HowItWorksSection />
-          {finalCta}
+          <EditionHero
+            label="Arquivo de corrida"
+            title={HOME_TITLE}
+            lede={EDITION_LEDE}
+            actions={heroActions}
+            banner={banner}
+          />
+          <SuaVezSection />
         </main>
         <EditionFooter />
       </>
@@ -84,11 +86,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       storyCards={storyCards}
       navActions={navActions}
       banner={banner}
-      finalCta={finalCta}
+      finalCta={(photo) => (
+        <Suspense fallback={null}>
+          <VisitorFinalCta photo={photo} />
+        </Suspense>
+      )}
       hero={{
         label: editionLabel(example.profile, true),
         title: HOME_TITLE,
-        lede: EDITION_LEDE,
+        lede: archiveLede(example.archive),
         badge: <Badge variant="outline">Arquivo de exemplo</Badge>,
         actions: heroActions,
       }}

@@ -84,6 +84,7 @@ export async function upsertProfileFromAthlete(
         country: athlete.country,
         avatar_url: athlete.profile || athlete.profile_medium,
         unit_system: unitSystem,
+        strava_revoked_at: null,
       })
       .eq("id", existing.id)
       .select("*")
@@ -144,4 +145,15 @@ export async function shouldRunInitialSync(profileId: string): Promise<boolean> 
     .maybeSingle()
 
   return profile?.sync_status !== "ready"
+}
+
+/** Atleta com perfil ativo (não desconectado), que já ocupa uma vaga no app do Strava. */
+export async function isConnectedAthlete(athleteId: number): Promise<boolean> {
+  const { data } = await createSupabaseAdminClient()
+    .from("profiles")
+    .select("id")
+    .eq("strava_athlete_id", athleteId)
+    .is("strava_revoked_at", null)
+    .maybeSingle()
+  return Boolean(data)
 }

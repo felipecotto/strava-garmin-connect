@@ -28,6 +28,10 @@ const errorCopy: Record<string, Omit<AlertCopy, "variant">> = {
       </>
     ),
   },
+  capacity: {
+    title: "Beta lotado",
+    body: "As vagas de atletas conectados estão ocupadas. Deixe seu e-mail na fila no fim da página e avisamos quando abrir uma vaga.",
+  },
   profile: {
     title: "Conta Strava conectada, mas o perfil não foi criado",
     body: (
@@ -59,7 +63,8 @@ function alertFromSearchParams(
     }
   }
   const error = typeof params.error === "string" ? errorCopy[params.error] : undefined
-  return error ? { variant: "destructive", ...error } : null
+  if (!error) return null
+  return { variant: params.error === "capacity" ? "signal" : "destructive", ...error }
 }
 
 /** Aviso de volta do OAuth do Strava (`?connected`, `?disconnected`, `?error`). */

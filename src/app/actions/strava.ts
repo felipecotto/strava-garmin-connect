@@ -6,6 +6,8 @@ import { fetchAthlete, getValidAccessToken } from "@/lib/strava/api"
 import { deauthorizeAccessToken } from "@/lib/strava/auth"
 import { isStravaConfigured } from "@/lib/strava/env"
 import { getStravaIronSession } from "@/lib/strava/session"
+import { createSupabaseAdminClient } from "@/lib/supabase/admin"
+import { isSupabaseConfigured } from "@/lib/supabase/env"
 import type { StravaAthlete } from "@/lib/strava/types"
 
 export type ProfileStravaResult =
@@ -42,6 +44,15 @@ export async function logoutStrava() {
     } catch {
       // Ainda limpamos a sessão local para garantir logout no app.
     }
+  }
+
+  // Libera a vaga do beta: perfis desconectados não contam no limite de atletas.
+  if (session.profileId && isSupabaseConfigured()) {
+    const { error } = await createSupabaseAdminClient()
+      .from("profiles")
+      .update({ strava_revoked_at: new Date().toISOString() })
+      .eq("id", session.profileId)
+    if (error) console.error("[strava] falha ao marcar desconexão", error)
   }
 
   session.destroy()

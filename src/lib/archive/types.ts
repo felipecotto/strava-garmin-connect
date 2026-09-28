@@ -82,6 +82,14 @@ export type RaceBuildUp = {
 
 export type ArchiveRace = DetectedRace & { buildUp: RaceBuildUp }
 
+/** Primeira corrida registrada. */
+export type ArchiveFirstRun = {
+  date: string
+  km: number
+  paceSecPerKm: number
+  activityId: number
+}
+
 export type ArchiveStreaks = {
   longestWeeks: number
   longestFrom: string | null
@@ -102,6 +110,7 @@ export type ArchiveData = {
   /** Dia de referência (YYYY-MM-DD, fuso do atleta) usado nos cálculos. */
   today: string
   totals: ArchiveTotals
+  firstRun: ArchiveFirstRun | null
   weeks: ArchiveWeek[]
   months: ArchiveMonth[]
   years: ArchiveYear[]

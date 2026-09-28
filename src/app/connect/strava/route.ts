@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 
+import { getBetaStatus } from "@/lib/beta/get-beta-status"
+
 import { getAppOrigin, getStravaOAuthConfig, isStravaConfigured } from "@/lib/strava/env"
 import { createStravaOAuthState } from "@/lib/strava/oauth-state"
 
@@ -8,6 +10,15 @@ export async function GET(request: Request) {
 
   if (!isStravaConfigured()) {
     return NextResponse.redirect(new URL("/?error=config", origin))
+  }
+
+  // Beta lotado: novos atletas vão para a fila. `?retorno=1` deixa passar quem já está no beta.
+  const url = new URL(request.url)
+  if (url.searchParams.get("retorno") !== "1") {
+    const beta = await getBetaStatus()
+    if (beta.phase === "lotado") {
+      return NextResponse.redirect(new URL("/?error=capacity#conectar", origin))
+    }
   }
 
   const { clientId, redirectUri } = getStravaOAuthConfig(request)

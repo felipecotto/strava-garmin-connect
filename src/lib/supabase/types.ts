@@ -24,6 +24,7 @@ export type Database = {
           unit_system: "metric" | "imperial"
           sync_status: "pending" | "syncing" | "ready" | "error"
           last_synced_at: string | null
+          strava_revoked_at: string | null
           created_at: string
           updated_at: string
         }
@@ -41,6 +42,7 @@ export type Database = {
           unit_system?: "metric" | "imperial"
           sync_status?: "pending" | "syncing" | "ready" | "error"
           last_synced_at?: string | null
+          strava_revoked_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -58,6 +60,7 @@ export type Database = {
           unit_system?: "metric" | "imperial"
           sync_status?: "pending" | "syncing" | "ready" | "error"
           last_synced_at?: string | null
+          strava_revoked_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -272,6 +275,33 @@ export type Database = {
           },
         ]
       }
+      beta_waitlist: {
+        Row: {
+          id: string
+          email: string
+          status: "waiting" | "invited" | "joined" | "left" | "expired"
+          invited_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          status?: "waiting" | "invited" | "joined" | "left" | "expired"
+          invited_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          status?: "waiting" | "invited" | "joined" | "left" | "expired"
+          invited_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
@@ -285,3 +315,4 @@ export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"]
 export type ProfileStatsRow = Database["public"]["Tables"]["profile_stats"]["Row"]
 export type PersonalRecordRow =
   Database["public"]["Tables"]["personal_records"]["Row"]
+export type BetaWaitlistRow = Database["public"]["Tables"]["beta_waitlist"]["Row"]

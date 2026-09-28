@@ -1,5 +1,5 @@
-import { metersToKm, onlyRuns } from "@/lib/archive/activity"
-import { ianaTimeZone, todayKey } from "@/lib/archive/dates"
+import { metersToKm, onlyRuns, paceSecPerKm, roundTo } from "@/lib/archive/activity"
+import { ianaTimeZone, localDayKey, todayKey } from "@/lib/archive/dates"
 import { computeLoad, computePauses } from "@/lib/archive/load"
 import {
   computeBuildUp,
@@ -18,6 +18,7 @@ import { computeStreaks } from "@/lib/archive/streaks"
 import type {
   ArchiveActivity,
   ArchiveData,
+  ArchiveFirstRun,
   ArchiveHighlights,
   ArchiveMonth,
 } from "@/lib/archive/types"
@@ -64,6 +65,21 @@ function computePeaks(
   return { peakWeek, peakMonth }
 }
 
+function computeFirstRun(runs: ArchiveActivity[]): ArchiveFirstRun | null {
+  let first: ArchiveActivity | null = null
+  for (const run of runs) {
+    if (run.distance_m <= 0) continue
+    if (!first || run.start_date_local < first.start_date_local) first = run
+  }
+  if (!first) return null
+  return {
+    date: localDayKey(first.start_date_local),
+    km: metersToKm(first.distance_m),
+    paceSecPerKm: roundTo(paceSecPerKm(first.distance_m, first.moving_time_s), 0),
+    activityId: first.id,
+  }
+}
+
 /** Monta a edição completa a partir de todas as atividades do atleta. */
 export function buildArchive(
   activities: ArchiveActivity[],
@@ -90,6 +106,7 @@ export function buildArchive(
   return {
     today,
     totals: computeTotals(runs),
+    firstRun: computeFirstRun(runs),
     weeks,
     months,
     years: computeYears(runs),

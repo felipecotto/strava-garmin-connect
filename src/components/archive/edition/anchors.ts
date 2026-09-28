@@ -2,9 +2,12 @@ export type EditionAnchor = { href: `#${string}`; label: string }
 
 export const STORY_CARD_ANCHOR = "card"
 
+/** Capítulos da edição, na ordem da prova. A página filtra os que existem para o atleta. */
 export const EDITION_ANCHORS: EditionAnchor[] = [
+  { href: "#largada", label: "Largada" },
+  { href: "#habito", label: "Hábito" },
   { href: "#volume", label: "Volume" },
-  { href: "#forma", label: "Forma" },
   { href: "#recordes", label: "Recordes" },
-  { href: `#${STORY_CARD_ANCHOR}`, label: "Card" },
+  { href: "#muro", label: "Muro" },
+  { href: "#chegada", label: "Chegada" },
 ]

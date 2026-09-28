@@ -2,13 +2,14 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
-import { EDITION_LEDE, EditionPage, editionLabel } from "@/components/archive/edition/edition-page"
+import { archiveLede, EditionPage, editionLabel } from "@/components/archive/edition/edition-page"
 import { EditionSkeleton } from "@/components/archive/edition/edition-skeleton"
 import { buildStoryCards, hasStoryCards } from "@/components/archive/edition/story-card/content"
 import {
   OwnerOnly,
   ProfileHeroActions,
   ViewerNavActions,
+  VisitorFinalCta,
 } from "@/components/archive/edition/viewer-slots"
 import { ConnectionAlerts } from "@/components/site/connection-alerts"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -96,16 +97,21 @@ async function ProfileEdition({
         </Suspense>
       }
       navActions={
-        <Suspense fallback={<Skeleton className="h-9 w-36 rounded-full" />}>
+        <Suspense fallback={<Skeleton className="h-10 w-36 rounded-none" />}>
           <ViewerNavActions />
         </Suspense>
       }
+      finalCta={(photo) => (
+        <Suspense fallback={null}>
+          <VisitorFinalCta photo={photo} />
+        </Suspense>
+      )}
       hero={{
         label: editionLabel(profile, false),
         title: profile.display_name,
-        lede: profile.bio?.trim() || EDITION_LEDE,
+        lede: profile.bio?.trim() || archiveLede(archive),
         actions: (
-          <Suspense fallback={<Skeleton className="h-11 w-44 rounded-full" />}>
+          <Suspense fallback={<Skeleton className="h-12 w-44 rounded-none" />}>
             <ProfileHeroActions profile={profile} hasStoryCard={hasStoryCards(storyCards)} />
           </Suspense>
         ),

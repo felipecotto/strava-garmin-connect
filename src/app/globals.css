@@ -15,7 +15,9 @@
 
 @theme inline {
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-barlow-condensed), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-display: var(--font-barlow-condensed), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-note: var(--font-caveat), "Comic Sans MS", cursive;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --color-background: var(--background);
@@ -44,6 +46,9 @@
   --color-signal: var(--signal);
   --color-signal-soft: var(--signal-soft);
   --color-ink-2: var(--ink-2);
+  --color-signal-on-ink: var(--signal-on-ink);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
 
   --color-sidebar: var(--background);
   --color-sidebar-foreground: var(--foreground);
@@ -85,6 +90,10 @@
   --signal: #2b34f5;
   --signal-soft: #dadcff;
   --ink-2: #4a4c46;
+  /* Cores fixas para blocos de capítulo (Muro em tinta, Chegada em ultramar). */
+  --ink: #111210;
+  --paper: #f2f2ee;
+  --signal-on-ink: #8a90ff;
   --chart-1: #2b34f5;
   --chart-2: #111210;
   --chart-3: #4a4c46;
@@ -189,55 +198,118 @@
   }
 }
 
-/* Escala tipográfica editorial */
-@utility type-odometer {
-  font-family: var(--font-heading);
-  font-size: clamp(88px, 19vw, 260px);
+/* Escala tipográfica editorial
+ * Display em Barlow Condensed (caixa alta), texto em Archivo, dados em Geist Mono.
+ * Tamanhos permitidos: 12, 14, 16, 19, 24, 32, 56, 80, 128, 200 e o número gigante.
+ */
+@utility type-giant {
+  font-family: var(--font-display);
+  font-size: clamp(120px, 24vw, 340px);
   font-weight: 900;
-  font-stretch: 62%;
-  line-height: 0.78;
+  line-height: 0.8;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
 }
 
-@utility type-display {
-  font-family: var(--font-heading);
-  font-size: clamp(44px, 7.4vw, 104px);
-  font-weight: 800;
-  font-stretch: 78%;
-  line-height: 0.9;
+@utility type-hero {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 8vw, 124px);
+  font-weight: 900;
+  line-height: 0.86;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+@utility type-km {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 8.5vw, 128px);
+  font-weight: 900;
+  line-height: 0.85;
   letter-spacing: -0.01em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 9vw, 128px);
+  font-weight: 900;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
 }
 
 @utility type-headline {
-  font-family: var(--font-heading);
-  font-size: clamp(34px, 4.6vw, 64px);
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.5vw, 80px);
   font-weight: 800;
-  font-stretch: 75%;
-  line-height: 0.92;
-  letter-spacing: -0.005em;
+  line-height: 0.9;
+  text-transform: uppercase;
 }
 
-@utility type-record {
-  font-family: var(--font-heading);
-  font-size: clamp(40px, 4.6vw, 64px);
+@utility type-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.6vw, 56px);
   font-weight: 800;
-  font-stretch: 70%;
-  line-height: 0.9;
+  line-height: 0.92;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-subtitle {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+/* Nome de distância nas células de recorde. */
+@utility type-record {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 5vw, 80px);
+  font-weight: 900;
+  line-height: 0.85;
   font-variant-numeric: tabular-nums;
 }
 
 @utility type-label {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.3;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 @utility type-axis {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.04em;
+}
+
+@utility type-note {
+  font-family: var(--font-note);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+/* Faixa em ultramar que rola com os totais. */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-ticker {
+  animation: ticker 60s linear infinite;
+  &:hover {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }

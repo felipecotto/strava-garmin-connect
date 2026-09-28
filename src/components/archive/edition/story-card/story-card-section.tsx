@@ -12,10 +12,10 @@ import { StoryCardStudio } from "./story-card"
 function StoryCardIntro() {
   return (
     <>
-      <MonoLabel>Card para o Stories</MonoLabel>
+      <MonoLabel>Pós-prova · A capa</MonoLabel>
       <h2 className="type-headline mt-2.5 text-balance">Um treino vira uma capa.</h2>
       <p className="mt-5 max-w-[56ch] text-ink-2">
-        Escolha o que contar: uma prova, um mês ou a temporada inteira. O card sai em{" "}
+        Cada prova, cada mês e cada temporada viram um card pronto para o Stories. Ele sai em{" "}
         {STORY_IMAGE_SIZE.width} × {STORY_IMAGE_SIZE.height}, com os números no centro e fora
         das áreas que o Instagram cobre.
       </p>
@@ -38,7 +38,7 @@ export function StoryCardSection({ profile, cards }: { profile: ProfileRow; card
   )
 
   return (
-    <section id={STORY_CARD_ANCHOR} className={EDITION_SECTION_CLASS}>
+    <section id={STORY_CARD_ANCHOR} data-km="42,2" className={EDITION_SECTION_CLASS}>
       <EditionContainer>
         <Suspense fallback={studio(false)}>
           <OwnerSwitch profileId={profile.id} owner={studio(true)} fallback={studio(false)} />
