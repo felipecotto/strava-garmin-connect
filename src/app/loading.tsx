@@ -1,5 +1,5 @@
 import { EditionSkeleton } from "@/components/archive/edition/edition-skeleton"
 
-export default function PublicProfileLoading() {
+export default function Loading() {
   return <EditionSkeleton />
 }

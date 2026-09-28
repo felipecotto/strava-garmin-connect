@@ -81,6 +81,7 @@ export type Database = {
           start_date_local: string
           timezone: string | null
           map_summary_polyline: string | null
+          workout_type: number | null
           created_at: string
           updated_at: string
         }
@@ -101,6 +102,7 @@ export type Database = {
           start_date_local: string
           timezone?: string | null
           map_summary_polyline?: string | null
+          workout_type?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -121,6 +123,7 @@ export type Database = {
           start_date_local?: string
           timezone?: string | null
           map_summary_polyline?: string | null
+          workout_type?: number | null
           created_at?: string
           updated_at?: string
         }

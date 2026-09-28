@@ -34,6 +34,8 @@ export type StravaActivity = {
   max_speed?: number
   average_heartrate?: number
   max_heartrate?: number
+  /** Corrida: 0 padrão, 1 prova, 2 longão, 3 treino. */
+  workout_type?: number | null
   timezone?: string
   start_date: string
   start_date_local: string

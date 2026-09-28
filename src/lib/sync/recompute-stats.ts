@@ -1,3 +1,6 @@
+import { revalidateTag } from "next/cache"
+
+import { archiveCacheTag } from "@/lib/archive/cache-tags"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 import type { Json } from "@/lib/supabase/types"
 import {
@@ -78,4 +81,12 @@ export async function recomputeProfileAggregates(
       throw new Error(`Falha ao inserir personal_records: ${insertError.message}`)
     }
   }
+}
+
+/**
+ * Marca a edição do arquivo como desatualizada ao fim de uma sincronização.
+ * Só pode ser chamada em Route Handlers e Server Functions (não durante o render).
+ */
+export function invalidateArchive(profileId: string): void {
+  revalidateTag(archiveCacheTag(profileId), "max")
 }
