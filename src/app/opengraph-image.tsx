@@ -18,10 +18,10 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "56px",
-          background: "#FAFAF8",
+          background: "#F2F2EE",
           color: "#131311",
           fontFamily: "system-ui, sans-serif",
-          borderBottom: "8px solid #E8450A",
+          borderBottom: "8px solid #2B34F5",
         }}
       >
         <div
@@ -36,7 +36,7 @@ export default function OpengraphImage() {
             fontFamily: "ui-monospace, monospace",
           }}
         >
-          <div style={{ width: 8, height: 8, background: "#E8450A" }} />
+          <div style={{ width: 8, height: 8, background: "#2B34F5" }} />
           CTT — Arquivo de Performance
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>

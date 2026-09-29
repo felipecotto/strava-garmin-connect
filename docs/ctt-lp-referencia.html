@@ -1,0 +1,547 @@
+<title>CTT — Arquivo de Corrida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Swiss running-lab — one wide column, data set like a race bib: condensed numerals, mono labels, a single ultramarine signal. */
+:root{
+  --bg:#F2F2EE; --surface:#FFFFFF; --ink:#111210; --ink-2:#4A4C46; --muted:#7A7C74;
+  --line:#D8D9D2; --line-soft:#E6E7E1; --accent:#2B34F5; --accent-soft:#DADCFF; --on-accent:#FFFFFF;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1240px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D0E0C; --surface:#161714; --ink:#ECEDE7; --ink-2:#B4B6AE; --muted:#83857C;
+  --line:#2C2E29; --line-soft:#20221E; --accent:#8A90FF; --accent-soft:#262A5C; --on-accent:#0D0E0C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D0E0C; --surface:#161714; --ink:#ECEDE7; --ink-2:#B4B6AE; --muted:#83857C;
+  --line:#2C2E29; --line-soft:#20221E; --accent:#8A90FF; --accent-soft:#262A5C; --on-accent:#0D0E0C; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gutter)}
+.mono{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:20px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--f-display);font-weight:900;font-stretch:70%;font-size:26px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:baseline;gap:10px}
+.brand small{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:44px;padding-inline:18px;border-radius:999px;background:var(--ink);color:var(--bg);font-family:var(--f-body);font-weight:600;font-size:15px;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--ink);background:transparent;color:var(--ink)}
+.nav .btn{height:36px;font-size:13px}
+@media (max-width:760px){.nav-links a{display:none}}
+
+/* hero */
+.hero{padding-block:clamp(40px,7vw,88px) 24px}
+.hero-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end}
+.hero h1{font-family:var(--f-display);font-weight:800;font-stretch:78%;font-size:clamp(44px,7.4vw,104px);line-height:.9;letter-spacing:-.025em;margin:14px 0 0;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-lede{max-width:44ch;color:var(--ink-2);font-size:18px;margin:0 0 24px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+@media (max-width:860px){.hero-top{grid-template-columns:1fr}}
+
+.odometer{margin-top:clamp(40px,6vw,72px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(16px,3vw,40px);align-items:end;border-top:1px solid var(--ink);padding-top:16px}
+.big{font-family:var(--f-display);font-weight:900;font-stretch:62%;font-size:clamp(88px,19vw,260px);line-height:.78;letter-spacing:-.03em}
+.big sup{font-size:.22em;font-stretch:100%;font-weight:600;vertical-align:top;margin-left:.1em;letter-spacing:0;position:relative;top:.5em}
+.odo-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-left:1px solid var(--line)}
+.odo-meta div{padding:4px 14px 6px;border-right:1px solid var(--line)}
+.odo-meta b{display:block;white-space:nowrap;font-family:var(--f-display);font-stretch:75%;font-weight:700;font-size:clamp(20px,2.2vw,30px);line-height:1.05;font-variant-numeric:tabular-nums}
+@media (max-width:860px){.odometer{grid-template-columns:1fr}.odo-meta{grid-template-columns:repeat(2,minmax(0,1fr));border-left:0}.odo-meta div{border-right:0;border-top:1px solid var(--line);padding:10px 0}}
+
+.strip{margin-top:28px}
+.strip-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;overflow:visible}
+
+/* sections */
+section.block{padding-block:clamp(56px,8vw,112px);border-top:1px solid var(--line)}
+.block-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(20px,4vw,64px);margin-bottom:clamp(28px,4vw,48px);align-items:end}
+.block-head h2{font-family:var(--f-display);font-weight:800;font-stretch:75%;font-size:clamp(34px,4.6vw,64px);line-height:.95;letter-spacing:-.02em;margin:10px 0 0;text-wrap:balance}
+.block-head p{margin:0;color:var(--ink-2);max-width:56ch}
+@media (max-width:860px){.block-head{grid-template-columns:1fr}}
+
+.twocol{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+@media (max-width:900px){.twocol{grid-template-columns:1fr}}
+
+table.years{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.years th{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:0 0 8px;border-bottom:1px solid var(--ink)}
+table.years th:first-child,table.years td:first-child{text-align:left}
+table.years td{padding:9px 0;border-bottom:1px solid var(--line);text-align:right;font-size:15px}
+table.years tr.hl td{color:var(--accent);font-weight:600}
+.cell-bar{display:inline-block;height:6px;border-radius:0 3px 3px 0;background:var(--line);vertical-align:middle;margin-right:8px}
+tr.hl .cell-bar{background:var(--accent)}
+
+/* records */
+.records{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink)}
+.rec{padding:18px 18px 22px 0;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.rec + .rec{padding-left:18px}
+.rec:last-child{border-right:0}
+.rec .d{font-family:var(--f-display);font-weight:800;font-stretch:70%;font-size:clamp(40px,4.6vw,64px);line-height:.9}
+.rec .t{font-family:var(--f-display);font-stretch:80%;font-weight:600;font-size:26px;font-variant-numeric:tabular-nums}
+.rec .p{font-size:14px;color:var(--ink-2)}
+.rec .prog{margin-top:10px}
+.prog-track{position:relative;height:22px}
+.prog-track .rail{position:absolute;left:0;right:0;top:10px;height:2px;background:var(--line)}
+.prog-track .seg{position:absolute;top:10px;height:2px;background:var(--accent)}
+.prog-track .dot{position:absolute;top:5px;width:12px;height:12px;border-radius:50%;margin-left:-6px;background:var(--surface);box-shadow:0 0 0 2px var(--muted)}
+.prog-track .dot.best{background:var(--accent);box-shadow:0 0 0 2px var(--bg)}
+.prog-lbl{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.rec.star .d{color:var(--accent)}
+@media (max-width:900px){.records{grid-template-columns:repeat(2,minmax(0,1fr))}.rec:nth-child(2){border-right:0}.rec:nth-child(3){padding-left:0}.rec:nth-child(n+3){border-top:1px solid var(--line)}}
+.fine{font-size:13px;color:var(--muted);margin-top:18px;max-width:70ch}
+
+/* clock */
+.clock-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+@media (max-width:900px){.clock-grid{grid-template-columns:1fr}}
+.stat-line{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.stat-line b{font-family:var(--f-display);font-weight:800;font-stretch:70%;font-size:48px;line-height:1;color:var(--accent)}
+.stat-line span{color:var(--ink-2);max-width:32ch}
+
+/* heatmap */
+.heat-wrap{overflow-x:auto;padding-bottom:6px}
+.legend{display:flex;align-items:center;gap:6px;margin-top:12px}
+.legend i{width:12px;height:12px;border-radius:2px;display:inline-block}
+
+/* cards */
+.card-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:center}
+@media (max-width:860px){.card-stage{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.chip{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.swatches{display:flex;gap:10px}
+.sw{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+.phone{justify-self:center;width:min(330px,100%);aspect-ratio:9/16;max-width:100%;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 30px 60px -30px rgba(0,0,0,.35),0 0 0 1px var(--line)}
+
+/* the story card has its own fixed colorways (it's an exported image, not page UI) */
+.story{position:absolute;inset:0;display:flex;flex-direction:column;padding:12% 9% 12%;font-family:var(--f-body)}
+.story[data-cw="paper"]{background:#F2F2EE;color:#111210;--c-acc:#2B34F5;--c-dim:#8A8C84;--c-line:#CFD0C8}
+.story[data-cw="ink"]{background:#0F100E;color:#EFEFEA;--c-acc:#8A90FF;--c-dim:#7C7E76;--c-line:#2E302B}
+.story[data-cw="ultra"]{background:#2B34F5;color:#FFFFFF;--c-acc:#FFFFFF;--c-dim:#B9BCFF;--c-line:#5A61F8}
+.story .s-top{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.story .s-top b{font-family:var(--f-display);font-stretch:70%;font-weight:900;font-size:16px;letter-spacing:0}
+.story .s-kicker{margin-top:auto;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-dim)}
+.story .s-big{font-family:var(--f-display);font-weight:900;font-stretch:62%;font-size:clamp(52px,19vw,76px);line-height:.85;letter-spacing:-.03em;margin-top:6px;font-variant-numeric:tabular-nums}
+.story .s-big small{font-size:.32em;font-stretch:90%;font-weight:600;letter-spacing:0;margin-left:4px}
+.story .s-sub{font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
+.story .s-delta{display:inline-block;margin-top:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;padding:4px 8px;border-radius:999px;border:1px solid var(--c-acc);color:var(--c-acc);text-transform:uppercase}
+.story .s-chart{margin-top:22px}
+.story .s-chart svg{display:block;width:100%}
+.story .s-foot{display:flex;justify-content:space-between;margin-top:12px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--c-dim)}
+
+/* principles */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.pillars div{border-top:1px solid var(--ink);padding-top:14px}
+.pillars h3{font-family:var(--f-display);font-stretch:80%;font-weight:700;font-size:24px;margin:8px 0 6px;line-height:1.1}
+.pillars p{margin:0;color:var(--ink-2);font-size:15px}
+@media (max-width:860px){.pillars{grid-template-columns:1fr}}
+
+.final{padding-block:clamp(64px,10vw,140px);border-top:1px solid var(--ink)}
+.final h2{font-family:var(--f-display);font-weight:900;font-stretch:66%;font-size:clamp(56px,11vw,160px);line-height:.85;letter-spacing:-.03em;margin:0 0 28px;text-wrap:balance}
+footer{border-top:1px solid var(--line);padding-block:20px 32px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* tooltip */
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:12px;line-height:1.4;padding:8px 10px;border-radius:6px;opacity:0;transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s;white-space:nowrap}
+#tip b{font-family:var(--f-body);font-size:13px;font-weight:600;display:block}
+.axis{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.ann{font-family:var(--f-mono);font-size:10.5px;fill:var(--ink-2)}
+.hit{fill:transparent;cursor:crosshair}
+</style>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<header class="wrap nav">
+  <a class="brand" href="#top">CTT <small>Arquivo de corrida</small></a>
+  <nav class="nav-links" aria-label="Seções">
+    <a href="#volume">Volume</a><a href="#forma">Forma</a><a href="#recordes">Recordes</a><a href="#card">Card</a>
+    <a class="btn" href="#conectar">Conectar Strava</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="hero-top">
+      <div>
+        <p class="mono">Arquivo de exemplo · Felipe Oliveira · São Paulo</p>
+        <h1>Seu Strava, <em>editado.</em></h1>
+      </div>
+      <div>
+        <p class="hero-lede">O Strava guarda cada treino num feed. O CTT lê esse histórico e monta uma edição dele: quanto você correu, como sua forma mudou, onde estão seus recordes. No fim, vira um card pronto para o Stories.</p>
+        <div class="cta-row">
+          <a class="btn" href="#conectar">Conectar Strava <span aria-hidden="true">→</span></a>
+          <a class="btn ghost" href="#card">Ver o card</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="odometer">
+      <div class="big num" aria-label="7.727 quilômetros">7.727<sup>km</sup></div>
+      <div class="odo-meta">
+        <div><span class="mono">Corridas</span><b>812</b></div>
+        <div><span class="mono">Horas</span><b>705</b></div>
+        <div><span class="mono">Subida · m</span><b>29.992</b></div>
+        <div><span class="mono">Desde</span><b>2020</b></div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-head">
+        <span class="mono">Cada barra é uma semana · jan 2023 → set 2026</span>
+        <span class="mono">Pico: 80,5 km · ago 2024</span>
+      </div>
+      <div class="chart" id="c-weeks" aria-label="Quilômetros por semana, janeiro de 2023 a setembro de 2026"></div>
+    </div>
+  </div>
+
+  <section class="block" id="volume">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Volume</p><h2>Seis anos de corrida, quatro de rotina.</h2></div>
+        <p>Até 2022 eram 40 corridas por ano. Em 2023 virou hábito, em 2024 chegou a 2.349 km. O gráfico mostra o mês a mês, e a tabela resume cada temporada com o ritmo médio.</p>
+      </div>
+      <div class="twocol">
+        <div class="chart" id="c-months" aria-label="Quilômetros por mês desde 2023"></div>
+        <div>
+          <table class="years" aria-label="Resumo por ano">
+            <thead><tr><th>Ano</th><th>km</th><th>Corridas</th><th>Ritmo</th><th>Maior</th></tr></thead>
+            <tbody id="t-years"></tbody>
+          </table>
+          <p class="fine">Ritmo médio de todas as corridas do ano, em min/km. 2026 vai até 20 de setembro.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="forma">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Forma</p><h2>A curva que o feed não mostra.</h2></div>
+        <p>Forma é a média da carga dos últimos 42 dias. Fadiga é a mesma conta em 7 dias. Quando a fadiga passa muito da forma, é bloco pesado. Quando cai, é descanso. Aqui dá pra ver os dois ciclos de maratona e a pausa de maio de 2025.</p>
+      </div>
+      <div class="chart" id="c-form" aria-label="Forma e fadiga semanais"></div>
+      <div class="legend" style="gap:18px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:8px"><i style="background:var(--accent);height:3px;width:18px"></i><span class="mono">Forma · 42 dias</span></span>
+        <span style="display:flex;align-items:center;gap:8px"><i style="background:var(--muted);height:1.5px;width:18px"></i><span class="mono">Fadiga · 7 dias</span></span>
+      </div>
+      <p class="fine">Calculado a partir do Esforço Relativo que o Strava atribui a cada atividade, incluindo pedal e musculação.</p>
+    </div>
+  </section>
+
+  <section class="block" id="recordes">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Recordes</p><h2>Do primeiro ao melhor.</h2></div>
+        <p>Cada distância mostra o melhor ritmo já feito e de onde ele saiu: o ponto cinza é a primeira vez nessa distância, o azul é o recorde atual.</p>
+      </div>
+      <div class="records" id="records"></div>
+      <p class="fine">Tempos de 5K, 10K e meia são equivalentes ao ritmo médio da atividade inteira. A maratona é o tempo real em movimento.</p>
+    </div>
+  </section>
+
+  <section class="block" id="relogio">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Relógio</p><h2>Corredor das 6h da manhã.</h2></div>
+        <p>O horário e o dia da semana contam a rotina melhor que qualquer legenda. Terça e quinta são os dias mais frequentes. Sábado é o dia do longão.</p>
+      </div>
+      <div class="clock-grid">
+        <div>
+          <div class="stat-line"><b>64%</b><span>das corridas começam entre 6h e 8h.</span></div>
+          <div class="chart" id="c-hours" aria-label="Corridas por hora de início"></div>
+        </div>
+        <div>
+          <div class="stat-line"><b>30%</b><span>de todo o volume acontece aos sábados.</span></div>
+          <div class="chart" id="c-days" aria-label="Quilômetros por dia da semana"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="ano">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Últimos 12 meses</p><h2>Um ano, dia por dia.</h2></div>
+        <p>Cada quadrado é um dia, mais escuro quanto mais longe. O maior recorde de constância é outro: 70 semanas seguidas com pelo menos uma corrida, de janeiro de 2024 a abril de 2025.</p>
+      </div>
+      <div class="heat-wrap"><div class="chart" id="c-heat" style="min-width:680px" aria-label="Calendário de corridas dos últimos 12 meses"></div></div>
+      <div class="legend"><span class="mono">Menos</span><span id="heat-legend" style="display:flex;gap:4px"></span><span class="mono">Mais · 21 km+</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="card">
+    <div class="wrap card-stage">
+      <div>
+        <p class="mono">Card para o Stories</p>
+        <div class="block-head" style="grid-template-columns:1fr;margin-bottom:0">
+          <h2>Um treino vira uma capa.</h2>
+          <p>Escolha o que contar: uma prova, um mês ou a temporada inteira. O card sai em 1080 × 1920, com os números no centro e fora das áreas que o Instagram cobre.</p>
+        </div>
+        <div class="chips" role="group" aria-label="Tipo de card">
+          <button class="chip" id="k-race" aria-pressed="true" data-kind="race">Prova</button>
+          <button class="chip" id="k-month" aria-pressed="false" data-kind="month">Mês</button>
+          <button class="chip" id="k-all" aria-pressed="false" data-kind="all">Temporada</button>
+        </div>
+        <div class="swatches" role="group" aria-label="Cor do card">
+          <button class="sw" id="cw-paper" aria-label="Papel" aria-pressed="true" data-cw="paper" style="background:#F2F2EE"></button>
+          <button class="sw" id="cw-ink" aria-label="Tinta" aria-pressed="false" data-cw="ink" style="background:#0F100E"></button>
+          <button class="sw" id="cw-ultra" aria-label="Ultramar" aria-pressed="false" data-cw="ultra" style="background:#2B34F5"></button>
+        </div>
+      </div>
+      <div class="phone"><div class="story" id="story" data-cw="paper"></div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="block-head">
+        <div><p class="mono">Como funciona</p><h2>Sem feed. Sem ranking.</h2></div>
+        <p>O CTT não substitui o Strava. Ele só lê o que já está lá e organiza.</p>
+      </div>
+      <div class="pillars">
+        <div><span class="mono">Conectar</span><h3>Um clique no Strava</h3><p>Acesso só de leitura. O histórico inteiro é importado na primeira vez, e os treinos novos entram sozinhos.</p></div>
+        <div><span class="mono">Ler</span><h3>Uma página por atleta</h3><p>Volume, forma, recordes e rotina num endereço seu, como usectt.com.br/felipe. Público ou privado, você escolhe.</p></div>
+        <div><span class="mono">Compartilhar</span><h3>Cards prontos</h3><p>Depois de uma prova ou no fim do mês, o card já está montado com os seus números.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="conectar">
+    <div class="wrap">
+      <h2>Quanto você já correu?</h2>
+      <div class="cta-row"><a class="btn" href="https://www.usectt.com.br/connect/strava">Conectar Strava <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span class="mono">CTT · usectt.com.br</span><span class="mono">Dados via Strava · São Paulo, BR</span></div></footer>
+
+<script>
+(()=>{
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e};
+const fmt=(n,d=0)=>n.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pace=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")}`;
+const hms=s=>{const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=Math.round(s%60);return h?`${h}:${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")}`:`${m}:${String(x).padStart(2,"0")}`};
+const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const dstr=d=>`${d.getUTCDate()} ${MES[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+
+/* ---------- real data (Strava, 812 corridas até 20 set 2026) ---------- */
+const WEEK0=Date.UTC(2023,0,2);
+const W=[16.6,33.5,26.6,24.3,38.1,23.9,15.1,17.9,20.3,24.4,6,13.4,23.1,27.9,29.1,27.3,24.1,29,27.5,44.1,42.1,35.2,38.3,30.1,42.1,38,47.4,42.1,36.1,41.1,42.6,36.9,42.2,23.5,23.1,29.1,26,21.3,26,20,19.2,21.6,19.2,21.6,25,12,34.5,23.2,28.1,23.6,19,0,25.1,27,31.3,37.1,30.1,20.1,35.1,23.9,32.2,26.4,37.5,29.8,38.1,39.5,42.1,49.1,46.9,39.5,42.2,56.2,63.5,64.5,62.4,56,55.9,59.7,61.1,72.7,70.1,47.6,53.2,65.4,73.8,75.6,80.5,78.5,66.9,44.2,65.9,20.1,32.1,45.1,44,49.2,9,38.3,31.6,43.5,41.4,21.4,20.8,18.1,30.1,29.1,39.9,45,44.1,64.4,64.5,63.5,49.1,68,54.1,57.2,60.6,68.5,70.5,73.5,76.1,52.6,0,5,0,0,0,19.1,15,18.3,30.1,35,37.2,36.6,28.1,35.4,41.1,42.3,38.1,44.1,40.7,42,38.1,32.2,37.1,34.4,41,0,10.6,19.1,26,29.5,23.9,16,32.1,30.6,10.4,30.5,18.9,44.1,20.4,35.1,41.5,41.3,46.3,44.4,63.2,41.2,72.4,46.7,52.6,60.1,68.7,70.6,57.2,79.5,53.6,44.7,56.7,28.3,32.3,46.3,43.1,52.5,42.2,44.8,27.6,41.8,39.8,36,36.9,38.5,40.2,32.7,0];
+const weekDate=i=>new Date(WEEK0+i*7*864e5);
+const RACE_WEEKS={"2024-09-23":"Maratona · 42,8 km","2026-06-01":"Maratona · 42,5 km"};
+const MONTHS=[["2023-01",109,13],["2023-02",87,10],["2023-03",76,10],["2023-04",119,16],["2023-05",151,15],["2023-06",158,15],["2023-07",185,17],["2023-08",158,17],["2023-09",113,15],["2023-10",86,17],["2023-11",100,14],["2023-12",81,11],["2024-01",128,14],["2024-02",117,17],["2024-03",149,21],["2024-04",188,18],["2024-05",230,23],["2024-06",260,28],["2024-07",277,25],["2024-08",293,22],["2024-09",286,20],["2024-10",160,16],["2024-11",152,15],["2024-12",110,13],["2025-01",160,18],["2025-02",244,28],["2025-03",258,27],["2025-04",308,23],["2025-05",38,5],["2025-06",52,7],["2025-07",154,14],["2025-08",170,15],["2025-09",165,13],["2025-10",145,18],["2025-11",85,11],["2025-12",107,16],["2026-01",110,14],["2026-02",157,16],["2026-03",248,18],["2026-04",249,25],["2026-05",275,27],["2026-06",173,13],["2026-07",192,19],["2026-08",172,20],["2026-09",103,10]];
+const YEARS=[[2020,50,8,438,8.4],[2021,38,5,417,10.6],[2022,304,40,380,11.6],[2023,1423,170,339,21.3],[2024,2349,232,317,42.8],[2025,1885,195,323,30.0],[2026,1679,162,327,42.5]];
+const LOAD0=Date.UTC(2023,5,5);
+const CTL=[5,15,19,24,27,30,34,37,37,39,40,43,43,43,43,44,45,43,41,39,39,38,37,39,33,36,36,36,35,34,30,33,36,38,42,42,39,38,38,40,39,42,39,44,46,50,52,52,52,53,56,63,66,69,73,75,73,73,74,77,77,77,81,85,90,97,96,95,89,89,80,74,74,73,73,64,65,64,67,69,65,63,57,59,59,61,66,72,78,83,84,81,83,81,81,85,89,89,91,95,92,78,68,58,49,41,40,38,39,42,49,53,57,62,62,66,71,74,81,85,86,85,85,85,84,86,76,68,64,66,68,65,62,63,65,57,65,63,68,65,70,76,79,84,85,91,91,97,98,98,104,105,110,108,114,110,104,107,99,93,89,85,86,84,84,78,79,77,77,77,76,76,76];
+const ATL=[23,57,43,46,42,42,52,50,40,45,42,55,44,42,42,44,51,36,32,28,33,29,28,40,14,37,36,32,33,28,13,35,43,43,54,42,26,29,33,40,37,53,36,54,56,63,60,54,48,53,64,88,80,81,85,81,67,63,68,82,79,68,82,95,103,122,101,88,63,81,52,41,59,62,66,29,53,53,72,73,47,54,37,52,54,62,76,92,100,104,92,72,79,73,75,89,97,87,90,103,77,27,14,7,2,1,25,24,38,51,69,70,81,91,72,81,87,87,106,103,91,82,79,77,79,96,49,31,33,57,64,47,44,57,68,36,76,60,77,61,84,94,97,104,100,116,99,115,108,96,123,111,124,103,127,101,79,116,82,65,63,60,79,73,82,56,68,63,66,73,72,75,77];
+const HOURS=[0,0,0,0,0,12,243,276,78,20,17,16,20,6,1,2,6,17,36,36,23,3,0,0];
+const DAYS=[["Seg",99,18],["Ter",1536,214],["Qua",518,69],["Qui",1485,183],["Sex",771,101],["Sáb",2342,147],["Dom",977,80]];
+const DAILY={"2025-09-23":10,"2025-09-26":8,"2025-09-27":20,"2025-10-01":10.1,"2025-10-02":7.1,"2025-10-04":15.1,"2025-10-07":8,"2025-10-09":10,"2025-10-11":19,"2025-10-15":10.4,"2025-10-16":9,"2025-10-18":15.1,"2025-10-20":2.5,"2025-10-21":8,"2025-10-23":9.1,"2025-10-26":21.3,"2025-11-03":3.6,"2025-11-04":7,"2025-11-11":8,"2025-11-12":8,"2025-11-15":3,"2025-11-18":7,"2025-11-19":4,"2025-11-22":15,"2025-11-25":7.4,"2025-11-27":8,"2025-11-28":14.1,"2025-12-02":10.6,"2025-12-04":7,"2025-12-05":6.3,"2025-12-10":8,"2025-12-12":8,"2025-12-15":2.5,"2025-12-17":8,"2025-12-18":8.2,"2025-12-20":13.4,"2025-12-23":5,"2025-12-24":5.1,"2025-12-27":16,"2025-12-28":4.4,"2025-12-31":4,"2026-01-02":1.4,"2026-01-03":5,"2026-01-06":8,"2026-01-08":8.5,"2026-01-10":14,"2026-01-12":3.6,"2026-01-13":5.1,"2026-01-16":10.3,"2026-01-19":6,"2026-01-20":9,"2026-01-22":10,"2026-01-24":19,"2026-01-26":4.2,"2026-01-28":6.1,"2026-02-01":10,"2026-02-03":8,"2026-02-05":7,"2026-02-07":20,"2026-02-10":12.5,"2026-02-12":10,"2026-02-14":19,"2026-02-17":10,"2026-02-18":2.8,"2026-02-19":7,"2026-02-22":21.4,"2026-02-24":10,"2026-02-26":12,"2026-02-28":7.3,"2026-03-01":17,"2026-03-04":12,"2026-03-05":8,"2026-03-06":2.3,"2026-03-08":22,"2026-03-11":10,"2026-03-13":14,"2026-03-14":25.1,"2026-03-15":14.1,"2026-03-17":10,"2026-03-21":27,"2026-03-22":4.2,"2026-03-23":5.3,"2026-03-24":10,"2026-03-26":15.1,"2026-03-27":10,"2026-03-28":32,"2026-03-31":10,"2026-04-02":11,"2026-04-04":7.6,"2026-04-05":18,"2026-04-07":12,"2026-04-09":10,"2026-04-11":7,"2026-04-12":23.5,"2026-04-14":15,"2026-04-16":12,"2026-04-17":8,"2026-04-19":25,"2026-04-21":14.8,"2026-04-23":15,"2026-04-24":4,"2026-04-25":29,"2026-04-26":5.9,"2026-04-28":10.5,"2026-04-29":4,"2026-04-30":16,"2026-05-01":8,"2026-05-02":32,"2026-05-05":12.6,"2026-05-07":13,"2026-05-08":6,"2026-05-09":25.5,"2026-05-12":11.4,"2026-05-14":14,"2026-05-15":8,"2026-05-16":36,"2026-05-17":10,"2026-05-19":9,"2026-05-21":13.5,"2026-05-22":6,"2026-05-23":25.1,"2026-05-26":9.2,"2026-05-28":11.1,"2026-05-29":6.2,"2026-05-30":18.1,"2026-06-02":10,"2026-06-04":4.1,"2026-06-07":42.5,"2026-06-11":7,"2026-06-14":21.2,"2026-06-16":8,"2026-06-18":10.2,"2026-06-20":14,"2026-06-23":10.5,"2026-06-25":10,"2026-06-27":15,"2026-06-28":10.8,"2026-06-30":9,"2026-07-02":10,"2026-07-04":10,"2026-07-05":14,"2026-07-07":11.4,"2026-07-09":5.7,"2026-07-10":13.5,"2026-07-11":14.7,"2026-07-12":7.1,"2026-07-14":8.2,"2026-07-16":11.1,"2026-07-17":6.7,"2026-07-18":16.2,"2026-07-21":7.5,"2026-07-22":11.2,"2026-07-23":4.7,"2026-07-26":21.4,"2026-07-29":8,"2026-07-30":1.7,"2026-07-31":8.5,"2026-08-01":9.4,"2026-08-04":7.9,"2026-08-06":11.7,"2026-08-07":9.3,"2026-08-08":12.9,"2026-08-11":7.4,"2026-08-12":10.9,"2026-08-14":7.6,"2026-08-15":13.9,"2026-08-18":6.9,"2026-08-19":9.4,"2026-08-21":8.7,"2026-08-22":11.1,"2026-08-25":6.2,"2026-08-26":8.2,"2026-08-27":8.8,"2026-08-28":12.7,"2026-08-29":1.1,"2026-08-31":8.2,"2026-09-02":10,"2026-09-04":9.1,"2026-09-05":11.2,"2026-09-07":7.2,"2026-09-09":9.6,"2026-09-11":13.4,"2026-09-13":10,"2026-09-17":7,"2026-09-18":10.4,"2026-09-20":15.3};
+const RECORDS=[
+  {d:"5K",best:1174,bp:235,date:"2024-07-02",first:328,fdate:"2022-09-04"},
+  {d:"10K",best:2502,bp:250,date:"2024-08-27",first:447,fdate:"2021-06-27"},
+  {d:"21K",best:5741,bp:272,date:"2024-07-28",first:315,fdate:"2023-06-11"},
+  {d:"42K",best:12407,bp:292,date:"2026-06-07",first:298,fdate:"2024-09-29",star:true,note:"−5:58 vs. 2024"}
+];
+
+/* ---------- tooltip ---------- */
+const tip=$("#tip");
+const show=(e,html)=>{tip.innerHTML=html;tip.style.left=e.clientX+"px";tip.style.top=e.clientY+"px";tip.style.opacity=1};
+const hide=()=>{tip.style.opacity=0};
+const bindHit=(node,html)=>{node.addEventListener("pointermove",e=>show(e,html));node.addEventListener("pointerleave",hide)};
+
+/* ---------- charts ---------- */
+function weeks(){
+  const box=$("#c-weeks"),w=box.clientWidth,h=Math.max(120,Math.min(180,w*.14)),pb=22;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const max=85,n=W.length,step=w/n,bw=Math.max(1.5,step*.62);
+  [20,40,60,80].forEach(v=>{const y=h-pb-(v/max)*(h-pb-8);el("line",{x1:0,x2:w,y1:y,y2:y,stroke:"var(--line-soft)","stroke-width":1},s)});
+  W.forEach((v,i)=>{
+    const d=weekDate(i),key=d.toISOString().slice(0,10),race=RACE_WEEKS[key];
+    const bh=Math.max(v>0?2:0,(v/max)*(h-pb-8)),x=i*step+(step-bw)/2,y=h-pb-bh;
+    if(bh>0){const r=el("rect",{x,y,width:bw,height:bh,rx:Math.min(2,bw/2),fill:race?"var(--accent)":"var(--ink)"},s)}
+    const hit=el("rect",{x:i*step,y:0,width:step,height:h-pb,class:"hit"},s);
+    bindHit(hit,`<b>${fmt(v,1)} km</b>semana de ${dstr(d)}${race?"<br>"+race:""}`);
+    if(race){el("text",{x:x+bw/2,y:y-6,"text-anchor":"middle",class:"ann"},s).textContent="42K"}
+  });
+  [2023,2024,2025,2026].forEach(yr=>{const i=Math.round((Date.UTC(yr,0,1)-WEEK0)/(7*864e5));const x=Math.max(0,i*step);
+    el("line",{x1:x,x2:x,y1:h-pb,y2:h-pb+5,stroke:"var(--muted)"},s);
+    el("text",{x:x+4,y:h-5,class:"axis"},s).textContent=yr});
+  el("line",{x1:0,x2:w,y1:h-pb,y2:h-pb,stroke:"var(--ink)","stroke-width":1},s);
+}
+
+function months(){
+  const box=$("#c-months"),w=box.clientWidth,h=Math.min(340,Math.max(240,w*.45)),pl=34,pb=26,pt=26;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const max=320,iw=w-pl,ih=h-pb-pt,n=MONTHS.length,step=iw/n,bw=Math.max(3,step*.66);
+  [0,100,200,300].forEach(v=>{const y=pt+ih-(v/max)*ih;el("line",{x1:pl,x2:w,y1:y,y2:y,stroke:v?"var(--line-soft)":"var(--ink)"},s);el("text",{x:pl-8,y:y+4,"text-anchor":"end",class:"axis"},s).textContent=v});
+  const peak=MONTHS.reduce((a,b)=>b[1]>a[1]?b:a);
+  MONTHS.forEach(([m,km,runs],i)=>{
+    const bh=(km/max)*ih,x=pl+i*step+(step-bw)/2,y=pt+ih-bh,yr=+m.slice(0,4),mo=+m.slice(5)-1;
+    const isPeak=m===peak[0];
+    el("path",{d:`M${x},${pt+ih}V${y+3}q0,-3 3,-3h${bw-6}q3,0 3,3V${pt+ih}Z`,fill:isPeak?"var(--accent)":yr===2026?"var(--ink)":"var(--ink-2)",opacity:yr===2026||isPeak?1:.55},s);
+    const hit=el("rect",{x:pl+i*step,y:pt,width:step,height:ih,class:"hit"},s);
+    bindHit(hit,`<b>${km} km</b>${MES[mo]} ${yr} · ${runs} corridas`);
+    if(mo===0){el("text",{x:pl+i*step+2,y:h-6,class:"axis"},s).textContent=yr}
+    if(isPeak){el("text",{x:x+bw/2,y:y-8,"text-anchor":"middle",class:"ann"},s).textContent=`${km} km · abr 25`}
+  });
+  const tb=$("#t-years");const maxY=Math.max(...YEARS.map(y=>y[1]));
+  tb.innerHTML=YEARS.slice().reverse().map(([y,km,r,p,l])=>`<tr class="${y===2024?"hl":""}"><td>${y}</td><td><span class="cell-bar" style="width:${Math.round(km/maxY*56)}px"></span>${fmt(km)}</td><td>${r}</td><td>${pace(p)}</td><td>${fmt(l,1)}</td></tr>`).join("");
+}
+
+function form(){
+  const box=$("#c-form"),w=box.clientWidth,h=Math.min(360,Math.max(240,w*.34)),pl=30,pb=26,pt=28;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const max=130,iw=w-pl,ih=h-pb-pt,n=CTL.length,X=i=>pl+i*(iw/(n-1)),Y=v=>pt+ih-(v/max)*ih;
+  [0,40,80,120].forEach(v=>{el("line",{x1:pl,x2:w,y1:Y(v),y2:Y(v),stroke:v?"var(--line-soft)":"var(--ink)"},s);el("text",{x:pl-8,y:Y(v)+4,"text-anchor":"end",class:"axis"},s).textContent=v});
+  const dt=i=>new Date(LOAD0+i*7*864e5);
+  [2024,2025,2026].forEach(yr=>{const i=(Date.UTC(yr,0,1)-LOAD0)/(7*864e5);el("text",{x:X(i)+4,y:h-6,class:"axis"},s).textContent=yr;el("line",{x1:X(i),x2:X(i),y1:pt+ih,y2:pt+ih+5,stroke:"var(--muted)"},s)});
+  // pause band
+  const pa=(Date.UTC(2025,4,5)-LOAD0)/(7*864e5),pz=(Date.UTC(2025,5,9)-LOAD0)/(7*864e5);
+  el("rect",{x:X(pa),y:pt,width:X(pz)-X(pa),height:ih,fill:"var(--line-soft)"},s);
+  el("text",{x:(X(pa)+X(pz))/2,y:pt-8,"text-anchor":"middle",class:"ann"},s).textContent="pausa";
+  const line=a=>a.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join("");
+  el("path",{d:line(CTL)+`L${X(n-1)},${Y(0)}L${X(0)},${Y(0)}Z`,fill:"var(--accent-soft)",opacity:.7},s);
+  el("path",{d:line(ATL),fill:"none",stroke:"var(--muted)","stroke-width":1.25,"stroke-linejoin":"round"},s);
+  el("path",{d:line(CTL),fill:"none",stroke:"var(--accent)","stroke-width":2.25,"stroke-linejoin":"round"},s);
+  // marathon markers
+  [["2024-09-29","Maratona · set 24"],["2026-06-07","Maratona · jun 26"]].forEach(([d,l])=>{
+    const i=(Date.parse(d)-LOAD0)/(7*864e5),ci=Math.round(i),x=X(i);
+    el("line",{x1:x,x2:x,y1:Y(CTL[ci])-4,y2:pt+6,stroke:"var(--ink-2)","stroke-dasharray":"2 3"},s);
+    el("text",{x:x,y:pt,"text-anchor":i>n*.8?"end":"middle",class:"ann"},s).textContent=l;
+  });
+  const last=n-1;el("circle",{cx:X(last),cy:Y(CTL[last]),r:4.5,fill:"var(--accent)",stroke:"var(--bg)","stroke-width":2},s);
+  // crosshair
+  const cross=el("line",{y1:pt,y2:pt+ih,stroke:"var(--ink)","stroke-width":1,opacity:0},s);
+  const dotC=el("circle",{r:4,fill:"var(--accent)",opacity:0},s),dotA=el("circle",{r:3,fill:"var(--muted)",opacity:0},s);
+  const hit=el("rect",{x:pl,y:pt,width:iw,height:ih,class:"hit"},s);
+  hit.addEventListener("pointermove",e=>{const r=s.getBoundingClientRect(),px=(e.clientX-r.left)*(w/r.width);const i=Math.max(0,Math.min(n-1,Math.round((px-pl)/(iw/(n-1)))));
+    cross.setAttribute("x1",X(i));cross.setAttribute("x2",X(i));cross.setAttribute("opacity",.35);
+    dotC.setAttribute("cx",X(i));dotC.setAttribute("cy",Y(CTL[i]));dotC.setAttribute("opacity",1);
+    dotA.setAttribute("cx",X(i));dotA.setAttribute("cy",Y(ATL[i]));dotA.setAttribute("opacity",1);
+    show(e,`<b>Forma ${CTL[i]} · Fadiga ${ATL[i]}</b>semana de ${dstr(dt(i))}`)});
+  hit.addEventListener("pointerleave",()=>{hide();[cross,dotC,dotA].forEach(x=>x.setAttribute("opacity",0))});
+}
+
+function records(){
+  const worst=460,bestP=225;
+  $("#records").innerHTML=RECORDS.map(r=>{
+    const pos=p=>((worst-p)/(worst-bestP)*100).toFixed(1);
+    const d=new Date(r.date+"T12:00:00Z");
+    return `<div class="rec${r.star?" star":""}">
+      <span class="mono">${dstr(d)}</span>
+      <span class="d">${r.d}</span>
+      <span class="t">${hms(r.best)}</span>
+      <span class="p">${pace(r.bp)}/km${r.note?` · <b style="color:var(--accent)">${r.note}</b>`:""}</span>
+      <div class="prog" aria-label="Ritmo da primeira vez ${pace(r.first)} por km, recorde ${pace(r.bp)} por km">
+        <div class="prog-track"><span class="rail"></span><span class="seg" style="left:${pos(r.first)}%;width:${(pos(r.bp)-pos(r.first)).toFixed(1)}%"></span><span class="dot" style="left:${pos(r.first)}%"></span><span class="dot best" style="left:${pos(r.bp)}%"></span></div>
+        <div class="prog-lbl"><span>${pace(r.first)} · ${r.fdate.slice(0,4)}</span><span>${pace(r.bp)}</span></div>
+      </div></div>`}).join("");
+}
+
+function hours(){
+  const box=$("#c-hours"),w=box.clientWidth,h=200,pb=22,pt=8;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const max=280,step=w/24,bw=Math.max(3,step*.64),ih=h-pb-pt;
+  el("line",{x1:0,x2:w,y1:pt+ih,y2:pt+ih,stroke:"var(--ink)"},s);
+  HOURS.forEach((v,i)=>{const bh=(v/max)*ih,x=i*step+(step-bw)/2,y=pt+ih-bh;
+    if(v)el("path",{d:`M${x},${pt+ih}V${y+Math.min(3,bh)}q0,-${Math.min(3,bh)} ${Math.min(3,bw/2)},-${Math.min(3,bh)}h${bw-2*Math.min(3,bw/2)}q${Math.min(3,bw/2)},0 ${Math.min(3,bw/2)},${Math.min(3,bh)}V${pt+ih}Z`,fill:i===6||i===7?"var(--accent)":"var(--ink-2)",opacity:i===6||i===7?1:.6},s);
+    const hit=el("rect",{x:i*step,y:pt,width:step,height:ih,class:"hit"},s);bindHit(hit,`<b>${v} corridas</b>começando às ${i}h`);
+    if(i%3===0)el("text",{x:i*step+step/2,y:h-5,"text-anchor":"middle",class:"axis"},s).textContent=`${i}h`});
+}
+
+function days(){
+  const box=$("#c-days"),w=box.clientWidth,rh=26,h=DAYS.length*rh;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const pl=40,pr=64,max=2342,iw=w-pl-pr;
+  DAYS.forEach(([d,km,n],i)=>{const y=i*rh+6,bw=Math.max(2,km/max*iw),sat=d==="Sáb";
+    el("text",{x:0,y:y+11,class:"axis"},s).textContent=d;
+    el("path",{d:`M${pl},${y}h${bw-3}q3,0 3,3v8q0,3 -3,3h-${bw-3}Z`,fill:sat?"var(--accent)":"var(--ink-2)",opacity:sat?1:.55},s);
+    el("text",{x:pl+bw+8,y:y+11,class:"axis",style:"fill:var(--ink-2)"},s).textContent=`${fmt(km)} km`;
+    const hit=el("rect",{x:0,y:i*rh,width:w,height:rh,class:"hit"},s);bindHit(hit,`<b>${fmt(km)} km</b>${n} corridas às ${d.toLowerCase()}`)});
+}
+
+const heatLevel=v=>v<=0?0:v<5?1:v<10?2:v<15?3:v<21?4:5;
+const HEAT=["var(--line-soft)","color-mix(in srgb,var(--accent) 22%,var(--bg))","color-mix(in srgb,var(--accent) 42%,var(--bg))","color-mix(in srgb,var(--accent) 62%,var(--bg))","color-mix(in srgb,var(--accent) 82%,var(--bg))","var(--accent)"];
+function heat(){
+  const box=$("#c-heat"),w=box.clientWidth,cols=53,gap=3,cell=Math.floor((w-28-gap*cols)/cols),h=7*(cell+gap)+22;
+  box.innerHTML="";const s=el("svg",{viewBox:`0 0 ${w} ${h}`,height:h},box);
+  const start=Date.UTC(2025,8,22);let lastMonth=-1;
+  ["Seg","","Qua","","Sex","","Dom"].forEach((l,i)=>{if(l)el("text",{x:0,y:18+i*(cell+gap)+cell-2,class:"axis"},s).textContent=l});
+  for(let c=0;c<cols;c++)for(let r=0;r<7;r++){
+    const d=new Date(start+(c*7+r)*864e5);if(d>Date.UTC(2026,8,27))continue;
+    const k=d.toISOString().slice(0,10),v=DAILY[k]||0,x=28+c*(cell+gap),y=18+r*(cell+gap);
+    if(r===0&&d.getUTCMonth()!==lastMonth){lastMonth=d.getUTCMonth();el("text",{x,y:10,class:"axis"},s).textContent=MES[lastMonth]}
+    const rc=el("rect",{x,y,width:cell,height:cell,rx:2,fill:HEAT[heatLevel(v)]},s);
+    bindHit(rc,v?`<b>${fmt(v,1)} km</b>${dstr(d)}`:`<b>Descanso</b>${dstr(d)}`);
+  }
+  $("#heat-legend").innerHTML=HEAT.map(c=>`<i style="background:${c}"></i>`).join("");
+}
+
+/* ---------- story card ---------- */
+const story=$("#story");let kind="race",cw="paper";
+function barsSVG(vals,hl,wv=240,hv=110,labelEvery){
+  const n=vals.length,max=Math.max(...vals),step=wv/n,bw=step*.62;
+  let out=`<svg viewBox="0 0 ${wv} ${hv}" height="${hv}" aria-hidden="true">`;
+  vals.forEach((v,i)=>{const bh=Math.max(v>0?2:0,v/max*(hv-4)),x=i*step+(step-bw)/2;
+    if(bh)out+=`<rect x="${x.toFixed(1)}" y="${(hv-bh).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="${Math.min(1.5,bw/2)}" fill="${hl(i)?"var(--c-acc)":"currentColor"}" opacity="${hl(i)?1:.85}"/>`});
+  return out+`<line x1="0" x2="${wv}" y1="${hv}" y2="${hv}" stroke="var(--c-line)"/></svg>`;
+}
+function renderStory(){
+  story.dataset.cw=cw;
+  let html="";
+  if(kind==="race"){
+    const i0=(Date.UTC(2026,1,16)-WEEK0)/(7*864e5),block=W.slice(i0,i0+16),tot=Math.round(block.reduce((a,b)=>a+b,0));
+    html=`<div class="s-top"><b>CTT</b><span>Maratona · 07 jun 2026</span></div>
+      <div class="s-kicker">Tempo em movimento</div>
+      <div class="s-big">3:26:47</div>
+      <div class="s-sub">42,5 km · 4:52/km</div>
+      <div><span class="s-delta">−5:58 vs. set 2024</span></div>
+      <div class="s-chart">${barsSVG(block,i=>i===15)}</div>
+      <div class="s-foot"><span>16 semanas · ${fmt(tot)} km</span><span>maior: 36 km</span></div>
+      <div class="s-foot" style="margin-top:14px"><span>usectt.com.br/felipe</span><span>Felipe Oliveira</span></div>`;
+  }else if(kind==="month"){
+    const vals=[];for(let d=1;d<=31;d++){vals.push(DAILY[`2026-08-${String(d).padStart(2,"0")}`]||0)}
+    html=`<div class="s-top"><b>CTT</b><span>Agosto 2026</span></div>
+      <div class="s-kicker">Volume do mês</div>
+      <div class="s-big">172<small>km</small></div>
+      <div class="s-sub">20 corridas · 5:35/km · 16h01</div>
+      <div><span class="s-delta">Maior: 13,9 km · 15 ago</span></div>
+      <div class="s-chart">${barsSVG(vals,i=>i===14)}</div>
+      <div class="s-foot"><span>1 ago</span><span>31 ago</span></div>
+      <div class="s-foot" style="margin-top:14px"><span>usectt.com.br/felipe</span><span>Felipe Oliveira</span></div>`;
+  }else{
+    html=`<div class="s-top"><b>CTT</b><span>2020 — 2026</span></div>
+      <div class="s-kicker">Tudo que já corri</div>
+      <div class="s-big">7.727<small>km</small></div>
+      <div class="s-sub">812 corridas · 705 horas · 2 maratonas</div>
+      <div><span class="s-delta">Pico: 2.349 km em 2024</span></div>
+      <div class="s-chart">${barsSVG(YEARS.map(y=>y[1]),i=>i===4)}</div>
+      <div class="s-foot">${YEARS.map(y=>`<span>${String(y[0]).slice(2)}</span>`).join("")}</div>
+      <div class="s-foot" style="margin-top:14px"><span>usectt.com.br/felipe</span><span>Felipe Oliveira</span></div>`;
+  }
+  story.innerHTML=html;
+}
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{kind=b.dataset.kind;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStory()}));
+document.querySelectorAll(".sw").forEach(b=>b.addEventListener("click",()=>{cw=b.dataset.cw;document.querySelectorAll(".sw").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStory()}));
+
+function drawAll(){weeks();months();form();hours();days();heat()}
+records();renderStory();drawAll();
+let t;window.addEventListener("resize",()=>{clearTimeout(t);t=setTimeout(drawAll,120)});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawAll);
+})();
+</script>

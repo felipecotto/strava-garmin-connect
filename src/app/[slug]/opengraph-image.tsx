@@ -1,8 +1,9 @@
+import { unstable_rethrow } from "next/navigation"
 import { ImageResponse } from "next/og"
 
-import { getPublicProfileBySlug } from "@/lib/profile/get-public-profile"
-import { formatKm, formatRaceTime } from "@/lib/profile/stats"
-import { isSupabaseConfigured } from "@/lib/supabase/env"
+import { formatKm, formatNumber, formatRaceTime } from "@/lib/archive/format"
+import { getArchive } from "@/lib/archive/get-archive"
+import { getProfileBySlug } from "@/lib/profile/get-profile"
 
 export const size = {
   width: 1200,
@@ -23,24 +24,24 @@ export default async function ProfileOpengraphImage({ params }: ImageProps) {
   let line = "Arquivo de performance · CTT"
   let statsLine = ""
 
-  if (isSupabaseConfigured()) {
-    try {
-      const data = await getPublicProfileBySlug(slug)
-      if (data) {
-        displayName = data.profile.display_name
-        const best5k = data.records.find((r) => r.key === "5k")
-        statsLine = [
-          `${formatKm(data.stats.totalDistanceM, 0)} km`,
-          `${data.stats.totalRuns} atividades`,
-          best5k ? `5K ${formatRaceTime(best5k.movingTimeS)}` : null,
-        ]
-          .filter(Boolean)
-          .join("  ·  ")
-        line = `/${data.profile.slug}`
-      }
-    } catch {
-      // fallback visual abaixo
+  try {
+    const profile = await getProfileBySlug(slug)
+    if (profile?.is_public) {
+      const { totals, records } = await getArchive(profile.id)
+      const best5k = records.find((record) => record.key === "5k")
+      displayName = profile.display_name
+      statsLine = [
+        `${formatKm(totals.km, 0)} km`,
+        `${formatNumber(totals.runs)} corridas`,
+        best5k ? `5K ${formatRaceTime(best5k.bestSec)}` : null,
+      ]
+        .filter(Boolean)
+        .join("  ·  ")
+      line = `/${profile.slug}`
     }
+  } catch (error) {
+    unstable_rethrow(error)
+    // fallback visual abaixo
   }
 
   return new ImageResponse(
@@ -53,10 +54,10 @@ export default async function ProfileOpengraphImage({ params }: ImageProps) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "56px",
-          background: "#FAFAF8",
+          background: "#F2F2EE",
           color: "#131311",
           fontFamily: "system-ui, sans-serif",
-          borderBottom: "8px solid #E8450A",
+          borderBottom: "8px solid #2B34F5",
         }}
       >
         <div
@@ -78,7 +79,7 @@ export default async function ProfileOpengraphImage({ params }: ImageProps) {
               fontFamily: "ui-monospace, monospace",
             }}
           >
-            <div style={{ width: 8, height: 8, background: "#E8450A" }} />
+            <div style={{ width: 8, height: 8, background: "#2B34F5" }} />
             CTT
           </div>
           <div

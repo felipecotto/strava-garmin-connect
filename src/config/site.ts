@@ -15,8 +15,12 @@ export const siteConfig = {
       instagram: "https://www.instagram.com/felipe.cotto",
     },
   },
+  domain: "usectt.com.br",
   connectStravaPath: "/connect/strava" as const,
+  settingsPath: "/perfil" as const,
   exampleProfilePath: "/felipe-oliveira" as const,
+  exampleProfileSlug: "felipe-oliveira",
+  stravaActivityUrl: "https://www.strava.com/activities",
 } as const
 
 export type SiteConfig = typeof siteConfig

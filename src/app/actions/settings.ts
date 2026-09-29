@@ -1,8 +1,12 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 
 import { getOwnerProfile } from "@/lib/profile/get-owner-profile"
+import {
+  profileCacheTag,
+  profileSlugCacheTag,
+} from "@/lib/profile/get-profile"
 import { isValidSlug, sanitizeSlug } from "@/lib/profile/slug"
 import { createSupabaseAdminClient } from "@/lib/supabase/admin"
 
@@ -67,6 +71,8 @@ export async function updateProfileSettings(
     return { ok: false, error: error.message }
   }
 
+  updateTag(profileCacheTag(profile.id))
+  updateTag(profileSlugCacheTag(slug))
   revalidatePath(`/${profile.slug}`)
   revalidatePath(`/${slug}`)
   revalidatePath("/")

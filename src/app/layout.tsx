@@ -1,27 +1,33 @@
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
+import { Archivo, Barlow_Condensed, Caveat, Geist_Mono } from "next/font/google"
 
 import { MonitoringProvider } from "@/components/analytics/monitoring-provider"
-import { GrainOverlay } from "@/components/ui/atmosphere"
 
 import "./globals.css"
 
-const inter = Inter({
-  variable: "--font-inter",
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+})
+
+/** Display: números gigantes e títulos em caixa alta. */
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+})
+
+/** Anotações à mão, no máximo quatro por página. */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500"],
+})
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
-})
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-})
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
 })
 
 export const metadata: Metadata = {
@@ -72,10 +78,9 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${jakarta.variable} ${jetbrains.variable} h-full`}
+      className={`${archivo.variable} ${barlowCondensed.variable} ${caveat.variable} ${geistMono.variable} light h-full`}
     >
       <body className="flex min-h-full flex-col font-sans">
-        <GrainOverlay />
         <MonitoringProvider />
         {children}
       </body>

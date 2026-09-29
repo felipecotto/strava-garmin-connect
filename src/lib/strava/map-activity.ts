@@ -23,5 +23,6 @@ export function mapStravaActivityToRow(
     start_date_local: activity.start_date_local,
     timezone: activity.timezone ?? null,
     map_summary_polyline: activity.map?.summary_polyline ?? null,
+    workout_type: activity.workout_type ?? null,
   }
 }

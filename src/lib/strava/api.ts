@@ -87,27 +87,3 @@ export async function fetchActivitiesPage(
   return res.json() as Promise<StravaActivity[]>
 }
 
-export async function fetchActivitiesRange(
-  accessToken: string,
-  afterSec: number,
-  beforeSec: number,
-  maxPages = 10
-): Promise<StravaActivity[]> {
-  const out: StravaActivity[] = []
-  const perPage = 100
-
-  for (let page = 1; page <= maxPages; page += 1) {
-    const batch = await fetchActivitiesPage(accessToken, {
-      afterSec,
-      beforeSec,
-      page,
-      perPage,
-    })
-    out.push(...batch)
-    if (batch.length < perPage) {
-      break
-    }
-  }
-
-  return out
-}

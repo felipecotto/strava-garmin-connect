@@ -1,75 +1,103 @@
 import type { Metadata } from "next"
-import Link from "next/link"
+import { Suspense } from "react"
 
-import { ArchiveManifesto } from "@/components/archive/archive-manifesto"
-import { ArchiveView } from "@/components/archive/archive-view"
-import { HomeAlerts } from "@/components/site/home-alerts"
-import { SiteChrome } from "@/components/site/site-chrome"
-import { Atmosphere } from "@/components/ui/atmosphere"
-import { buttonVariants } from "@/components/ui/button"
-import { siteConfig } from "@/config/site"
-import { getHomeArchive } from "@/lib/profile/get-home-archive"
-import { cn } from "@/lib/utils"
+import { EditionFooter, SuaVezSection } from "@/components/archive/edition/closing-sections"
+import { EditionHero } from "@/components/archive/edition/edition-hero"
+import { EditionNav } from "@/components/archive/edition/edition-nav"
+import {
+  archiveLede,
+  EDITION_LEDE,
+  EditionPage,
+  editionLabel,
+} from "@/components/archive/edition/edition-page"
+import { buildStoryCards } from "@/components/archive/edition/story-card/content"
+import {
+  DemoHeroActions,
+  ViewerNavActions,
+  VisitorFinalCta,
+} from "@/components/archive/edition/viewer-slots"
+import { ConnectionAlerts } from "@/components/site/connection-alerts"
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import { getExampleEdition } from "@/lib/profile/get-example-edition"
 
 export const metadata: Metadata = {
   title: {
-    absolute: "CTT — Arquivo de Performance",
+    absolute: "CTT — Seu Strava, editado",
   },
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-  const { mode, data } = await getHomeArchive()
-  const alerts = <HomeAlerts searchParams={searchParams} />
+const HOME_TITLE = (
+  <>
+    Seu Strava,
+    <br />
+    editado
+    <br />
+    <span className="text-signal">em 42 km.</span>
+  </>
+)
 
-  if (data) {
+type HomePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const example = await getExampleEdition()
+  const storyCards = example ? buildStoryCards(example.archive) : {}
+  const navActions = (
+    <Suspense fallback={<Skeleton className="h-10 w-36 rounded-none" />}>
+      <ViewerNavActions />
+    </Suspense>
+  )
+  const heroActions = (
+    <Suspense fallback={<Skeleton className="h-12 w-44 rounded-none" />}>
+      <DemoHeroActions />
+    </Suspense>
+  )
+  const banner = (
+    <Suspense fallback={null}>
+      <ConnectionAlerts searchParams={searchParams} />
+    </Suspense>
+  )
+
+  if (!example) {
     return (
-      <div>
-        <ArchiveView
-          data={data}
-          variant={mode === "owner" ? "owner" : "demo"}
-          banner={alerts}
-        />
-        <ArchiveManifesto data={data} />
-        <footer className="border-t border-[color-mix(in_srgb,var(--line)_70%,transparent)] py-6 font-mono text-xs text-[var(--label)]">
-          <div className="mx-auto flex max-w-[1180px] justify-between px-6 sm:px-8">
-            <span>CTT — usectt.com.br</span>
-            <span>SÃO PAULO, BR — 2026</span>
-          </div>
-        </footer>
-      </div>
+      <>
+        <EditionNav actions={navActions} showSections={false} />
+        <main id="top">
+          <EditionHero
+            label="Arquivo de corrida"
+            title={HOME_TITLE}
+            lede={EDITION_LEDE}
+            actions={heroActions}
+            banner={banner}
+          />
+          <SuaVezSection />
+        </main>
+        <EditionFooter />
+      </>
     )
   }
 
   return (
-    <div className="relative min-h-full text-[var(--ink)]">
-      <Atmosphere className="opacity-70" />
-      <div className="relative mx-auto w-full max-w-[1180px] px-6 pb-16 pt-2 sm:px-8">
-        <SiteChrome isOwner={mode === "owner"} />
-        <div className="mt-6">{alerts}</div>
-        <div className="mt-16 max-w-xl space-y-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--label)]">
-            Arquivo de performance
-          </p>
-          <h1 className="font-heading text-4xl font-extrabold tracking-tight text-[var(--ink)] sm:text-5xl">
-            O que você treinou, fica registrado.
-          </h1>
-          <p className="text-[var(--ink-soft)]">
-            Conecte o Strava para criar seu arquivo — pace, volume e histórico,
-            sem feed.
-          </p>
-          <Link
-            href={siteConfig.connectStravaPath}
-            className={cn(buttonVariants({ size: "lg" }), "inline-flex")}
-          >
-            Conectar Strava →
-          </Link>
-        </div>
-        <ArchiveManifesto data={null} />
-      </div>
-    </div>
+    <EditionPage
+      profile={example.profile}
+      archive={example.archive}
+      storyCards={storyCards}
+      navActions={navActions}
+      banner={banner}
+      finalCta={(photo) => (
+        <Suspense fallback={null}>
+          <VisitorFinalCta photo={photo} />
+        </Suspense>
+      )}
+      hero={{
+        label: editionLabel(example.profile, true),
+        title: HOME_TITLE,
+        lede: archiveLede(example.archive),
+        badge: <Badge variant="outline">Arquivo de exemplo</Badge>,
+        actions: heroActions,
+      }}
+    />
   )
 }

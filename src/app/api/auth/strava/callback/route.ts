@@ -1,15 +1,18 @@
 import { after, NextResponse } from "next/server"
 
+import { getBetaStatus } from "@/lib/beta/get-beta-status"
 import {
+  isConnectedAthlete,
   shouldRunInitialSync,
   upsertProfileFromAthlete,
 } from "@/lib/profile/upsert-from-athlete"
 import { fetchAthlete } from "@/lib/strava/api"
-import { exchangeAuthorizationCode } from "@/lib/strava/auth"
+import { deauthorizeAccessToken, exchangeAuthorizationCode } from "@/lib/strava/auth"
 import { getAppOrigin, isStravaConfigured } from "@/lib/strava/env"
 import { verifyStravaOAuthState } from "@/lib/strava/oauth-state"
 import { getStravaIronSession } from "@/lib/strava/session"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
+import { expireProfileCache } from "@/lib/sync/expire-edition-cache"
 import { syncInitialActivities } from "@/lib/sync/initial-sync"
 
 export async function GET(request: Request) {
@@ -46,14 +49,30 @@ export async function GET(request: Request) {
   session.refreshToken = token.refresh_token
   session.expiresAt = token.expires_at
 
+  let destination = "/?connected=1"
+
   if (isSupabaseConfigured()) {
     try {
       const athlete =
         token.athlete ?? (await fetchAthlete(token.access_token))
+
+      // Beta lotado: só entra quem já ocupa uma vaga. O resto vai para a fila.
+      const beta = await getBetaStatus()
+      if (beta.phase === "lotado" && !(await isConnectedAthlete(athlete.id))) {
+        try {
+          await deauthorizeAccessToken(token.access_token)
+        } catch {
+          // A vaga no Strava não chega a ser ocupada sem o perfil; seguimos para a fila.
+        }
+        return redirectWith("/?error=capacity#conectar")
+      }
+
       const { profile } = await upsertProfileFromAthlete(athlete)
       session.profileId = profile.id
+      expireProfileCache(profile.id, profile.slug)
 
       const needsSync = await shouldRunInitialSync(profile.id)
+      destination = needsSync ? `/${profile.slug}?connected=1` : `/${profile.slug}`
       if (needsSync) {
         const accessToken = token.access_token
         const profileId = profile.id
@@ -73,5 +92,5 @@ export async function GET(request: Request) {
   }
 
   await session.save()
-  return redirectWith("/?connected=1")
+  return redirectWith(destination)
 }
