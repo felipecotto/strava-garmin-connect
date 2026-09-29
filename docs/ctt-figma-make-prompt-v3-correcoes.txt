@@ -1,0 +1,66 @@
+Refine a landing do CTT. Mantenha a estrutura em capítulos (KM 0 a KM 42), os textos e os dados. Corrija exatamente os pontos abaixo, na ordem. Somente modo claro.
+
+REGRAS GLOBAIS (valem para a página inteira)
+- Tamanho mínimo de texto: 12px para rótulos em Geist Mono, 11px só para eixo de gráfico, 14px para qualquer texto corrido. Nada abaixo disso, inclusive dentro dos cards do Stories.
+- Use no máximo estes tamanhos: 12, 14, 16, 19, 24, 32, 56, 80, 128, 200 (e o número gigante do hero/odômetro). Remova todos os outros.
+- Cores de texto só destes tokens: tinta #111210, secundário #4A4C46, apagado #7A7C74, papel #F2F2EE, ultramar #2B34F5, ultramar claro #8A90FF (só sobre fundo escuro), branco #FFFFFF (sobre ultramar). Remova #5C5E58, #9FA19A e qualquer texto com opacidade abaixo de 80%.
+- Contraste mínimo AA (4,5:1) para todo texto, inclusive metadados sobre ultramar e tinta.
+- Geist Mono só para eixos, datas e rótulos de até 3 palavras. Legendas, notas de rodapé, descrições de passos e textos de apoio vão para Archivo 14px.
+- Botão principal: 48px de altura, padding 0 24px, Archivo SemiBold 15px, ícone lucide arrow-right 18px (não use o caractere "→"). O botão do CTA final tem 56px e é o maior da página.
+- Container: até 1440px de conteúdo em telas grandes (hero, números gigantes e gráficos crescem até lá); texto corrido continua limitado a 56 caracteres por linha.
+
+1. TICKER
+Texto branco #FFFFFF, Geist Mono 12px caixa alta, letter-spacing 0.08em, sobre o ultramar. Separador "●" também branco.
+
+2. HERO (KM 0)
+- Foto: hero-km0.jpg (corredor de lado, em blur, camiseta verde). O retrato sorrindo sai do hero.
+- Grid 12 colunas: texto em 5 colunas, foto em 7, alinhados pela base.
+- H1 em no máximo 3 linhas: "SEU STRAVA," / "EDITADO" / "EM 42 KM." (última em ultramar), Barlow Condensed 900, clamp(64px, 8vw, 128px).
+- Chips de dado pousados na cena, não nos cantos: "7.727 km" no espaço à frente do corredor (à direita dele, na altura do peito), "06:00" perto do boné, "3:26:47" no asfalto. Chip com 40px de altura, quadrado do ícone 32px, texto Archivo SemiBold 16px.
+- A anotação "quase todo dia" fica 24px abaixo do chip "06:00", sem encostar.
+- Coordenadas em Geist Mono 12px branco no canto inferior esquerdo da foto.
+
+3. VARIAÇÃO DE LAYOUT (nenhum capítulo repete o anterior)
+- KM 5: "5,8" em Barlow Condensed 900 ~320px ocupando 7 colunas; "km" sobrescrito alinhado ao topo do número (não embaixo); o parágrafo alinhado pela base do número, em 4 colunas à direita. A régua de anos inclui 2020, 2021 e 2022 com rótulo.
+- KM 10: foto habito-km10.jpg sangrando até a borda esquerda da tela, 5 colunas; dados nas 7 colunas da direita.
+- KM 21: foto volume-km21-faixa.jpg em sangria total (100vw), 480px de altura, entre o título e o gráfico.
+- Pós-prova (capas): título e texto centralizados acima dos cards.
+
+4. KM 10 · BARRAS POR DIA
+Remova o trilho cinza de fundo das barras (não existe meta de 100%). Só a barra, com o km em Geist Mono 12px na ponta. Sábado em ultramar. A anotação "dia de longão" fica à direita do valor do sábado, 16px de distância, sem cortar.
+
+5. KM 21 · VOLUME
+- Nas barras semanais, as duas semanas de maratona em ultramar com o rótulo "42K" em Geist Mono 12px acima de cada barra. Remova a legenda "Semana com maratona (azul)".
+- As 3 métricas (232, 70, 80,5 km) têm a altura do próprio conteúdo e ficam alinhadas pelo topo com a tabela; sem caixas vazias.
+
+6. RECORDES
+- Todas as trilhas usam a MESMA escala de ritmo: esquerda = 7:30/km, direita = 3:45/km. Posição = (450 − ritmo em segundos) / 225. Assim: 5K de 5:28 para 3:55; 10K de 7:27 para 4:10; 21K de 5:15 para 4:32; 42K de 4:58 para 4:52.
+- Rótulos da trilha em Geist Mono 12px.
+- No bloco 42K em ultramar, o tempo antigo riscado "3:32:45" em branco a 80% (não mais apagado).
+
+7. KM 30 · O MURO
+- Antes do gráfico, o dado do capítulo em display: "95 → 38" em Barlow Condensed 900, 128px, papel #F2F2EE, com a legenda "forma em oito semanas" em Geist Mono 12px.
+- Gráfico: área da forma em #8A90FF a 25% (sólido, sem gradiente), linha da forma #8A90FF 2px, fadiga em linha #B4B6AE 1px. Faixa vertical "PAUSA" de 5 mai a 9 jun 2025 em #F2F2EE a 10% com rótulo. Linhas tracejadas nas duas maratonas com rótulo. A anotação "aqui" aponta para o ponto mais baixo da forma (38, fim de jun 2025).
+- Eixo X só com os anos. Legenda em Geist Mono 12px.
+
+8. KM 42 · A CHEGADA
+- Foto: chegada-km42.jpg (retrato sorrindo, P&B), no lugar da foto em blur.
+- O chip "−5:58" em Barlow Condensed 900 32px, branco sobre tinta, no canto inferior da foto, maior que hoje.
+- Metadados do cabeçalho em branco a 80%.
+
+9. CARDS DO STORIES
+Cards com 380px de largura (9:16). O card de Prova no centro, maior (420px) e sem rotação; Mês e Temporada atrás, a ±4° e 90% do tamanho. Nenhum texto dentro do card abaixo de 12px. O canto superior direito mostra o contexto do card ("Maratona · 07 jun 2026", "Agosto 2026", "2020 — 2026"), não "Arquivo de corrida".
+
+10. CALENDÁRIO
+Ocupe as 12 colunas: células de 18px com 4px de espaço. Legenda em Geist Mono 12px. Termine a seção com a métrica "70 semanas seguidas" em Barlow Condensed 900 56px à direita da legenda.
+
+11. NAV
+O contador mostra o KM do capítulo atual: "KM 0,0", "KM 5,0", "KM 10,0", "KM 21,1", "KM 30,0", "KM 42,2" (nunca um dado como 5,8). Links em Geist Mono 12px na cor secundária #4A4C46.
+
+12. RODAPÉ
+"CTT" em Barlow Condensed 900 com font-size de ~34vw, ocupando 100% da largura e cortado na base. Metadados acima em Geist Mono 12px #7A7C74.
+
+13. SUA VEZ
+Foto: sua-vez.jpg (blur intenso), 5 colunas. Os passos 01/02/03: número em Geist Mono 12px, título em Barlow Condensed 800 24px, texto em Archivo 14px. Botão "Conectar Strava" com 56px.
+
+Não altere textos, dados, ordem dos capítulos nem as cores dos blocos (Muro em tinta, Chegada em ultramar).

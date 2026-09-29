@@ -1,0 +1,97 @@
+Refaça a landing page do CTT (usectt.com.br) do zero, em português do Brasil, com React + Tailwind + componentes shadcn/ui + gráficos com o Chart do shadcn sobre Recharts. SOMENTE modo claro. Responsiva de 375px a 1440px.
+
+O QUE MUDA NESTA VERSÃO
+A versão anterior acertou tipografia e dados, mas parece um relatório: seções iguais, uma depois da outra, sem ritmo e sem imagem. Esta versão precisa parecer a campanha de uma marca de corrida (referências: Bandit Running, On, RUNLAB, Stride ©25) e contar uma história com começo, meio e chegada.
+
+A IDEIA CENTRAL: A PÁGINA É UMA MARATONA
+A história do atleta é contada como uma prova de 42,195 km. Cada capítulo é uma marcação de quilômetro, na ordem real dos acontecimentos: KM 0 (largada), KM 5, KM 10, KM 21, KM 30 (o muro), KM 42 (a chegada) e Pós-prova. A numeração é informação, não enfeite: ela acompanha a cronologia de 2020 a 2026.
+- Barra de progresso fixa no topo, fina (2px, ultramar), que avança conforme a rolagem. À direita da nav, um contador em Geist Mono que muda por capítulo: "KM 0,0 / 42,195" → "KM 21,1 / 42,195" → "KM 42,2 / 42,195".
+- Cada capítulo abre com um marcador grande: "KM 21" em Barlow Condensed 900, com a data do capítulo em mono ao lado ("JUL — SET 2024") e uma linha de 1px que atravessa a página.
+
+DIREÇÃO DE ARTE
+Laboratório suíço de corrida em modo claro: papel, tinta e um único azul ultramar. A tipografia tem atitude de pôster (Bandit, Stride); a precisão e o respiro são da On; a fotografia é crua e em movimento (RUNLAB).
+
+Tipografia (importe no CSS global):
+https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Archivo:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Caveat:wght@500&display=swap
+- Display: Barlow Condensed 800–900, CAIXA ALTA, tracking -0.01em, line-height 0.85. Usada em títulos de capítulo, números gigantes e no hero. Números podem passar de 200px no desktop.
+- Texto: Archivo largura normal 400, 17–19px, line-height 1.5, até 56 caracteres por linha.
+- Metadados: Geist Mono 11–12px, caixa alta, letter-spacing 0.08em.
+- Anotações à mão: Caveat 22–28px em ultramar, levemente rotacionadas (−3° a 3°), com uma seta fina desenhada em SVG apontando para o dado. No máximo 4 na página inteira, como as notas de um treinador na planilha.
+- Números tabulares, formato brasileiro (7.727 km, 42,5 km, 4:52/km).
+
+Cor (tokens do shadcn; nenhum hex solto nos componentes):
+background #F2F2EE (papel), foreground #111210 (tinta), card #FFFFFF, muted #E6E7E1, muted-foreground #7A7C74, border #D8D9D2, texto secundário #4A4C46, signal #2B34F5 (ultramar), signal-soft #DADCFF, on-signal #FFFFFF.
+- Ultramar é a única cor de destaque, mas agora aparece com força em três lugares: a faixa ticker, o bloco da chegada (KM 42) e os destaques de dado.
+- Um único bloco em tinta (fundo #111210, texto papel) para dar contraste no capítulo KM 30, o muro. O resto da página é papel.
+- Sem laranja, gradiente, glassmorphism, emoji ou sombra decorativa.
+
+Fotografia:
+- Fotos reais de corrida com motion blur, do Unsplash: corredor desfocado na rua ao amanhecer, grupo em movimento, linha de chegada. Tratamento: dessaturadas cerca de 20%, contraste alto, leve grão (overlay de ruído a 6%).
+- Fotos em painéis grandes com raio 4px ou sangrando até a borda da tela; nunca em miniatura.
+- Sobre as fotos, "chips de dado" como na RUNLAB: retângulos brancos, sem raio, padding 10px 14px, com um quadrado de 28px em tinta à esquerda contendo um ícone lucide branco (timer, route, sunrise, trending-up) e o dado em Archivo 600 16px ("7.727 km", "3:26:47", "06:00", "+2.349 km em 2024"). Posicionados em pontos diferentes da foto, como etiquetas.
+- Grade fina de 1px (branca a 12%) sobre as fotos do hero e do muro, reforçando o "laboratório".
+
+Elementos gráficos recorrentes:
+- Faixa ticker em ultramar, texto branco em Geist Mono caixa alta, rolando horizontalmente em loop lento (pausa no hover e com prefers-reduced-motion): "7.727 KM ● 812 CORRIDAS ● 705 HORAS ● 29.992 M DE SUBIDA ● 2 MARATONAS ● DESDE 2020 ●". Aparece abaixo do hero e antes do rodapé.
+- Coordenadas e metadados técnicos em mono nos cantos dos blocos, como numa ficha: "−23,5874 / −46,6576 · PARQUE IBIRAPUERA", "ARQUIVO Nº 001", "ATUALIZADO 20 SET 2026".
+- Linhas de 1px em tinta que atravessam a página no início de cada capítulo.
+- Layout assimétrico em grid de 12 colunas: alterne capítulos com texto à esquerda e dado à direita, dado gigante sangrando, foto ocupando 7 colunas. Nenhum capítulo repete o layout do anterior.
+
+Botões: principal com fundo tinta, texto papel, SEM raio (retângulo, como RUNLAB), altura 48px, ícone de seta à direita; hover em ultramar. Secundário com borda 1px tinta. Chips e toggles em Geist Mono, retangulares.
+
+Gráficos: barras finas com topo de 2px de raio, grade só horizontal, rótulos em mono 10.5px, anotações diretas no gráfico, tooltip em todos (fundo tinta, texto papel). Sem pizza, 3D ou eixo duplo.
+
+DADOS (use exatamente estes números num arquivo src/data/felipe.ts; não invente nem arredonde)
+- Felipe Oliveira, São Paulo, slug "felipe". Primeira corrida em maio de 2020; dados até 20 set 2026. 812 corridas, 7.727 km, 705 horas, 29.992 m de subida, 2 maratonas.
+- km por semana, uma posição por semana a partir da segunda-feira 2023-01-02 (0 = sem corrida). Maratonas nas semanas de 2024-09-23 e 2026-06-01: [16.6,33.5,26.6,24.3,38.1,23.9,15.1,17.9,20.3,24.4,6,13.4,23.1,27.9,29.1,27.3,24.1,29,27.5,44.1,42.1,35.2,38.3,30.1,42.1,38,47.4,42.1,36.1,41.1,42.6,36.9,42.2,23.5,23.1,29.1,26,21.3,26,20,19.2,21.6,19.2,21.6,25,12,34.5,23.2,28.1,23.6,19,0,25.1,27,31.3,37.1,30.1,20.1,35.1,23.9,32.2,26.4,37.5,29.8,38.1,39.5,42.1,49.1,46.9,39.5,42.2,56.2,63.5,64.5,62.4,56,55.9,59.7,61.1,72.7,70.1,47.6,53.2,65.4,73.8,75.6,80.5,78.5,66.9,44.2,65.9,20.1,32.1,45.1,44,49.2,9,38.3,31.6,43.5,41.4,21.4,20.8,18.1,30.1,29.1,39.9,45,44.1,64.4,64.5,63.5,49.1,68,54.1,57.2,60.6,68.5,70.5,73.5,76.1,52.6,0,5,0,0,0,19.1,15,18.3,30.1,35,37.2,36.6,28.1,35.4,41.1,42.3,38.1,44.1,40.7,42,38.1,32.2,37.1,34.4,41,0,10.6,19.1,26,29.5,23.9,16,32.1,30.6,10.4,30.5,18.9,44.1,20.4,35.1,41.5,41.3,46.3,44.4,63.2,41.2,72.4,46.7,52.6,60.1,68.7,70.6,57.2,79.5,53.6,44.7,56.7,28.3,32.3,46.3,43.1,52.5,42.2,44.8,27.6,41.8,39.8,36,36.9,38.5,40.2,32.7,0]
+- Meses [mês, km, corridas]: [["2023-01",109,13],["2023-02",87,10],["2023-03",76,10],["2023-04",119,16],["2023-05",151,15],["2023-06",158,15],["2023-07",185,17],["2023-08",158,17],["2023-09",113,15],["2023-10",86,17],["2023-11",100,14],["2023-12",81,11],["2024-01",128,14],["2024-02",117,17],["2024-03",149,21],["2024-04",188,18],["2024-05",230,23],["2024-06",260,28],["2024-07",277,25],["2024-08",293,22],["2024-09",286,20],["2024-10",160,16],["2024-11",152,15],["2024-12",110,13],["2025-01",160,18],["2025-02",244,28],["2025-03",258,27],["2025-04",308,23],["2025-05",38,5],["2025-06",52,7],["2025-07",154,14],["2025-08",170,15],["2025-09",165,13],["2025-10",145,18],["2025-11",85,11],["2025-12",107,16],["2026-01",110,14],["2026-02",157,16],["2026-03",248,18],["2026-04",249,25],["2026-05",275,27],["2026-06",173,13],["2026-07",192,19],["2026-08",172,20],["2026-09",103,10]]
+- Anos [ano, km, corridas, ritmo médio em s/km, maior corrida km]: [[2020,50,8,438,8.4],[2021,38,5,417,10.6],[2022,304,40,380,11.6],[2023,1423,170,339,21.3],[2024,2349,232,317,42.8],[2025,1885,195,323,30.0],[2026,1679,162,327,42.5]]
+- Forma (carga média 42 dias) e fadiga (7 dias), um ponto a cada 2 semanas a partir de 2023-06-05. Forma: [5,19,27,34,37,40,43,43,45,41,39,37,33,36,35,30,36,42,39,38,39,39,46,52,52,56,66,73,73,74,77,81,90,96,89,80,74,73,65,67,65,57,59,66,78,84,83,81,89,91,92,68,49,40,39,49,57,62,71,81,86,85,84,76,64,68,62,65,65,68,70,79,85,91,98,104,110,114,104,99,89,86,84,79,77,76,76] Fadiga: [23,43,42,52,40,42,44,42,51,32,33,28,14,36,33,13,43,54,26,33,37,36,56,60,48,64,80,85,67,68,79,82,103,101,63,52,59,66,53,72,47,37,54,76,100,92,79,75,97,90,77,14,2,25,38,69,81,72,87,106,91,79,79,49,33,64,44,68,76,77,84,97,100,99,108,123,124,127,79,82,63,79,82,68,66,72,77] Pausa de 2025-05-05 a 2025-06-09.
+- Recordes: 5K 19:34 (3:55/km, 2 jul 2024; primeira vez 5:28/km em 2022). 10K 41:42 (4:10/km, 27 ago 2024; primeira 7:27/km em 2021). 21K 1:35:41 (4:32/km, 28 jul 2024; primeira 5:15/km em 2023). 42K 3:26:47 (4:52/km, 7 jun 2026; anterior 3:32:45 a 4:58/km em 29 set 2024; −5:58).
+- Corridas por hora de início, 0h a 23h: [0,0,0,0,0,12,243,276,78,20,17,16,20,6,1,2,6,17,36,36,23,3,0,0]
+- Dias [dia, km, corridas]: [["Seg",99,18],["Ter",1536,214],["Qua",518,69],["Qui",1485,183],["Sex",771,101],["Sáb",2342,147],["Dom",977,80]]
+- km por dia de 2025-09-22 a 2026-09-27 (dia ausente = descanso): {"2025-09-23":10,"2025-09-26":8,"2025-09-27":20,"2025-10-01":10.1,"2025-10-02":7.1,"2025-10-04":15.1,"2025-10-07":8,"2025-10-09":10,"2025-10-11":19,"2025-10-15":10.4,"2025-10-16":9,"2025-10-18":15.1,"2025-10-20":2.5,"2025-10-21":8,"2025-10-23":9.1,"2025-10-26":21.3,"2025-11-03":3.6,"2025-11-04":7,"2025-11-11":8,"2025-11-12":8,"2025-11-15":3,"2025-11-18":7,"2025-11-19":4,"2025-11-22":15,"2025-11-25":7.4,"2025-11-27":8,"2025-11-28":14.1,"2025-12-02":10.6,"2025-12-04":7,"2025-12-05":6.3,"2025-12-10":8,"2025-12-12":8,"2025-12-15":2.5,"2025-12-17":8,"2025-12-18":8.2,"2025-12-20":13.4,"2025-12-23":5,"2025-12-24":5.1,"2025-12-27":16,"2025-12-28":4.4,"2025-12-31":4,"2026-01-02":1.4,"2026-01-03":5,"2026-01-06":8,"2026-01-08":8.5,"2026-01-10":14,"2026-01-12":3.6,"2026-01-13":5.1,"2026-01-16":10.3,"2026-01-19":6,"2026-01-20":9,"2026-01-22":10,"2026-01-24":19,"2026-01-26":4.2,"2026-01-28":6.1,"2026-02-01":10,"2026-02-03":8,"2026-02-05":7,"2026-02-07":20,"2026-02-10":12.5,"2026-02-12":10,"2026-02-14":19,"2026-02-17":10,"2026-02-18":2.8,"2026-02-19":7,"2026-02-22":21.4,"2026-02-24":10,"2026-02-26":12,"2026-02-28":7.3,"2026-03-01":17,"2026-03-04":12,"2026-03-05":8,"2026-03-06":2.3,"2026-03-08":22,"2026-03-11":10,"2026-03-13":14,"2026-03-14":25.1,"2026-03-15":14.1,"2026-03-17":10,"2026-03-21":27,"2026-03-22":4.2,"2026-03-23":5.3,"2026-03-24":10,"2026-03-26":15.1,"2026-03-27":10,"2026-03-28":32,"2026-03-31":10,"2026-04-02":11,"2026-04-04":7.6,"2026-04-05":18,"2026-04-07":12,"2026-04-09":10,"2026-04-11":7,"2026-04-12":23.5,"2026-04-14":15,"2026-04-16":12,"2026-04-17":8,"2026-04-19":25,"2026-04-21":14.8,"2026-04-23":15,"2026-04-24":4,"2026-04-25":29,"2026-04-26":5.9,"2026-04-28":10.5,"2026-04-29":4,"2026-04-30":16,"2026-05-01":8,"2026-05-02":32,"2026-05-05":12.6,"2026-05-07":13,"2026-05-08":6,"2026-05-09":25.5,"2026-05-12":11.4,"2026-05-14":14,"2026-05-15":8,"2026-05-16":36,"2026-05-17":10,"2026-05-19":9,"2026-05-21":13.5,"2026-05-22":6,"2026-05-23":25.1,"2026-05-26":9.2,"2026-05-28":11.1,"2026-05-29":6.2,"2026-05-30":18.1,"2026-06-02":10,"2026-06-04":4.1,"2026-06-07":42.5,"2026-06-11":7,"2026-06-14":21.2,"2026-06-16":8,"2026-06-18":10.2,"2026-06-20":14,"2026-06-23":10.5,"2026-06-25":10,"2026-06-27":15,"2026-06-28":10.8,"2026-06-30":9,"2026-07-02":10,"2026-07-04":10,"2026-07-05":14,"2026-07-07":11.4,"2026-07-09":5.7,"2026-07-10":13.5,"2026-07-11":14.7,"2026-07-12":7.1,"2026-07-14":8.2,"2026-07-16":11.1,"2026-07-17":6.7,"2026-07-18":16.2,"2026-07-21":7.5,"2026-07-22":11.2,"2026-07-23":4.7,"2026-07-26":21.4,"2026-07-29":8,"2026-07-30":1.7,"2026-07-31":8.5,"2026-08-01":9.4,"2026-08-04":7.9,"2026-08-06":11.7,"2026-08-07":9.3,"2026-08-08":12.9,"2026-08-11":7.4,"2026-08-12":10.9,"2026-08-14":7.6,"2026-08-15":13.9,"2026-08-18":6.9,"2026-08-19":9.4,"2026-08-21":8.7,"2026-08-22":11.1,"2026-08-25":6.2,"2026-08-26":8.2,"2026-08-27":8.8,"2026-08-28":12.7,"2026-08-29":1.1,"2026-08-31":8.2,"2026-09-02":10,"2026-09-04":9.1,"2026-09-05":11.2,"2026-09-07":7.2,"2026-09-09":9.6,"2026-09-11":13.4,"2026-09-13":10,"2026-09-17":7,"2026-09-18":10.4,"2026-09-20":15.3}
+- Destaques: 64% das corridas começam entre 6h e 8h; 30% do volume é no sábado; pico semanal 80,5 km (26 ago 2024); pico mensal 308 km (abr 2025); 70 semanas seguidas com corrida (jan 2024 a abr 2025).
+- Primeira corrida registrada: 26 mai 2020, 5,8 km a 6:33/km. Em 2020 e 2021 foram 13 corridas, nenhuma acima de 11 km.
+
+ROTEIRO DA PÁGINA (nesta ordem; os textos são finais)
+
+0. NAV: "CTT" em Barlow Condensed 900; âncoras "Largada, Hábito, Volume, Recordes, Muro, Chegada"; o contador "KM x / 42,195"; botão "Conectar Strava". Barra de progresso de 2px no topo.
+
+1. LARGADA · KM 0 — hero em 12 colunas.
+   Esquerda (5 col.): metadados "ARQUIVO Nº 001 · FELIPE OLIVEIRA · SÃO PAULO"; H1 gigante em caixa alta, três linhas: "SEU STRAVA," / "EDITADO" / "EM 42 KM." (última linha em ultramar). Texto: "Seis anos, 812 corridas e duas maratonas cabem num feed que ninguém relê. O CTT transforma esse histórico numa história com começo, meio e chegada." Botões "Conectar Strava" e "Ler a história do Felipe".
+   Direita (7 col.): foto grande de corredor em motion blur ao amanhecer, com a grade fina e 3 chips de dado ("7.727 km" com ícone route, "06:00" com sunrise, "3:26:47" com timer). No canto inferior da foto, em mono branco: "−23,5874 / −46,6576".
+   Anotação Caveat apontando para o chip "06:00": "quase todo dia".
+   Logo abaixo, a faixa ticker em ultramar.
+
+2. KM 5 · A PRIMEIRA — "MAI 2020". Layout: número gigante à esquerda "5,8 km" e à direita um texto curto: "A primeira corrida registrada teve 5,8 km a 6:33/km. Em dois anos vieram só mais 12. Nenhuma passou de 11 km." Abaixo, uma régua horizontal de anos (2020 a 2026) com a largura de cada ano proporcional ao km do ano (50, 38, 304, 1.423, 2.349, 1.885, 1.679), 2020–2022 quase invisíveis e 2024 em ultramar. Rótulos de km embaixo de cada ano.
+
+3. KM 10 · O HÁBITO — "2023". Título: "CORREDOR DAS 6H DA MANHÃ." Texto: "Em 2023 foram 170 corridas. A rotina se fixou cedo: quase duas em cada três começam antes das 8h, e terça e quinta viram dias sagrados." Dados: "64%" gigante em ultramar + gráfico de barras por hora (6h e 7h em ultramar); ao lado, barras horizontais por dia da semana com km (sábado em ultramar, com anotação Caveat "dia de longão"). Uma foto vertical de corredor na cidade em 4 colunas.
+
+4. KM 21 · O VOLUME — "2024". Título: "2.349 KM EM UM ANO." Texto: "2024 foi o ano do volume: 232 corridas, uma sequência de 70 semanas seguidas que começou em janeiro e um pico de 80,5 km em uma semana de agosto." Gráfico principal ocupando 12 colunas: a faixa de volume semanal de 2023 a 2026 (uma barra por semana, maratonas em ultramar com rótulo "42K", 2024 levemente destacado por um fundo muted atrás das barras daquele ano). Abaixo, em 3 colunas de números: "232 corridas", "70 semanas seguidas", "80,5 km · pico semanal". Tabela compacta por ano à direita em tipografia mono.
+
+5. KM 21,1 · OS RECORDES — "JUL — SET 2024". Título: "TRÊS RECORDES EM OITO SEMANAS." Texto: "Entre julho e agosto de 2024 caíram os recordes de 5K, 10K e meia. Em setembro veio a primeira maratona: 3:32:45." Grade de 4 colunas separadas por linhas verticais: data em mono, distância gigante (5K, 10K, 21K, 42K), tempo, ritmo e uma trilha de progressão (ponto vazado na primeira vez, ponto ultramar no recorde). A coluna 42K mostra os dois tempos, 3:32:45 riscado e 3:26:47, e fica em ultramar. Nota pequena: "Tempos de 5K, 10K e meia equivalentes ao ritmo médio da atividade."
+
+6. KM 30 · O MURO — "MAI — JUN 2025". O único bloco em fundo tinta, sangrando até a borda. Foto em motion blur de um corredor sozinho, escurecida, ocupando metade do bloco. Título em papel: "TODO CICLO TEM UM MURO." Texto: "Em maio de 2025 os treinos pararam. A forma, que estava em 95, caiu para 38 em oito semanas. Doze semanas depois, estava em 85 de novo." Gráfico de forma e fadiga em cima do fundo tinta: área da forma em ultramar claro (#8A90FF a 35%), linha da forma #8A90FF 2px, fadiga em linha fina cinza, faixa "PAUSA" destacada, marcações das duas maratonas. Anotação Caveat em #8A90FF apontando para o vale: "aqui".
+
+7. KM 42 · A CHEGADA — "07 JUN 2026". Bloco inteiro em ultramar, texto branco. Tempo gigante ocupando a largura: "3:26:47" (Barlow Condensed 900, até 260px). Linha de detalhe: "42,5 KM · 4:52/KM · −5:58 VS. 2024". Abaixo, as 16 semanas do ciclo como barras brancas (a da prova destacada) com "16 SEMANAS · 899 KM · MAIOR LONGÃO 36 KM". Foto de linha de chegada em motion blur à direita com um chip de dado "−5:58".
+
+8. PÓS-PROVA · A CAPA — Título: "UM TREINO VIRA UMA CAPA." Texto: "Cada prova, cada mês e cada temporada viram um card pronto para o Stories, com os seus números e nada mais." Três cards do Stories lado a lado (não um toggle): Prova, Mês e Temporada, cada um numa cor (Papel, Tinta, Ultramar), levemente rotacionados (−2°, 0°, 2°) como pôsteres colados na parede, com sombra longa e suave. No mobile, carrossel horizontal com snap.
+   Especificação do card: 9:16, padding 12% vertical e 9% lateral. Topo com "CTT" e contexto em mono; bloco de números empurrado para baixo: rótulo mono, número gigante (Barlow Condensed 900), linha de detalhe, pílula com borda, mini gráfico de barras, rodapé mono "usectt.com.br/felipe" e "Felipe Oliveira". Cores fixas: Papel #F2F2EE/#111210 destaque #2B34F5; Tinta #0F100E/#EFEFEA destaque #8A90FF; Ultramar #2B34F5/#FFFFFF destaque #FFFFFF.
+   Prova: "MARATONA · 07 JUN 2026", "3:26:47", "42,5 km · 4:52/km", pílula "−5:58 vs. set 2024", barras das 16 semanas.
+   Mês: "AGOSTO 2026", "172 km", "20 corridas · 5:35/km · 16h01", pílula "Maior: 13,9 km", barras por dia de agosto.
+   Temporada: "2020 — 2026", "7.727 km", "812 corridas · 705 horas · 2 maratonas", pílula "Pico: 2.349 km em 2024", barras por ano.
+
+9. PÓS-PROVA · O ANO SEGUE — Título: "O TREINO CONTINUA." Calendário dos últimos 12 meses (53 colunas × 7 linhas, quadrados de 12–14px, 6 níveis de muted até ultramar, meses em mono, tooltip por dia, rolagem própria no mobile). Texto: "Dois meses depois da chegada, a rotina voltou: 172 km em agosto, quase sempre antes das 8h."
+
+10. SUA VEZ — Título gigante em duas linhas: "QUAL É A SUA" / "HISTÓRIA?" Texto: "Conecte o Strava. O CTT lê todo o seu histórico, só para leitura, e monta a sua edição em alguns minutos." Botão "Conectar Strava". À direita, três passos numerados (Conectar, Ler, Compartilhar) em mono, com linha de 1px em cima de cada.
+    Faixa ticker em ultramar de novo.
+
+11. RODAPÉ em tinta: "CTT" gigante em Barlow Condensed 900 ocupando a largura inteira, cortado na base. Acima, em mono: "CTT · usectt.com.br", "Dados via Strava", "−23,5505 / −46,6333 · São Paulo, BR", "© 2026".
+
+QUALIDADE
+- Ritmo: alterne densidade. Capítulos com um número gigante e pouco texto se intercalam com capítulos de gráfico. Muito espaço vazio entre capítulos (160px no desktop).
+- Em 375px: nada de rolagem horizontal da página, nenhum número cortado; os números gigantes reduzem com clamp() e os layouts viram uma coluna na ordem de leitura.
+- Todo gráfico com aria-label e tooltip; foco visível (outline 2px ultramar); contraste AA, inclusive texto sobre foto (use um gradiente escuro só na base da foto quando houver texto sobre ela).
+- Movimento: ticker, barra de progresso e uma entrada suave de cada capítulo (fade + 12px). Tudo desligado com prefers-reduced-motion. A página precisa estar completa sem animação.
+- Textos curtos, voz ativa, sem exclamação e sem frase motivacional genérica.
