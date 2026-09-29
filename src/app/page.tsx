@@ -51,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   )
   const heroActions = (
     <Suspense fallback={<Skeleton className="h-12 w-44 rounded-none" />}>
-      <DemoHeroActions />
+      <DemoHeroActions showStoryLink={Boolean(example?.archive.firstRun)} />
     </Suspense>
   )
   const banner = (

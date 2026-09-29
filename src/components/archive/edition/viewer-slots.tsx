@@ -49,14 +49,16 @@ function SeeStoryCardLink({ hasStoryCard }: { hasStoryCard: boolean }) {
 }
 
 /** Ações do hero na home, que sempre mostra o arquivo de exemplo. */
-export async function DemoHeroActions() {
+export async function DemoHeroActions({ showStoryLink = true }: { showStoryLink?: boolean } = {}) {
   const viewer = await getViewerProfile()
   return (
     <>
       {viewer ? <MyArchiveLink slug={viewer.slug} /> : <ConnectStravaLink />}
-      <a href="#primeira" className={cn(buttonVariants({ variant: "outline" }))}>
-        Ler a história do {siteConfig.author.name.split(" ")[0]}
-      </a>
+      {showStoryLink ? (
+        <a href="#primeira" className={cn(buttonVariants({ variant: "outline" }))}>
+          Ler a história do {siteConfig.author.name.split(" ")[0]}
+        </a>
+      ) : null}
     </>
   )
 }
